@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface CustomerService {
     Page<CustomerShowDTO> findAll(Pageable pageable);
     CustomerDTO createCustomer(CustomerSaveDTO customerDTO);
-    CustomerDTO updateCustomer(UUID id, CustomerDTO customerDTO);
+    CustomerDTO updateCustomer(UUID id, CustomerSaveDTO customerSaveDTO);
     CustomerDTO updateCustomerStatus(UUID id, Status status);
 }
