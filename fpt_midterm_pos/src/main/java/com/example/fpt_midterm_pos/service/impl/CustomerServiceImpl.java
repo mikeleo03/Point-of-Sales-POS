@@ -53,10 +53,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO updateCustomerStatus(UUID id, Status status, boolean changeStatus) {
+    public CustomerDTO updateCustomerStatus(UUID id, Status status) {
         Customer custCheck = customerRepository.findById(id).orElse(null);
         if(custCheck != null) {
-            if(changeStatus) {
+            if(status != custCheck.getStatus()) {
                 if(status == Status.Active) {
                     custCheck.setStatus(Status.Deactive);
                 } else if(status == Status.Deactive) {
@@ -65,6 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
                 Customer updatedCustomer = customerRepository.save(custCheck);
                 return customerMapper.toCustomerDTO(updatedCustomer);
             }
+            return customerMapper.toCustomerDTO(custCheck);
         }
         return null;
     }

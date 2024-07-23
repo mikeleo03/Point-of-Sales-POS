@@ -13,5 +13,5 @@ public interface CustomerService {
     Page<CustomerShowDTO> findAll(Pageable pageable);
     CustomerDTO createEmployee(CustomerDTO customerDTO);
     CustomerDTO updateCustomer(UUID id, CustomerDTO customerDTO);
-    CustomerDTO updateCustomerStatus(UUID id, Status status, boolean changeStatus);
+    CustomerDTO updateCustomerStatus(UUID id, Status status);
 }
