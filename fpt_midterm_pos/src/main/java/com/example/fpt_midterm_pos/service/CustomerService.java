@@ -1,6 +1,7 @@
 package com.example.fpt_midterm_pos.service;
 
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
+import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
 import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
 import com.example.fpt_midterm_pos.data.model.Status;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 public interface CustomerService {
     Page<CustomerShowDTO> findAll(Pageable pageable);
-    CustomerDTO createEmployee(CustomerDTO customerDTO);
+    CustomerDTO createCustomer(CustomerSaveDTO customerDTO);
     CustomerDTO updateCustomer(UUID id, CustomerDTO customerDTO);
     CustomerDTO updateCustomerStatus(UUID id, Status status);
 }

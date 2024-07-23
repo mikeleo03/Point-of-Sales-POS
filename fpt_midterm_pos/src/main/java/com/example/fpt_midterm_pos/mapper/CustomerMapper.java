@@ -3,6 +3,7 @@ package com.example.fpt_midterm_pos.mapper;
 import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
+import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,4 +26,13 @@ public interface CustomerMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "invoice", ignore = true)
     Customer toCustomer(CustomerShowDTO customerShowDTO);
+
+    CustomerSaveDTO toCustomerSaveDTO(Customer customer);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "invoice", ignore = true)
+    Customer toCustomer(CustomerSaveDTO customerSaveDTO);
 }

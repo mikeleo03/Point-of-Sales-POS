@@ -1,6 +1,7 @@
 package com.example.fpt_midterm_pos.service.impl;
 
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
+import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
 import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
 import com.example.fpt_midterm_pos.service.CustomerService;
 import com.example.fpt_midterm_pos.mapper.CustomerMapper;
@@ -29,8 +30,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO createEmployee(CustomerDTO customerDTO) {
-        Customer customer = customerMapper.toCustomer(customerDTO);
+    public CustomerDTO createCustomer(CustomerSaveDTO customerSaveDTO) {
+        Customer customer = customerMapper.toCustomer(customerSaveDTO);
         customer.setId(UUID.randomUUID());
         customer.setCreatedAt(new Date());
         customer.setUpdatedAt(new Date());
