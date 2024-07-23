@@ -1,8 +1,7 @@
 package com.example.fpt_midterm_pos.controller;
 
-import com.example.fpt_midterm_pos.data.model.Product;
-import com.example.fpt_midterm_pos.dto.ProductDTO;
-import com.example.fpt_midterm_pos.service.ProductService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,10 +9,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import com.example.fpt_midterm_pos.data.model.Product;
+import com.example.fpt_midterm_pos.data.model.Status;
+import com.example.fpt_midterm_pos.dto.ProductDTO;
+import com.example.fpt_midterm_pos.service.ProductService;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -62,12 +71,12 @@ public class ProductController {
 
     @PutMapping("/active/{id}")
     public Product updateProductStatusActive(@PathVariable String id) {
-        return productService.updateProductStatus(id, Product.Status.Active);
+        return productService.updateProductStatus(id, Status.Active);
     }
 
     @PutMapping("/deactive/{id}")
     public Product updateProductStatusDeactive(@PathVariable String id) {
-        return productService.updateProductStatus(id, Product.Status.Deactive);
+        return productService.updateProductStatus(id, Status.Deactive);
     }
 
 

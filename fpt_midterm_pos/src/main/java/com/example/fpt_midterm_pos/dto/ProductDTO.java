@@ -2,13 +2,13 @@ package com.example.fpt_midterm_pos.dto;
 
 import java.time.LocalDate;
 
+import com.example.fpt_midterm_pos.data.model.Status;
+
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
-
-import java.math.BigDecimal;
-
-import jakarta.validation.constraints.*;
-import com.example.fpt_midterm_pos.data.model.Product;
 
 @Data
 public class ProductDTO {
@@ -19,9 +19,9 @@ public class ProductDTO {
     private String name;
 
     @Min(value = 0, message = "Price must be a positive number")
-    private int price;
+    private Double price;
 
-    private Product.Status status;
+    private Status status;
 
     private Integer quantity;
 
@@ -30,5 +30,4 @@ public class ProductDTO {
 
     @Column(name = "updated_at")
     private LocalDate updatedAt;
-
 }

@@ -50,6 +50,6 @@ public class FileUtils {
         String name = attributes[1];
         int price = Integer.parseInt(attributes[2]);
         Integer quantity = Integer.parseInt(attributes[3]); // Changed to Integer
-        return new Product(id, name, price, Product.Status.Active, quantity, LocalDate.now(), LocalDate.now());
+        return new Product(id, name, price, Status.Active, quantity, LocalDate.now(), LocalDate.now());
     }
 }
