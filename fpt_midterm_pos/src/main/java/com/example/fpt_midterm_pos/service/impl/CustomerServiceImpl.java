@@ -6,6 +6,7 @@ import com.example.fpt_midterm_pos.service.CustomerService;
 import com.example.fpt_midterm_pos.mapper.CustomerMapper;
 import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
+import com.example.fpt_midterm_pos.data.model.Status;
 
 import lombok.AllArgsConstructor;
 
@@ -39,11 +40,32 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO updateCustomer(UUID id, CustomerDTO customerDTO) {
-        return new CustomerDTO();
+        Customer custCheck = customerRepository.findById(id).orElse(null);
+        if(custCheck != null) {
+            Customer customer = customerMapper.toCustomer(customerDTO);
+            custCheck.setName(customer.getName());
+            custCheck.setPhoneNumber(customer.getPhoneNumber());
+            custCheck.setUpdatedAt(new Date());
+            Customer updatedCustomer = customerRepository.save(custCheck);
+            return customerMapper.toCustomerDTO(updatedCustomer);
+        }
+        return null;
     }
 
     @Override
-    public CustomerDTO updateCustomerStatus(UUID id) {
-        return new CustomerDTO();
+    public CustomerDTO updateCustomerStatus(UUID id, Status status, boolean changeStatus) {
+        Customer custCheck = customerRepository.findById(id).orElse(null);
+        if(custCheck != null) {
+            if(changeStatus) {
+                if(status == Status.Active) {
+                    custCheck.setStatus(Status.Deactive);
+                } else if(status == Status.Deactive) {
+                    custCheck.setStatus(Status.Active);
+                }
+                Customer updatedCustomer = customerRepository.save(custCheck);
+                return customerMapper.toCustomerDTO(updatedCustomer);
+            }
+        }
+        return null;
     }
 }

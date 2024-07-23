@@ -7,27 +7,22 @@ import lombok.AllArgsConstructor;
 
 import java.util.Date;
 import java.util.UUID;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Customer")
-public class Customer {
+@Table(name = "Invoice")
+public class Invoice {
     @Id
     @Column(name = "ID", nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(nullable = false, length = 10)
+    private int amount;
 
     @Column(nullable = false)
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.Active;
+    private Date date;
 
     @Column(nullable = false)
     private Date createdAt;
@@ -35,6 +30,7 @@ public class Customer {
     @Column(nullable = false)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-    private Set<Invoice> invoice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customerId", nullable=false, insertable = false, updatable = false)
+    private Customer customer;
 }
