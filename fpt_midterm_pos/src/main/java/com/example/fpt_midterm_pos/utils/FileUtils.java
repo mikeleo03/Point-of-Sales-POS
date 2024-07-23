@@ -7,10 +7,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.fpt_midterm_pos.data.model.Product;
-import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.fpt_midterm_pos.data.model.Product;
+import com.example.fpt_midterm_pos.data.model.Status;
 
 public class FileUtils {
     public static String TYPE = "text/csv";
@@ -48,7 +50,7 @@ public class FileUtils {
         }
         String id = attributes[0];
         String name = attributes[1];
-        int price = Integer.parseInt(attributes[2]);
+        Double price = (double) Integer.parseInt(attributes[2]);
         Integer quantity = Integer.parseInt(attributes[3]); // Changed to Integer
         return new Product(id, name, price, Status.Active, quantity, LocalDate.now(), LocalDate.now());
     }
