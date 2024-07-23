@@ -47,7 +47,7 @@ public class ProductController {
 
         Sort sort = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        return productService.findAll(pageable);
+        return productService.findAllByStatusAndName(name, pageable);
     }
 
     @PostMapping

@@ -53,7 +53,4 @@ public class Product implements Serializable {
         Active,
         Deactive
     }
-
-//    public Product(String id, String name, int price, Status status, Integer quantity, LocalDate createdAt, LocalDate updatedAt) {
-//    }
 }

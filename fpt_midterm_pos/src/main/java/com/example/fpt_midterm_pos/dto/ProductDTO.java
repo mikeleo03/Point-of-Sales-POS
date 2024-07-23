@@ -2,6 +2,7 @@ package com.example.fpt_midterm_pos.dto;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -23,5 +24,11 @@ public class ProductDTO {
     private Product.Status status;
 
     private Integer quantity;
+
+    @Column(name = "created_at")
+    private LocalDate createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDate updatedAt;
 
 }
