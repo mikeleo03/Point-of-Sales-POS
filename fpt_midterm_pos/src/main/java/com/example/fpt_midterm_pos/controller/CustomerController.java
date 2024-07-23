@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/customers")
 @AllArgsConstructor
@@ -39,7 +41,20 @@ public class CustomerController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") int id, @RequestBody CustomerDTO customerDTO) {
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") UUID id, @RequestBody CustomerSaveDTO customerSaveDTO) {
+        CustomerDTO customer = customerService.updateCustomer(id, customerSaveDTO);
+        return ResponseEntity.ok(customer);
+    }
+
+    @PutMapping(value = "/active/{id}")
+    public ResponseEntity<CustomerDTO> updateCustomerStatusActive(@PathVariable("id") UUID id) {
+        CustomerDTO customer = customerService.updateCustomerStatus(id, Status.Active);
+        return ResponseEntity.ok(customer);
+    }
+
+    @PutMapping(value = "/deactive/{id}")
+    public ResponseEntity<CustomerDTO> updateCustomerStatusDeactive(@PathVariable("id") UUID id) {
+        CustomerDTO customer = customerService.updateCustomerStatus(id, Status.Deactive);
+        return ResponseEntity.ok(customer);
     }
 }

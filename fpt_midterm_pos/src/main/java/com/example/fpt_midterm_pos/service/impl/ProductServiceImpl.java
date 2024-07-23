@@ -1,25 +1,24 @@
 package com.example.fpt_midterm_pos.service.impl;
 
-import com.example.fpt_midterm_pos.mapper.ProductMapper;
-import com.example.fpt_midterm_pos.utils.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import com.example.fpt_midterm_pos.service.ProductService;
-import com.example.fpt_midterm_pos.data.repository.ProductRepository;
-import com.example.fpt_midterm_pos.data.model.Product;
-import com.example.fpt_midterm_pos.data.model.Status;
-import com.example.fpt_midterm_pos.dto.ProductDTO;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.fpt_midterm_pos.data.model.Product;
+import com.example.fpt_midterm_pos.data.model.Status;
+import com.example.fpt_midterm_pos.data.repository.ProductRepository;
+import com.example.fpt_midterm_pos.dto.ProductDTO;
+import com.example.fpt_midterm_pos.mapper.ProductMapper;
+import com.example.fpt_midterm_pos.service.ProductService;
+import com.example.fpt_midterm_pos.utils.FileUtils;
 
 @Service
 public class ProductServiceImpl implements ProductService {
