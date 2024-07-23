@@ -1,9 +1,7 @@
 package com.example.fpt_midterm_pos.dto;
 
 import java.util.Date;
-import java.util.UUID;
-
-import com.example.fpt_midterm_pos.data.model.Customer;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceDTO {
-    private UUID id;
-    private Double amount;
     private Date date;
-    private Date createdAt;
-    private Date updatedAt;
-    private Customer customer;
+    private CustomerInvoiceDTO customer;
+    private List<InvoiceDetailDTO> invoiceDetails;
 }
