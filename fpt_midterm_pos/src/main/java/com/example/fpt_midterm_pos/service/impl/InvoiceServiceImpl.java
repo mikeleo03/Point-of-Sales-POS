@@ -111,7 +111,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
             // Check whether the product actually exists using the ID on the product repo
-            Product product = productRepository.findById(detailDTO.getProduct().getId())
+            Product product = productRepository.findById(detailDTO.getId().getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             // Re-validate the product status
@@ -174,7 +174,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceDetail> updatedInvoiceDetails = new ArrayList<>();
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
-            Product product = productRepository.findById(detailDTO.getProduct().getId())
+            Product product = productRepository.findById(detailDTO.getId().getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             if (product.getStatus() != Status.Active) {
