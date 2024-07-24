@@ -125,6 +125,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             // Since the repo only returning active product, it already validated
             invoiceDetail.setProduct(product);
+            invoiceDetail.setProductName(product.getName());
             invoiceDetail.setQuantity(detailDTO.getQuantity());
             invoiceDetail.setPrice(product.getPrice());
             invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());  // Amount = price * quantity
@@ -183,6 +184,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             InvoiceDetail invoiceDetail = new InvoiceDetail();
             invoiceDetail.setInvoice(existingInvoice);
             invoiceDetail.setProduct(product);
+            invoiceDetail.setProductName(product.getName());
             invoiceDetail.setQuantity(detailDTO.getQuantity());
             invoiceDetail.setPrice(product.getPrice());
             invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());

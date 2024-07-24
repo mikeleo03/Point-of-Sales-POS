@@ -31,6 +31,9 @@ public class InvoiceDetail {
     private Product product;
 
     @Column(nullable = false)
+    private String productName;
+
+    @Column(nullable = false)
     private Integer quantity;
 
     @Column(nullable = false)
