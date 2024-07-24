@@ -25,14 +25,9 @@ import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.service.InvoiceService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @RestController
 @RequestMapping("/api/v1/invoices")
 public class InvoiceController {
-
-    private static final Logger logger = LoggerFactory.getLogger(InvoiceController.class);
 
     @Autowired
     private InvoiceService invoiceService;
@@ -51,38 +46,17 @@ public class InvoiceController {
 
     @PostMapping
     public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
-        logger.info("Received request to create invoice: {}", invoiceDTO);
-
         try {
             InvoiceDTO createdInvoice = invoiceService.createInvoice(invoiceDTO);
-            logger.info("Invoice created successfully");
             return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
         } catch (ResourceNotFoundException e) {
-            logger.error("Resource not found: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle resource not found
         } catch (IllegalArgumentException e) {
-            logger.error("Invalid argument: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Handle invalid product status
         } catch (Exception e) {
-            logger.error("Unexpected error occurred: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
         }
     }
-
-
-    // @PostMapping
-    // public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
-    //     try {
-    //         InvoiceDTO createdInvoice = invoiceService.createInvoice(invoiceDTO);
-    //         return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
-    //     } catch (ResourceNotFoundException e) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle resource not found
-    //     } catch (IllegalArgumentException e) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Handle invalid product status
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
-    //     }
-    // }
 
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceDTO invoiceDTO) {
