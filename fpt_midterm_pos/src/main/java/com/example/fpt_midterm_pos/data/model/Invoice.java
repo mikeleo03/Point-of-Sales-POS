@@ -26,8 +26,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "Invoice")
 public class Invoice {
     @Id
-    @Column(name = "ID", columnDefinition = "BINARY(36)", updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class Invoice {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customerId", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
