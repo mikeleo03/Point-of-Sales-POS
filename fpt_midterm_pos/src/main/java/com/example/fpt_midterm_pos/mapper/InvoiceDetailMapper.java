@@ -13,4 +13,14 @@ public interface InvoiceDetailMapper {
 
     @Mapping(source = "id.productId", target = "productId")
     InvoiceDetailDTO toInvoiceDetailDTO(InvoiceDetail invoiceDetail);
+
+    @Mapping(source = "productId", target = "id.productId")
+    @Mapping(target = "invoice", ignore = true)
+    @Mapping(target = "product", ignore = true)
+    @Mapping(target = "productName", ignore = true)
+    @Mapping(target = "amount", ignore = true)
+    @Mapping(target = "price", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    InvoiceDetail toInvoiceDetail(InvoiceDetailDTO invoiceDetail);
 }

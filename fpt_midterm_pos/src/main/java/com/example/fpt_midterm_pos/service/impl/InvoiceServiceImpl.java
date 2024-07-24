@@ -36,7 +36,7 @@ import com.example.fpt_midterm_pos.service.InvoiceService;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
-    
+
     @Autowired
     private InvoiceRepository invoiceRepository;
 
@@ -99,7 +99,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = new Invoice();
         invoice.setCustomer(customer);
         invoice.setAmount(0.00);    // Set the initial amount to 0.00
-        invoice.setDate(invoiceDTO.getDate());
+        invoice.setDate(new Date());
         invoice.setCreatedAt(new Date());
         invoice.setUpdatedAt(new Date());
         // Save the invoice
@@ -174,7 +174,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         // Update the invoice details
-        existingInvoice.setDate(invoiceDTO.getDate());
+        existingInvoice.setDate(new Date());
         existingInvoice.setUpdatedAt(new Date());
 
         // Update invoice details

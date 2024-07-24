@@ -16,5 +16,11 @@ public interface InvoiceMapper {
     InvoiceDTO toInvoiceDTO(Invoice invoice);
 
     @Mapping(source = "customerId", target = "customer.id")
+    @Mapping(source = "invoiceDetails", target = "invoiceDetails")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "amount", ignore = true)
+    @Mapping(target = "date", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Invoice toInvoice(InvoiceDTO invoiceDTO);
 }
