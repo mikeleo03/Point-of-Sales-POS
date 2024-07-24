@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import com.example.fpt_midterm_pos.data.model.Invoice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,7 +51,7 @@ public class FileUtils {
         Product product = new Product();
         product.setName(attributes[0]);
         product.setPrice((double) Integer.parseInt(attributes[1]));
-        product.setQuantity(Integer.parseInt(attributes[2]));
+        product.setQuantity(Integer.valueOf(attributes[2]));
         product.setStatus(Status.Active);
         product.setCreatedAt(LocalDate.now());
         product.setUpdatedAt(LocalDate.now());

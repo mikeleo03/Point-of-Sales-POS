@@ -1,6 +1,6 @@
 package com.example.fpt_midterm_pos.dto;
 
-import com.example.fpt_midterm_pos.data.model.InvoiceDetailKey;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceDetailDTO {
-    private InvoiceDetailKey id;
-    private ProductDTO product;
+    private UUID productId;
     private Integer quantity;
-    private Double price;
-    private Double amount;
 }
