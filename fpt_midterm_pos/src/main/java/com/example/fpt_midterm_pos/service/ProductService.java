@@ -10,16 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.ProductDTO;
+import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
 
 public interface ProductService {
 
-    List<ProductDTO> findAll();
-
-    Page<ProductDTO> findAll(Pageable pageable);
-
-    List<ProductDTO> findByNameLike(String name);
-
-    Page<ProductDTO> findAllByStatusAndName(String name, Pageable pageable);
+    Page<ProductDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable);
 
     Product save(ProductDTO productDTO);
 
