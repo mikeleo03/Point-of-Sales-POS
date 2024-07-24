@@ -1,7 +1,7 @@
 package com.example.fpt_midterm_pos.service.impl;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +19,7 @@ import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
 import com.example.fpt_midterm_pos.dto.ProductDTO;
+import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.mapper.ProductMapper;
 import com.example.fpt_midterm_pos.service.ProductService;
 import com.example.fpt_midterm_pos.utils.FileUtils;
@@ -30,40 +33,43 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper = ProductMapper.INSTANCE;
 
     @Override
-    public List<ProductDTO> findAll() {
-        return productRepository.findAllByStatus(Status.Active, Pageable.unpaged())
-                .getContent()
-                .stream()
-                .map(productMapper::toDTO)
-                .collect(Collectors.toList());
-    }
+    public Page<ProductDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
+        // Listing all the criteria
+        String productName = criteria.getName();
+        String sortByName = criteria.getSortByName();
+        String sortByPrice = criteria.getSortByPrice();
+        Double minPrice = criteria.getMinPrice();
+        Double maxPrice = criteria.getMaxPrice();
 
-    @Override
-    public Page<ProductDTO> findAll(Pageable pageable) {
-        return productRepository.findAllByStatus(Status.Active, pageable)
-                .map(productMapper::toDTO);
-    }
+        // Define the sort rules
+        Sort sort = Sort.unsorted();
+        if (sortByName != null) {
+            sort = sort.and(Sort.by("name").ascending());
+            if (sortByName.equalsIgnoreCase("desc")) {
+                sort = sort.and(Sort.by("name").descending());
+            }
+        }
+        if (sortByPrice != null) {
+            sort = sort.and(Sort.by("price").ascending());
+            if (sortByPrice.equalsIgnoreCase("desc")) {
+                sort = sort.and(Sort.by("price").descending());
+            }
+        }
 
-    @Override
-    public List<ProductDTO> findByNameLike(String name) {
-        return productRepository.findByNameContainingAndStatus(name, Status.Active)
-                .stream()
-                .map(productMapper::toDTO)
-                .collect(Collectors.toList());
-    }
+        // Set the pageable
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-    @Override
-    public Page<ProductDTO> findAllByStatusAndName(String name, Pageable pageable) {
-        return productRepository.findByStatusAndNameContaining(Status.Active, name, pageable)
-                .map(productMapper::toDTO);
+        // Get the product data from the repo
+        Page<Product> products = productRepository.findByFilters(productName, minPrice, maxPrice, sortedPageable);
+        return products.map(productMapper::toDTO);
     }
 
     @Override
     public Product save(ProductDTO productDTO) {
         Product product = productMapper.toEntity(productDTO);
-        product.setStatus(Status.Active);  // Ensure the product is set to active when saving
-        product.setCreatedAt(LocalDate.now());
-        product.setUpdatedAt(LocalDate.now());
+        product.setStatus(Status.Active); // Ensure the product is set to active when saving
+        product.setCreatedAt(new Date());
+        product.setUpdatedAt(new Date());
         return productRepository.save(product);
     }
 
@@ -75,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
             product.setName(productDTO.getName());
             product.setPrice(productDTO.getPrice());
             product.setQuantity(productDTO.getQuantity());
-            product.setUpdatedAt(LocalDate.now());
+            product.setUpdatedAt(new Date());
             return productRepository.save(product);
         } else {
             throw new RuntimeException("Product not found");
@@ -93,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
             throw new RuntimeException("Product not found");
         }
     }
+
     @Override
     public List<ProductDTO> saveProductsFromCSV(MultipartFile file) {
         if (!FileUtils.hasCSVFormat(file)) {

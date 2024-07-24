@@ -3,8 +3,8 @@ package com.example.fpt_midterm_pos.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -53,8 +53,8 @@ public class FileUtils {
         product.setPrice((double) Integer.parseInt(attributes[1]));
         product.setQuantity(Integer.valueOf(attributes[2]));
         product.setStatus(Status.Active);
-        product.setCreatedAt(LocalDate.now());
-        product.setUpdatedAt(LocalDate.now());
+        product.setCreatedAt(new Date());
+        product.setUpdatedAt(new Date());
         return product;
     }
 }

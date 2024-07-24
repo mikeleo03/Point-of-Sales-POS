@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +23,7 @@ import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.ProductDTO;
 import com.example.fpt_midterm_pos.service.ProductService;
+import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -33,31 +33,17 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<ProductDTO> getAllProducts() {
-        return productService.findAll();
-    }
+    public ResponseEntity<Page<ProductDTO>> getProductsByCriteria(ProductSearchCriteriaDTO criteria,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.findByCriteria(criteria, pageable);
 
-    @GetMapping(params = {"page", "size"})
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
-        return productService.findAll(pageable);
-    }
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
 
-    @GetMapping(params = "name")
-    public List<ProductDTO> getProductsByName(@RequestParam String name) {
-        return productService.findByNameLike(name);
-    }
-
-    @GetMapping(params = {"name", "sortBy", "sortOrder", "page", "size"})
-    public Page<ProductDTO> getProductsByNameWithSortingAndPagination(
-            @RequestParam String name,
-            @RequestParam String sortBy,
-            @RequestParam String sortOrder,
-            @RequestParam int page,
-            @RequestParam int size) {
-
-        Sort sort = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return productService.findAllByStatusAndName(name, pageable);
+        return ResponseEntity.status(HttpStatus.CREATED).body(products);
+        // return productService.findByCriteria(criteria, pageable);
     }
 
     @PostMapping
@@ -80,7 +66,6 @@ public class ProductController {
         return productService.updateProductStatus(id, Status.Deactive);
     }
 
-
     @PostMapping("/upload")
     public ResponseEntity<List<ProductDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
         try {
@@ -93,4 +78,3 @@ public class ProductController {
         }
     }
 }
-
