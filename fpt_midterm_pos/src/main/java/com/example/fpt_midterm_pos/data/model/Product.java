@@ -1,8 +1,7 @@
 package com.example.fpt_midterm_pos.data.model;
 
 import java.time.LocalDate;
-
-import org.hibernate.annotations.GenericGenerator;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,10 +27,9 @@ import lombok.Setter;
 public class Product {
 
     @Id
+    @Column(name = "ID", nullable = false)
     @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id")
-    private String id;
+    private UUID id;
 
     @NotBlank(message = "Name is mandatory")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
