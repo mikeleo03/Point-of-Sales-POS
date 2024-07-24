@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import com.example.fpt_midterm_pos.data.model.Invoice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +18,7 @@ import com.example.fpt_midterm_pos.data.model.Status;
 
 public class FileUtils {
     public static String TYPE = "text/csv";
-    static String[] HEADERS = { "id", "name", "price", "quantity" };
+    static String[] HEADERS = {"name", "price", "quantity" };
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     public static boolean hasCSVFormat(MultipartFile file) {
@@ -48,10 +50,13 @@ public class FileUtils {
         if (attributes.length < HEADERS.length) {
             throw new IllegalArgumentException("Invalid CSV format");
         }
-        String id = attributes[0];
-        String name = attributes[1];
-        Double price = (double) Integer.parseInt(attributes[2]);
-        Integer quantity = Integer.parseInt(attributes[3]); // Changed to Integer
-        return new Product(id, name, price, Status.Active, quantity, LocalDate.now(), LocalDate.now());
+        Product product = new Product();
+        product.setName(attributes[0]);
+        product.setPrice((double) Integer.parseInt(attributes[1]));
+        product.setQuantity(Integer.parseInt(attributes[2]));
+        product.setStatus(Status.Active);
+        product.setCreatedAt(LocalDate.now());
+        product.setUpdatedAt(LocalDate.now());
+        return product;
     }
 }
