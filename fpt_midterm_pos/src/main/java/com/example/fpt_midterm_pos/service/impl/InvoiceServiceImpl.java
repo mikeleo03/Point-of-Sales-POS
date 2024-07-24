@@ -111,7 +111,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
             // Check whether the product actually exists using the ID on the product repo
-            Product product = productRepository.findById(detailDTO.getProduct().getId())
+            Product product = productRepository.findById(detailDTO.getId().getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             // Re-validate the product status
@@ -125,6 +125,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             // Since the repo only returning active product, it already validated
             invoiceDetail.setProduct(product);
+            invoiceDetail.setProductName(product.getName());
             invoiceDetail.setQuantity(detailDTO.getQuantity());
             invoiceDetail.setPrice(product.getPrice());
             invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());  // Amount = price * quantity
@@ -173,7 +174,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceDetail> updatedInvoiceDetails = new ArrayList<>();
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
-            Product product = productRepository.findById(detailDTO.getProduct().getId())
+            Product product = productRepository.findById(detailDTO.getId().getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             if (product.getStatus() != Status.Active) {
@@ -183,6 +184,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             InvoiceDetail invoiceDetail = new InvoiceDetail();
             invoiceDetail.setInvoice(existingInvoice);
             invoiceDetail.setProduct(product);
+            invoiceDetail.setProductName(product.getName());
             invoiceDetail.setQuantity(detailDTO.getQuantity());
             invoiceDetail.setPrice(product.getPrice());
             invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());

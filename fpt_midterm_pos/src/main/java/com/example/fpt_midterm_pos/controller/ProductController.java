@@ -1,6 +1,7 @@
 package com.example.fpt_midterm_pos.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -65,17 +66,17 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
+    public Product updateProduct(@PathVariable UUID id, @RequestBody ProductDTO productDTO) {
         return productService.updateProduct(id, productDTO);
     }
 
     @PutMapping("/active/{id}")
-    public Product updateProductStatusActive(@PathVariable String id) {
+    public Product updateProductStatusActive(@PathVariable UUID id) {
         return productService.updateProductStatus(id, Status.Active);
     }
 
     @PutMapping("/deactive/{id}")
-    public Product updateProductStatusDeactive(@PathVariable String id) {
+    public Product updateProductStatusDeactive(@PathVariable UUID id) {
         return productService.updateProductStatus(id, Status.Deactive);
     }
 

@@ -1,17 +1,13 @@
 package com.example.fpt_midterm_pos.dto;
 
-import java.time.LocalDate;
-
 import com.example.fpt_midterm_pos.data.model.Status;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Data
 @NoArgsConstructor

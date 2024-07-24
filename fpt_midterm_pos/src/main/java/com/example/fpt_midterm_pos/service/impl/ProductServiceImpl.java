@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(String id, ProductDTO productDTO) {
-        Optional<Product> productOpt = productRepository.findById(id); // Use id directly as String
+    public Product updateProduct(UUID id, ProductDTO productDTO) {
+        Optional<Product> productOpt = productRepository.findById(id);
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
             product.setName(productDTO.getName());
@@ -82,8 +83,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProductStatus(String id, Status status) {
-        Optional<Product> productOpt = productRepository.findById(id); // Use id directly as String
+    public Product updateProductStatus(UUID id, Status status) {
+        Optional<Product> productOpt = productRepository.findById(id);
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
             product.setStatus(status);

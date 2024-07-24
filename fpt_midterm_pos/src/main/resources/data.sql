@@ -38,6 +38,7 @@ CREATE TABLE InvoiceDetails (
     productID CHAR(36),
     quantity INT(10),
     productPrice INT(10),
+    productName VARCHAR(255),
     amount INT(10),
     createdAt DATETIME,
     updatedAt DATETIME,
