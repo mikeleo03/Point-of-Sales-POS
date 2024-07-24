@@ -6,9 +6,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +30,7 @@ import com.example.fpt_midterm_pos.data.repository.ProductRepository;
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceDetailDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
+import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.InvoiceMapper;
 import com.example.fpt_midterm_pos.service.InvoiceService;
@@ -88,7 +89,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public Invoice createInvoice(InvoiceDTO invoiceDTO) {
+    public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {
         // 1. Select the customer
         // The main idea is by looking the invoice customer ID and browse on customer repo
         Customer customer = customerRepository.findById(invoiceDTO.getCustomerId())
@@ -119,6 +120,11 @@ public class InvoiceServiceImpl implements InvoiceService {
             if (product.getStatus() != Status.Active) {
                 throw new IllegalArgumentException("Product is not active");
             }
+            
+            // And request quantity
+            if (product.getQuantity() < detailDTO.getQuantity()) {
+                throw new IllegalArgumentException("Insufficient product stock");
+            }
 
             // If valid, then create invoice detail
             // Start from the key
@@ -135,12 +141,15 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceDetail.setQuantity(detailDTO.getQuantity());
             invoiceDetail.setPrice(product.getPrice());
             invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());  // Amount = price * quantity
-            invoiceDetail.setCreatedAt(new Date());
-            invoiceDetail.setUpdatedAt(new Date());
+            invoiceDetail.setCreatedAt(savedInvoice.getCreatedAt());
+            invoiceDetail.setUpdatedAt(savedInvoice.getUpdatedAt());
             invoiceDetails.add(invoiceDetail);
 
             // Update product quantity
             product.setQuantity(product.getQuantity() - detailDTO.getQuantity());
+            if (product.getQuantity() < 0) {
+                throw new IllegalArgumentException("Insufficient product stock");
+            }
             productRepository.save(product);
 
             totalAmount += invoiceDetail.getAmount();
@@ -154,12 +163,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         // Set list of products for the invoice
         savedInvoice.setInvoiceDetails(invoiceDetails);
 
-        return invoiceRepository.save(savedInvoice);
+        return invoiceMapper.toInvoiceDTO(invoiceRepository.save(savedInvoice));
     }
 
     @Override
     @Transactional
-    public Invoice updateInvoice(UUID id, InvoiceDTO invoiceDTO) throws BadRequestException {
+    public InvoiceDTO updateInvoice(UUID id, InvoiceDTO invoiceDTO) throws BadRequestException {
         // Check if the invoice actually exists
         Invoice existingInvoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
@@ -181,25 +190,55 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceDetail> updatedInvoiceDetails = new ArrayList<>();
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
+            // Check if the product exists
             Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
+            // Validate the product status
             if (product.getStatus() != Status.Active) {
                 throw new BadRequestException("Product is not active");
             }
 
+            // Modify based on the existing invoice
+            Optional<InvoiceDetail> existingDetailOpt = existingInvoice.getInvoiceDetails().stream()
+                .filter(detail -> detail.getProduct().getId().equals(detailDTO.getProductId()))
+                .findFirst();
+
+            // Calculate the diifs
+            int quantityDifference = detailDTO.getQuantity();
+            if (existingDetailOpt.isPresent()) {
+                InvoiceDetail existingDetail = existingDetailOpt.get();
+                quantityDifference -= existingDetail.getQuantity();
+                updatedInvoiceDetails.remove(existingDetail);
+            }
+
+            // Validate
+            if (product.getQuantity() < quantityDifference) {
+                throw new IllegalArgumentException("Insufficient product stock");
+            }
+
+            // Start from the key
+            InvoiceDetailKey key = new InvoiceDetailKey(existingInvoice.getId(), detailDTO.getProductId());
+            
+            // Managing the invoice detail
             InvoiceDetail invoiceDetail = new InvoiceDetail();
+            invoiceDetail.setId(key);
             invoiceDetail.setInvoice(existingInvoice);
+
             invoiceDetail.setProduct(product);
             invoiceDetail.setProductName(product.getName());
             invoiceDetail.setQuantity(detailDTO.getQuantity());
             invoiceDetail.setPrice(product.getPrice());
             invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());
+            invoiceDetail.setCreatedAt(existingInvoice.getCreatedAt());
             invoiceDetail.setUpdatedAt(new Date());
             updatedInvoiceDetails.add(invoiceDetail);
 
             // Update product quantity
-            product.setQuantity(product.getQuantity() - detailDTO.getQuantity());
+            product.setQuantity(product.getQuantity() - quantityDifference);
+            if (product.getQuantity() < 0) {
+                throw new IllegalArgumentException("Insufficient product stock");
+            }
             productRepository.save(product);
 
             totalAmount += invoiceDetail.getAmount();
@@ -211,7 +250,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         existingInvoice.setAmount(totalAmount);
         existingInvoice.setInvoiceDetails(updatedInvoiceDetails);
 
-        return invoiceRepository.save(existingInvoice);
+        return invoiceMapper.toInvoiceDTO(invoiceRepository.save(existingInvoice));
     }
 
     @Override
