@@ -61,6 +61,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product save(ProductDTO productDTO) {
         Product product = productMapper.toEntity(productDTO);
+        if (product.getId() == null) {
+            product.setId(UUID.randomUUID()); // Generate a new UUID if it's not already set
+        }
         product.setStatus(Status.Active);  // Ensure the product is set to active when saving
         product.setCreatedAt(LocalDate.now());
         product.setUpdatedAt(LocalDate.now());

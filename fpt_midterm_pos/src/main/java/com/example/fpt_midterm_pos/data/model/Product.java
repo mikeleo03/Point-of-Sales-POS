@@ -25,10 +25,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-
     @Id
-    @Column(name = "ID", nullable = false)
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
+    @Column(name = "ID", columnDefinition = "BINARY(36)", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotBlank(message = "Name is mandatory")
