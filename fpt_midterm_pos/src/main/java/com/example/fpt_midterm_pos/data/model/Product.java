@@ -1,6 +1,5 @@
 package com.example.fpt_midterm_pos.data.model;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -26,8 +25,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Product {
 
     @Id
     @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
