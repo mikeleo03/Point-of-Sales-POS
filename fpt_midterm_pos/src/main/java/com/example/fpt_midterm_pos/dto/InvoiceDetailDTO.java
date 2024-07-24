@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InvoiceDetailDTO {
     private InvoiceDetailKey id;
-    private ProductDTO product;
     private Integer quantity;
     private Double price;
     private Double amount;
