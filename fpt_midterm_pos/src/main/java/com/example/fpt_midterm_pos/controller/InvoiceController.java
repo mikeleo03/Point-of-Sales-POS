@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.fpt_midterm_pos.data.model.Invoice;
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
@@ -45,9 +46,9 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
+    public ResponseEntity<Invoice> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
         try {
-            InvoiceDTO createdInvoice = invoiceService.createInvoice(invoiceDTO);
+            Invoice createdInvoice = invoiceService.createInvoice(invoiceDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle resource not found
@@ -59,9 +60,9 @@ public class InvoiceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceDTO invoiceDTO) {
+    public ResponseEntity<Invoice> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceDTO invoiceDTO) {
         try {
-            InvoiceDTO updatedInvoice = invoiceService.updateInvoice(id, invoiceDTO);
+            Invoice updatedInvoice = invoiceService.updateInvoice(id, invoiceDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(updatedInvoice);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle resource not found

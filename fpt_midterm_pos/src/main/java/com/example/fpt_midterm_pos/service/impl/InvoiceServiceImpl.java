@@ -88,7 +88,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {
+    public Invoice createInvoice(InvoiceDTO invoiceDTO) {
         // 1. Select the customer
         // The main idea is by looking the invoice customer ID and browse on customer repo
         Customer customer = customerRepository.findById(invoiceDTO.getCustomerId())
@@ -153,14 +153,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         savedInvoice.setAmount(totalAmount);
         // Set list of products for the invoice
         savedInvoice.setInvoiceDetails(invoiceDetails);
-        invoiceRepository.save(savedInvoice);
 
-        return invoiceMapper.toInvoiceDTO(savedInvoice);
+        return invoiceRepository.save(savedInvoice);
     }
 
     @Override
     @Transactional
-    public InvoiceDTO updateInvoice(UUID id, InvoiceDTO invoiceDTO) throws BadRequestException {
+    public Invoice updateInvoice(UUID id, InvoiceDTO invoiceDTO) throws BadRequestException {
         // Check if the invoice actually exists
         Invoice existingInvoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
@@ -211,9 +210,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         // Update the invoice amount
         existingInvoice.setAmount(totalAmount);
         existingInvoice.setInvoiceDetails(updatedInvoiceDetails);
-        invoiceRepository.save(existingInvoice);
 
-        return invoiceMapper.toInvoiceDTO(existingInvoice);
+        return invoiceRepository.save(existingInvoice);
     }
 
     @Override
