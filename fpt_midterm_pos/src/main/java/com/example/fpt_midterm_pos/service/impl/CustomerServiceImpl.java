@@ -40,10 +40,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO updateCustomer(UUID id, CustomerDTO customerDTO) {
+    public CustomerDTO updateCustomer(UUID id, CustomerSaveDTO customerSaveDTO) {
         Customer custCheck = customerRepository.findById(id).orElse(null);
         if(custCheck != null) {
-            Customer customer = customerMapper.toCustomer(customerDTO);
+            Customer customer = customerMapper.toCustomer(customerSaveDTO);
             custCheck.setName(customer.getName());
             custCheck.setPhoneNumber(customer.getPhoneNumber());
             custCheck.setUpdatedAt(new Date());
@@ -58,9 +58,9 @@ public class CustomerServiceImpl implements CustomerService {
         Customer custCheck = customerRepository.findById(id).orElse(null);
         if(custCheck != null) {
             if(status != custCheck.getStatus()) {
-                if(status == Status.Active) {
+                if(custCheck.getStatus() == Status.Active) {
                     custCheck.setStatus(Status.Deactive);
-                } else if(status == Status.Deactive) {
+                } else if(custCheck.getStatus() == Status.Deactive) {
                     custCheck.setStatus(Status.Active);
                 }
                 Customer updatedCustomer = customerRepository.save(custCheck);

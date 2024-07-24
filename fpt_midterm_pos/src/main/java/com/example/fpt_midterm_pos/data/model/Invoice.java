@@ -1,12 +1,22 @@
 package com.example.fpt_midterm_pos.data.model;
 
-import jakarta.persistence.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import java.util.Date;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -16,10 +26,11 @@ import java.util.UUID;
 public class Invoice {
     @Id
     @Column(name = "ID", nullable = false)
+    @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, length = 10)
-    private int amount;
+    @Column(nullable = false)
+    private Double amount;
 
     @Column(nullable = false)
     private Date date;
@@ -33,4 +44,7 @@ public class Invoice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerId", nullable=false, insertable = false, updatable = false)
     private Customer customer;
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<InvoiceDetail> invoiceDetails;
 }
