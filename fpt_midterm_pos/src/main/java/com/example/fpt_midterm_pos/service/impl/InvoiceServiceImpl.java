@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +38,8 @@ import com.example.fpt_midterm_pos.service.InvoiceService;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
+
+    private static final Logger logger = LoggerFactory.getLogger(InvoiceService.class);
 
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -85,16 +90,86 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoices.map(invoiceMapper::toInvoiceDTO);
     }
 
+    // @Override
+    // @Transactional
+    // public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {
+    //     // 1. Select the customer
+    //     // The main idea is by looking the invoice customer ID and browse on customer repo
+    //     Customer customer = customerRepository.findById(invoiceDTO.getCustomerId())
+    //         .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+    //     // 2. Add new invoice
+    //     // Initialize a new invoice with initial value
+    //     Invoice invoice = new Invoice();
+    //     invoice.setCustomer(customer);
+    //     invoice.setAmount(0.00);    // Set the initial amount to 0.00
+    //     invoice.setDate(invoiceDTO.getDate());
+    //     invoice.setCreatedAt(new Date());
+    //     invoice.setUpdatedAt(new Date());
+    //     // Save the invoice
+    //     Invoice savedInvoice = invoiceRepository.save(invoice);
+
+    //     // 3. Add product to invoice
+    //     // This can be done through invoice details
+    //     double totalAmount = 0.00;
+    //     List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+
+    //     for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
+    //         // Check whether the product actually exists using the ID on the product repo
+    //         Product product = productRepository.findById(detailDTO.getProductId())
+    //                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+            
+    //         // Re-validate the product status
+    //         if (product.getStatus() != Status.Active) {
+    //             throw new IllegalArgumentException("Product is not active");
+    //         }
+
+    //         // If valid, then create invoice detail
+    //         InvoiceDetail invoiceDetail = new InvoiceDetail();
+    //         invoiceDetail.setInvoice(savedInvoice);
+
+    //         // Since the repo only returning active product, it already validated
+    //         invoiceDetail.setProduct(product);
+    //         invoiceDetail.setProductName(product.getName());
+    //         invoiceDetail.setQuantity(detailDTO.getQuantity());
+    //         invoiceDetail.setPrice(product.getPrice());
+    //         invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());  // Amount = price * quantity
+    //         invoiceDetails.add(invoiceDetail);
+
+    //         // Update product quantity
+    //         product.setQuantity(product.getQuantity() - detailDTO.getQuantity());
+    //         productRepository.save(product);
+
+    //         totalAmount += invoiceDetail.getAmount();
+    //     }
+
+    //     // Save all the invoice details
+    //     invoiceDetailRepository.saveAll(invoiceDetails);
+
+    //     // Update the invoice amount
+    //     savedInvoice.setAmount(totalAmount);
+    //     // Set list of products for the invoice
+    //     savedInvoice.setInvoiceDetails(invoiceDetails);
+    //     invoiceRepository.save(savedInvoice);
+
+    //     return invoiceMapper.toInvoiceDTO(savedInvoice);
+    // }
+
     @Override
     @Transactional
     public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {
+        logger.info("Starting to create invoice for customer ID: {}", invoiceDTO.getCustomerId());
+
         // 1. Select the customer
-        // The main idea is by looking the invoice customer ID and browse on customer repo
+        logger.debug("Fetching customer with ID: {}", invoiceDTO.getCustomerId());
         Customer customer = customerRepository.findById(invoiceDTO.getCustomerId())
-            .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            .orElseThrow(() -> {
+                logger.error("Customer not found for ID: {}", invoiceDTO.getCustomerId());
+                return new ResourceNotFoundException("Customer not found");
+            });
 
         // 2. Add new invoice
-        // Initialize a new invoice with initial value
+        logger.debug("Initializing a new invoice");
         Invoice invoice = new Invoice();
         invoice.setCustomer(customer);
         invoice.setAmount(0.00);    // Set the initial amount to 0.00
@@ -102,33 +177,34 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setCreatedAt(new Date());
         invoice.setUpdatedAt(new Date());
         // Save the invoice
+        logger.debug("Saving the invoice");
         Invoice savedInvoice = invoiceRepository.save(invoice);
 
         // 3. Add product to invoice
-        // This can be done through invoice details
         double totalAmount = 0.00;
         List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
-            // Check whether the product actually exists using the ID on the product repo
+            logger.debug("Processing product with ID: {}", detailDTO.getProductId());
             Product product = productRepository.findById(detailDTO.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-            
-            // Re-validate the product status
+                    .orElseThrow(() -> {
+                        logger.error("Product not found for ID: {}", detailDTO.getProductId());
+                        return new ResourceNotFoundException("Product not found");
+                    });
+
             if (product.getStatus() != Status.Active) {
+                logger.error("Product with ID: {} is not active", detailDTO.getProductId());
                 throw new IllegalArgumentException("Product is not active");
             }
 
-            // If valid, then create invoice detail
+            // Create invoice detail
             InvoiceDetail invoiceDetail = new InvoiceDetail();
             invoiceDetail.setInvoice(savedInvoice);
-
-            // Since the repo only returning active product, it already validated
             invoiceDetail.setProduct(product);
             invoiceDetail.setProductName(product.getName());
             invoiceDetail.setQuantity(detailDTO.getQuantity());
             invoiceDetail.setPrice(product.getPrice());
-            invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());  // Amount = price * quantity
+            invoiceDetail.setAmount(product.getPrice() * detailDTO.getQuantity());
             invoiceDetails.add(invoiceDetail);
 
             // Update product quantity
@@ -138,15 +214,15 @@ public class InvoiceServiceImpl implements InvoiceService {
             totalAmount += invoiceDetail.getAmount();
         }
 
-        // Save all the invoice details
+        logger.debug("Saving all invoice details");
         invoiceDetailRepository.saveAll(invoiceDetails);
 
         // Update the invoice amount
         savedInvoice.setAmount(totalAmount);
-        // Set list of products for the invoice
         savedInvoice.setInvoiceDetails(invoiceDetails);
         invoiceRepository.save(savedInvoice);
 
+        logger.info("Invoice created successfully with ID: {}", savedInvoice.getId());
         return invoiceMapper.toInvoiceDTO(savedInvoice);
     }
 
