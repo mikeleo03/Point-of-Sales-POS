@@ -11,7 +11,10 @@ import com.example.fpt_midterm_pos.dto.InvoiceDTO;
 public interface InvoiceMapper {
     InvoiceMapper INSTANCE = Mappers.getMapper(InvoiceMapper.class);
 
-    @Mapping(source = "invoiceDetails", target = "invoiceDetails")
     @Mapping(source = "customer.id", target = "customerId")
+    @Mapping(source = "invoiceDetails", target = "invoiceDetails")
     InvoiceDTO toInvoiceDTO(Invoice invoice);
+
+    @Mapping(source = "customerId", target = "customer.id")
+    Invoice toInvoice(InvoiceDTO invoiceDTO);
 }
