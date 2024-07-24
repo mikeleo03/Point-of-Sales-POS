@@ -8,11 +8,13 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
+    private UUID Id;
     @NotBlank(message = "Name is mandatory")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
     private String name;

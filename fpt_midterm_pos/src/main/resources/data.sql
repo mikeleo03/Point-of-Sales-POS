@@ -1,6 +1,6 @@
 -- Initialize table with DDL
 -- Create `Customer` table
-CREATE TABLE Customer (
+CREATE TABLE customer (
     ID CHAR(36) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     phoneNumber VARCHAR(255),
@@ -10,7 +10,7 @@ CREATE TABLE Customer (
 );
 
 -- Create `Product` table
-CREATE TABLE Product (
+CREATE TABLE product (
     ID CHAR(36) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
@@ -22,18 +22,18 @@ CREATE TABLE Product (
 
 
 -- Create `Invoice` table
-CREATE TABLE Invoice (
+CREATE TABLE invoice (
     ID CHAR(36) PRIMARY KEY,
     amount INT(10) NOT NULL,
     date DATE NOT NULL,
     createdAt DATETIME,
     updatedAt DATETIME,
     customerId CHAR(36),
-    FOREIGN KEY (customerId) REFERENCES Customer(ID)
+    FOREIGN KEY (customerId) REFERENCES customer(ID)
 );
 
 -- Create `InvoiceDetails` table
-CREATE TABLE InvoiceDetails (
+CREATE TABLE invoice_details (
     invoiceID CHAR(36),
     productID CHAR(36),
     quantity INT(10),
@@ -43,6 +43,6 @@ CREATE TABLE InvoiceDetails (
     createdAt DATETIME,
     updatedAt DATETIME,
     PRIMARY KEY (invoiceID, productID),
-    FOREIGN KEY (invoiceID) REFERENCES Invoice(ID),
-    FOREIGN KEY (productID) REFERENCES Product(ID)
+    FOREIGN KEY (invoiceID) REFERENCES invoice(ID),
+    FOREIGN KEY (productID) REFERENCES product(ID)
 );

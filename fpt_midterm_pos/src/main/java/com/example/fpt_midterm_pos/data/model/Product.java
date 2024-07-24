@@ -17,19 +17,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "product")
+@Table(name = "Product")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
 
+    // @Id
+    // @GeneratedValue(generator = "uuid2")
+    // @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    // @Column(name = "ID", updatable = false)
+    // @Getter
+    // @Setter
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
     private UUID id;
+    
 
     @NotBlank(message = "Name is mandatory")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
