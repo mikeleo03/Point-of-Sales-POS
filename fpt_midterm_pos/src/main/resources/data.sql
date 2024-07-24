@@ -43,6 +43,6 @@ CREATE TABLE InvoiceDetails (
     createdAt DATETIME,
     updatedAt DATETIME,
     PRIMARY KEY (invoiceID, productID),
-    FOREIGN KEY (invoiceID) REFERENCES Invoice(ID),
-    FOREIGN KEY (productID) REFERENCES Product(ID)
+    FOREIGN KEY (invoiceID) REFERENCES invoice(ID),
+    FOREIGN KEY (productID) REFERENCES product(ID)
 );

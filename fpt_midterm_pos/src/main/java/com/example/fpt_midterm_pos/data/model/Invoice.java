@@ -33,7 +33,7 @@ public class Invoice {
     @Column(nullable = false)
     private Double amount;
 
-    @Column(nullable = false)
+    @Column(name = "date", nullable = false)
     private Date date;
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class Invoice {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customerId", nullable=false, insertable = false, updatable = false)
+    @JoinColumn(name = "customerId", nullable = false, insertable = false, updatable = false)
     private Customer customer;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
