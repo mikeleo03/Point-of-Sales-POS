@@ -90,7 +90,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {
         // 1. Select the customer
         // The main idea is by looking the invoice customer ID and browse on customer repo
-        Customer customer = customerRepository.findById(invoiceDTO.getCustomer().getId())
+        Customer customer = customerRepository.findById(invoiceDTO.getCustomerId())
             .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
         // 2. Add new invoice
@@ -111,7 +111,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
             // Check whether the product actually exists using the ID on the product repo
-            Product product = productRepository.findById(detailDTO.getId().getProductId())
+            Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             // Re-validate the product status
@@ -174,7 +174,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceDetail> updatedInvoiceDetails = new ArrayList<>();
 
         for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
-            Product product = productRepository.findById(detailDTO.getId().getProductId())
+            Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             if (product.getStatus() != Status.Active) {
