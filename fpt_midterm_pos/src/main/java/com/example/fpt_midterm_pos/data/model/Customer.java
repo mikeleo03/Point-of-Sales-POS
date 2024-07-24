@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "Customer")
 public class Customer {
     @Id
-    @Column(name = "ID", nullable = false)
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
+    @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)

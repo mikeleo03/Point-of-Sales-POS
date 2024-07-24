@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
-import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.service.InvoiceService;
 
 @RestController
@@ -46,30 +44,14 @@ public class InvoiceController {
 
     @PostMapping
     public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
-        try {
-            InvoiceDTO createdInvoice = invoiceService.createInvoice(invoiceDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle resource not found
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Handle invalid product status
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
-        }
+        InvoiceDTO createdInvoice = invoiceService.createInvoice(invoiceDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceDTO invoiceDTO) {
-        try {
-            InvoiceDTO updatedInvoice = invoiceService.updateInvoice(id, invoiceDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(updatedInvoice);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle resource not found
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Handle invalid product status
-        } catch (BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
-        }
+        InvoiceDTO updatedInvoice = invoiceService.updateInvoice(id, invoiceDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedInvoice);
     }
 
     @GetMapping("/{id}/export")

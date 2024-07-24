@@ -14,7 +14,7 @@ import com.example.fpt_midterm_pos.data.model.Invoice;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
-    
+
     @Query("SELECT i FROM Invoice i WHERE " +
            "(:customerName IS NULL OR i.customer.name LIKE %:customerName%) AND " +
            "(:customerId IS NULL OR i.customer.id = :customerId) AND " +
@@ -26,4 +26,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
                                 @Param("endDate") Date endDate,
                                 @Param("month") Integer month,
                                 Pageable pageable);
+    
 }

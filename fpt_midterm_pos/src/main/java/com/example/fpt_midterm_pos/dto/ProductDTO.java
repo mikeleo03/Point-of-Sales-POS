@@ -1,7 +1,5 @@
 package com.example.fpt_midterm_pos.dto;
 
-import com.example.fpt_midterm_pos.data.model.Status;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -19,8 +17,6 @@ public class ProductDTO {
 
     @Min(value = 0, message = "Price must be a positive number")
     private Double price;
-
-    private Status status;
 
     private Integer quantity;
 }
