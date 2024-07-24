@@ -1,17 +1,24 @@
 package com.example.fpt_midterm_pos.data.model;
 
-import jakarta.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-
-import java.io.Serializable;
-import java.sql.Date;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "product")
@@ -34,11 +41,11 @@ public class Product implements Serializable {
     private String name;
 
     @Column(name = "price")
-    private int price;
+    private Double price;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.Active;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -48,9 +55,4 @@ public class Product implements Serializable {
 
     @Column(name = "updatedAt")
     private LocalDate updatedAt;
-
-    public enum Status {
-        Active,
-        Deactive
-    }
 }
