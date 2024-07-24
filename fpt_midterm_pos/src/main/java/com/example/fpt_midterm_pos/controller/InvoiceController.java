@@ -38,10 +38,10 @@ public class InvoiceController {
         Page<InvoiceDTO> invoices = invoiceService.findByCriteria(criteria, pageable);
 
         if (invoices.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.ok(invoices);
+        return ResponseEntity.status(HttpStatus.CREATED).body(invoices);
     }
 
     @PostMapping
