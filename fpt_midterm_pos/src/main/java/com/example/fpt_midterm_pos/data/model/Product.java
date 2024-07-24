@@ -1,6 +1,6 @@
 package com.example.fpt_midterm_pos.data.model;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -47,8 +47,8 @@ public class Product {
     private Integer quantity;
 
     @Column(name = "createdAt")
-    private LocalDate createdAt;
+    private Date createdAt;
 
     @Column(name = "updatedAt")
-    private LocalDate updatedAt;
+    private Date updatedAt;
 }

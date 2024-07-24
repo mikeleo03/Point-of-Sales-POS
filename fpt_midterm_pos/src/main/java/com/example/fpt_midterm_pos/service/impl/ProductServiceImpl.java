@@ -2,6 +2,7 @@ package com.example.fpt_midterm_pos.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -68,8 +69,8 @@ public class ProductServiceImpl implements ProductService {
     public Product save(ProductDTO productDTO) {
         Product product = productMapper.toEntity(productDTO);
         product.setStatus(Status.Active); // Ensure the product is set to active when saving
-        product.setCreatedAt(LocalDate.now());
-        product.setUpdatedAt(LocalDate.now());
+        product.setCreatedAt(new Date());
+        product.setUpdatedAt(new Date());
         return productRepository.save(product);
     }
 
@@ -81,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
             product.setName(productDTO.getName());
             product.setPrice(productDTO.getPrice());
             product.setQuantity(productDTO.getQuantity());
-            product.setUpdatedAt(LocalDate.now());
+            product.setUpdatedAt(new Date());
             return productRepository.save(product);
         } else {
             throw new RuntimeException("Product not found");
