@@ -104,7 +104,8 @@ public class InvoiceController {
             @ApiResponse(responseCode = "200", description = "Export Excel successfully"),
             @ApiResponse(responseCode = "404", description = "Invoice not found")
     })
-    @GetMapping("/export/excel/v2")
+
+    @GetMapping("/export/excel")
     public void exportInvoiceToExcel(
             InvoiceDetailsSearchCriteriaDTO criteria,
             HttpServletResponse response) throws IOException {
