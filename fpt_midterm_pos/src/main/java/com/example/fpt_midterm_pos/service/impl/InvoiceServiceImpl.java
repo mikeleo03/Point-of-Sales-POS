@@ -28,7 +28,7 @@ import com.example.fpt_midterm_pos.data.repository.InvoiceDetailRepository;
 import com.example.fpt_midterm_pos.data.repository.InvoiceRepository;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceDetailDTO;
+import com.example.fpt_midterm_pos.dto.InvoiceDetailSaveDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
@@ -111,7 +111,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         double totalAmount = 0.00;
         List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
-        for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
+        for (InvoiceDetailSaveDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
             // Check whether the product actually exists using the ID on the product repo
             Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -189,7 +189,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         double totalAmount = 0.00;
         List<InvoiceDetail> updatedInvoiceDetails = new ArrayList<>();
 
-        for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
+        for (InvoiceDetailSaveDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
             // Check if the product exists
             Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));

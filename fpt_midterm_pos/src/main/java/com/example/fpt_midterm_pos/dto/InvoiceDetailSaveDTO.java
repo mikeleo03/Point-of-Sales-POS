@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvoiceDetailDTO {
+public class InvoiceDetailSaveDTO {
     private UUID productId;
-    private String productName;
     private Integer quantity;
-    private Double price;
-    private Double amount;
 }
