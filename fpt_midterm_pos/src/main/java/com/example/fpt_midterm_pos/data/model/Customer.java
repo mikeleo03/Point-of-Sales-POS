@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,24 +34,24 @@ public class Customer {
 
     @NotBlank(message = "Name is mandatory")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @NotBlank(message = "Phone is mandatory")
     @Pattern(regexp = "^\\+62[0-9]{9,13}$", message = "Phone number must start with +62 and contain 9 to 13 digits")
-    @Column(nullable = false)
+    @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private Status status = Status.Active;
 
-    @Column(nullable = false)
+    @Column(name = "createdAt", nullable = false)
     private Date createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Invoice> invoice;
 }

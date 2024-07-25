@@ -14,41 +14,39 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Entity
-@Table(name = "Product")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "Product")
 public class Product {
     @Id
     @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
 
     @NotBlank(message = "Name is mandatory")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "price")
+    @NotBlank(message = "Price is mandatory")
+    @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private Status status = Status.Active;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "createdAt")
+    @Column(name = "createdAt", nullable = false)
     private Date createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 }
