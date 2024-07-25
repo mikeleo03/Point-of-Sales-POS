@@ -31,9 +31,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+
     @GetMapping
-    public ResponseEntity<Page<ProductShowDTO>> getProductsByCriteria(ProductSearchCriteriaDTO criteria,
-            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Page<ProductShowDTO>> getProductsByCriteria(ProductSearchCriteriaDTO criteria, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductShowDTO> products = productService.findByCriteria(criteria, pageable);
 
@@ -42,8 +42,8 @@ public class ProductController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(products);
-        // return productService.findByCriteria(criteria, pageable);
     }
+
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductSaveDTO productSaveDTO) {
@@ -69,17 +69,6 @@ public class ProductController {
         return ResponseEntity.ok(productDTO);
     }
 
-//    @PostMapping("/upload")
-//    public ResponseEntity<List<ProductSaveDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
-//        try {
-//            List<ProductSaveDTO> products = productService.saveProductsFromCSV(file);
-//            return new ResponseEntity<>(products, HttpStatus.OK);
-//        } catch (IllegalArgumentException e) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
     @PostMapping("/upload")
     public ResponseEntity<List<ProductDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
         try {

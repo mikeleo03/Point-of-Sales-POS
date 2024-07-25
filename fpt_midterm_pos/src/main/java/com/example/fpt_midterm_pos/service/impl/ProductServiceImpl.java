@@ -60,9 +60,10 @@ public class ProductServiceImpl implements ProductService {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         // Get the product data from the repo
-        Page<Product> products = productRepository.findByFilters(productName, minPrice, maxPrice, sortedPageable);
+        Page<Product> products = productRepository.findByFilters(Status.Active, productName, minPrice, maxPrice, sortedPageable);
         return products.map(productMapper::toShowDTO);
     }
+
 
     @Override
     public ProductDTO save(ProductSaveDTO productSaveDTO) {
@@ -97,8 +98,10 @@ public class ProductServiceImpl implements ProductService {
             if(status != prodCheck.getStatus()) {
                 if(prodCheck.getStatus() == Status.Active) {
                     prodCheck.setStatus(Status.Deactive);
+                    prodCheck.setUpdatedAt(new Date());
                 } else if(prodCheck.getStatus() == Status.Deactive) {
                     prodCheck.setStatus(Status.Active);
+                    prodCheck.setUpdatedAt(new Date());
                 }
                 Product updatedProduct = productRepository.save(prodCheck);
                 return productMapper.toProductDTO(updatedProduct);
