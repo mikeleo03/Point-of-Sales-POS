@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.example.fpt_midterm_pos.dto.*;
+import com.example.fpt_midterm_pos.utils.ExcelGenerator;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +32,6 @@ import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
 import com.example.fpt_midterm_pos.data.repository.InvoiceDetailRepository;
 import com.example.fpt_midterm_pos.data.repository.InvoiceRepository;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
-import com.example.fpt_midterm_pos.dto.InvoiceDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceDetailSaveDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
-import com.example.fpt_midterm_pos.dto.RevenueShowDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.InvoiceMapper;
@@ -301,6 +299,15 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
 
         return pdfGenerator.generateInvoicePDF(invoice);
+    }
+
+    @Override
+    public Workbook exportInvoiceToExcelByFilter(InvoiceDetailsSearchCriteriaDTO criteria) {
+        UUID customerId = criteria.getCustomerId();
+        Integer month = criteria.getMonth();
+        Integer year = criteria.getYear();
+        List<Invoice> invoices = invoiceRepository.findByFiltersForExcel(customerId, month, year);
+        return ExcelGenerator.generateInvoiceExcel(invoices);
     }
 
     /**

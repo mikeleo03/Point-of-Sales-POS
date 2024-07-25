@@ -1,5 +1,6 @@
 package com.example.fpt_midterm_pos.service;
 
+import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
 import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
@@ -23,4 +24,6 @@ public interface CustomerService {
 
     // Updates the status of an existing customer.
     CustomerDTO updateCustomerStatus(UUID id, Status status);
+
+    Customer findById(UUID id);
 }
