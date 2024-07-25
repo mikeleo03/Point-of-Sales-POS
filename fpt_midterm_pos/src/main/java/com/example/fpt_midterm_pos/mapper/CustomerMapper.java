@@ -12,8 +12,10 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {InvoiceMapper.class})
 public interface CustomerMapper {
+    
     CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
+    // Customer - CustomerDTO
     CustomerDTO toCustomerDTO(Customer customer);
 
     @Mapping(target = "createdAt", ignore = true)
@@ -21,6 +23,7 @@ public interface CustomerMapper {
     @Mapping(target = "invoice", ignore = true)
     Customer toCustomer(CustomerDTO customerDTO);
 
+    // Customer - CustomerShowDTO
     CustomerShowDTO toCustomerShowDTO(Customer customer);
 
     @Mapping(target = "status", ignore = true)
@@ -29,6 +32,7 @@ public interface CustomerMapper {
     @Mapping(target = "invoice", ignore = true)
     Customer toCustomer(CustomerShowDTO customerShowDTO);
 
+    // Customer - CustomerSaveDTO
     CustomerSaveDTO toCustomerSaveDTO(Customer customer);
 
     @Mapping(target = "id", ignore = true)
