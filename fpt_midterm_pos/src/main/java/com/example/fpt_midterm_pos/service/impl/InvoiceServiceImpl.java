@@ -4,12 +4,15 @@ package com.example.fpt_midterm_pos.service.impl;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Calendar;
 
+import org.apache.poi.hpsf.Decimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,11 +35,13 @@ import com.example.fpt_midterm_pos.dto.InvoiceDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceDetailSaveDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
+import com.example.fpt_midterm_pos.dto.RevenueShowDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.InvoiceMapper;
 import com.example.fpt_midterm_pos.service.InvoiceService;
 import com.example.fpt_midterm_pos.utils.PDFGenerator;
+import com.example.fpt_midterm_pos.utils.DateUtils;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -266,5 +271,40 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
 
         return pdfGenerator.generateInvoicePDF(invoice);
+    }
+
+    @Override
+    public RevenueShowDTO getInvoicesRevenue(Date date, String revenueBy) {
+        Double revenueTotal;
+        LocalDate localDate = DateUtils.formatDateToLocalDate(date);
+
+        int year = localDate.getYear();
+        int month = localDate.getMonthValue();
+        int day = localDate.getDayOfMonth();
+
+        RevenueShowDTO revenueShowDTO = new RevenueShowDTO(year, 0, 0, 0.0);
+
+        switch(revenueBy.toLowerCase()) {
+            case "year" -> {
+                revenueTotal = invoiceRepository.findTotalRevenueByYear(year);
+                revenueShowDTO.setAmount(revenueTotal);
+            }
+            case "month" -> {
+                revenueTotal = invoiceRepository.findTotalRevenueByMonth(year, month);
+                revenueShowDTO.setMonth(month);
+                revenueShowDTO.setAmount(revenueTotal);
+            }
+            case "day" -> {
+                revenueTotal = invoiceRepository.findTotalRevenueByDay(date);
+                revenueShowDTO.setMonth(month);
+                revenueShowDTO.setDay(day);
+                revenueShowDTO.setAmount(revenueTotal);
+            }
+            default -> {
+                throw new IllegalArgumentException("Invalid revenueBy parameter");
+            }
+        }
+        
+        return revenueShowDTO;
     }
 }

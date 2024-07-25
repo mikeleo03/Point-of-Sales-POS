@@ -2,6 +2,7 @@ package com.example.fpt_midterm_pos.controller;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
+import com.example.fpt_midterm_pos.dto.RevenueShowDTO;
 import com.example.fpt_midterm_pos.service.InvoiceService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,6 +56,13 @@ public class InvoiceController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(invoices);
+    }
+
+    @Operation(summary = "Create Report Revenue Invoice by Year or Month or Day.")
+    @GetMapping(value = "/revenue")
+    public ResponseEntity<RevenueShowDTO> getRevenue(@RequestParam Date date, @RequestParam String revenueBy) {
+        RevenueShowDTO revenue = invoiceService.getInvoicesRevenue(date, revenueBy);
+        return ResponseEntity.status(HttpStatus.OK).body(revenue);
     }
 
     @Operation(summary = "Create a new invoice.")
