@@ -21,6 +21,13 @@ public class PDFGenerator {
         this.templateEngine = templateEngine;
     }
 
+    /**
+     * Generates a PDF invoice for the given invoice object.
+     *
+     * @param invoice The invoice object containing all the necessary data to generate the PDF.
+     * @return A byte array containing the PDF data.
+     * @throws IOException If an error occurs while processing the HTML to PDF.
+     */
     public byte[] generateInvoicePDF(Invoice invoice) throws IOException {
         // Create a context
         Context context = new Context();
@@ -42,4 +49,3 @@ public class PDFGenerator {
         return stream.toByteArray();
     }
 }
-
