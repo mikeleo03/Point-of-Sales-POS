@@ -3,24 +3,22 @@ package com.example.fpt_midterm_pos.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.fpt_midterm_pos.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
-import com.example.fpt_midterm_pos.dto.ProductDTO;
-import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
 
 public interface ProductService {
 
-    Page<ProductDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable);
+    Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable);
 
-    Product save(ProductDTO productDTO);
+    ProductDTO save(ProductSaveDTO productSaveDTO);
 
-    Product updateProduct(UUID id, ProductDTO productDTO);
+    ProductDTO updateProduct(UUID id, ProductSaveDTO productSaveDTO);
 
-    Product updateProductStatus(UUID id, Status status);
+    ProductDTO updateProductStatus(UUID id, Status status);
 
     List<ProductDTO> saveProductsFromCSV(MultipartFile file);
 }
