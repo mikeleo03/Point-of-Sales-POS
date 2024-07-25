@@ -107,7 +107,7 @@ BEGIN
     DECLARE rand_customer_idx INT;
     DECLARE rand_product_idx INT;
     
-    WHILE i < 20 DO
+    WHILE i < 40 DO
         SET rand_customer_idx = FLOOR(RAND() * 20);
         SET rand_product_idx = FLOOR(RAND() * 20);
         SELECT ID INTO customer_id FROM Customer LIMIT 1 OFFSET rand_customer_idx;

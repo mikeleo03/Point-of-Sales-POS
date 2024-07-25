@@ -163,7 +163,7 @@ public class InvoiceController {
         @ApiResponse(responseCode = "200", description = "Invoice exported successfully"),
         @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
-    @GetMapping("/export/excel")
+    @GetMapping("/excel")
     public void exportInvoiceToExcel(InvoiceDetailsSearchCriteriaDTO criteria, HttpServletResponse response) throws IOException {
         if (criteria.getCustomerId() == null && criteria.getMonth() == null && criteria.getYear() == null) {
             response.setContentType("application/json");
