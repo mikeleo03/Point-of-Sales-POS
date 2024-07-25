@@ -31,9 +31,22 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+//    @GetMapping
+//    public ResponseEntity<Page<ProductShowDTO>> getProductsByCriteria(ProductSearchCriteriaDTO criteria,
+//            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<ProductShowDTO> products = productService.findByCriteria(criteria, pageable);
+//
+//        if (products.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.CREATED).body(products);
+//        // return productService.findByCriteria(criteria, pageable);
+//    }
     @GetMapping
     public ResponseEntity<Page<ProductShowDTO>> getProductsByCriteria(ProductSearchCriteriaDTO criteria,
-            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+                                                                      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductShowDTO> products = productService.findByCriteria(criteria, pageable);
 
@@ -42,8 +55,8 @@ public class ProductController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(products);
-        // return productService.findByCriteria(criteria, pageable);
     }
+
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductSaveDTO productSaveDTO) {
