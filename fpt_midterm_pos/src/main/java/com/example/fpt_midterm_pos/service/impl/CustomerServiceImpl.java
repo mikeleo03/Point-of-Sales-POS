@@ -7,6 +7,7 @@ import com.example.fpt_midterm_pos.service.CustomerService;
 import com.example.fpt_midterm_pos.mapper.CustomerMapper;
 import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
+import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.data.model.Status;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +33,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO createCustomer(CustomerSaveDTO customerSaveDTO) {
         Customer customer = customerMapper.toCustomer(customerSaveDTO);
-        customer.setId(UUID.randomUUID());
         customer.setCreatedAt(new Date());
         customer.setUpdatedAt(new Date());
         Customer savedCustomer = customerRepository.save(customer);
@@ -41,33 +41,30 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO updateCustomer(UUID id, CustomerSaveDTO customerSaveDTO) {
-        Customer custCheck = customerRepository.findById(id).orElse(null);
-        if(custCheck != null) {
-            Customer customer = customerMapper.toCustomer(customerSaveDTO);
-            custCheck.setName(customer.getName());
-            custCheck.setPhoneNumber(customer.getPhoneNumber());
-            custCheck.setUpdatedAt(new Date());
-            Customer updatedCustomer = customerRepository.save(custCheck);
-            return customerMapper.toCustomerDTO(updatedCustomer);
-        }
-        return null;
+        Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        Customer customer = customerMapper.toCustomer(customerSaveDTO);
+        custCheck.setName(customer.getName());
+        custCheck.setPhoneNumber(customer.getPhoneNumber());
+        custCheck.setUpdatedAt(new Date());
+        Customer updatedCustomer = customerRepository.save(custCheck);
+        return customerMapper.toCustomerDTO(updatedCustomer);
     }
 
     @Override
     public CustomerDTO updateCustomerStatus(UUID id, Status status) {
-        Customer custCheck = customerRepository.findById(id).orElse(null);
-        if(custCheck != null) {
-            if(status != custCheck.getStatus()) {
-                if(custCheck.getStatus() == Status.Active) {
-                    custCheck.setStatus(Status.Deactive);
-                } else if(custCheck.getStatus() == Status.Deactive) {
-                    custCheck.setStatus(Status.Active);
-                }
-                Customer updatedCustomer = customerRepository.save(custCheck);
-                return customerMapper.toCustomerDTO(updatedCustomer);
+        Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        if(status != custCheck.getStatus()) {
+            if(custCheck.getStatus() == Status.Active) {
+                custCheck.setStatus(Status.Deactive);
+            } else if(custCheck.getStatus() == Status.Deactive) {
+                custCheck.setStatus(Status.Active);
             }
-            return customerMapper.toCustomerDTO(custCheck);
+            custCheck.setUpdatedAt(new Date());
+            Customer updatedCustomer = customerRepository.save(custCheck);
+            return customerMapper.toCustomerDTO(updatedCustomer);
         }
-        return null;
+        return customerMapper.toCustomerDTO(custCheck);
     }
 }

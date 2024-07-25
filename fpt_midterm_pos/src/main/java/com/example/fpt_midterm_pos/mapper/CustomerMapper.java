@@ -14,10 +14,11 @@ import org.mapstruct.factory.Mappers;
 public interface CustomerMapper {
     CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
-    @Mapping(target = "invoice", source = "invoice")
     CustomerDTO toCustomerDTO(Customer customer);
 
-    @Mapping(target = "invoice", source = "invoice")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "invoice", ignore = true)
     Customer toCustomer(CustomerDTO customerDTO);
 
     CustomerShowDTO toCustomerShowDTO(Customer customer);
