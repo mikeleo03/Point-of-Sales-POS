@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Product")
 public class Product {
+    
     @Id
     @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)

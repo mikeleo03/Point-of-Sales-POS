@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "InvoiceDetails")
 public class InvoiceDetail {
+    
     @EmbeddedId
     private InvoiceDetailKey id;
 

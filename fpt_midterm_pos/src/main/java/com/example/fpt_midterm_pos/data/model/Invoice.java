@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Invoice")
 public class Invoice {
+    
     @Id
     @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
