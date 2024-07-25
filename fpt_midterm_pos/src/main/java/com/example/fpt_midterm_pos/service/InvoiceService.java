@@ -1,5 +1,6 @@
 package com.example.fpt_midterm_pos.service;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -14,5 +15,5 @@ public interface InvoiceService {
     Page<InvoiceDTO> findByCriteria(InvoiceSearchCriteriaDTO criteria, Pageable pageable);
     InvoiceDTO createInvoice(InvoiceSaveDTO invoiceDTO);
     InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceDTO) throws BadRequestException;
-    void exportInvoiceToPDF(UUID id);
+    byte[] exportInvoiceToPDF(UUID id) throws IOException;
 }

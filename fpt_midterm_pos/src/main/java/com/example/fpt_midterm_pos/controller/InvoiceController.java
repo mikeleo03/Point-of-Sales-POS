@@ -1,5 +1,6 @@
 package com.example.fpt_midterm_pos.controller;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -8,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,11 +79,17 @@ public class InvoiceController {
 
     @Operation(summary = "Export the invoice details data into PDF.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Invoices exported successfully"),
-        @ApiResponse(responseCode = "204", description = "Invoices not found")
+        @ApiResponse(responseCode = "200", description = "Invoice exported successfully"),
+        @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
     @GetMapping("/{id}/export")
-    public void exportInvoiceToPDF(@PathVariable UUID id) {
-        invoiceService.exportInvoiceToPDF(id);
+    public ResponseEntity<byte[]> exportInvoiceToPDF(@PathVariable UUID id) throws IOException {
+        byte[] pdfBytes = invoiceService.exportInvoiceToPDF(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("invoice.pdf").build());
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pdfBytes);
     }
 }

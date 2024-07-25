@@ -3,7 +3,6 @@ package com.example.fpt_midterm_pos.controller;
 import java.util.List;
 import java.util.UUID;
 
-import com.example.fpt_midterm_pos.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
+import com.example.fpt_midterm_pos.dto.ProductDTO;
+import com.example.fpt_midterm_pos.dto.ProductSaveDTO;
+import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
+import com.example.fpt_midterm_pos.dto.ProductShowDTO;
 import com.example.fpt_midterm_pos.service.ProductService;
 
 @RestController
@@ -71,14 +73,8 @@ public class ProductController {
 
     @PostMapping("/upload")
     public ResponseEntity<List<ProductDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
-        try {
-            List<ProductDTO> products = productService.saveProductsFromCSV(file);
-            return new ResponseEntity<>(products, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<ProductDTO> products = productService.saveProductsFromCSV(file);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
 }
