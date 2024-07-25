@@ -8,6 +8,7 @@ import com.example.fpt_midterm_pos.mapper.CustomerMapper;
 import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
+import com.example.fpt_midterm_pos.exception.DuplicateStatusException;
 import com.example.fpt_midterm_pos.data.model.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,8 @@ public class CustomerServiceImpl implements CustomerService {
      * @return A Page object containing a list of {@link CustomerShowDTO} objects representing the customers on the specified page.
      */
     @Override
-    public Page<CustomerShowDTO> findAll(Pageable pageable) {
-        return customerRepository.findAll(pageable).map(customerMapper::toCustomerShowDTO);
+    public Page<CustomerShowDTO> findAllActiveCustomer(Pageable pageable) {
+        return customerRepository.findByStatus(Status.Active, pageable).map(customerMapper::toCustomerShowDTO);
     }
 
     @Override
@@ -89,16 +90,17 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO updateCustomerStatus(UUID id, Status status) {
         Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
-        if (status != custCheck.getStatus()) {
-            if (custCheck.getStatus() == Status.Active) {
-                custCheck.setStatus(Status.Deactive);
-            } else if (custCheck.getStatus() == Status.Deactive) {
-                custCheck.setStatus(Status.Active);
-            }
-            custCheck.setUpdatedAt(new Date());
-            Customer updatedCustomer = customerRepository.save(custCheck);
-            return customerMapper.toCustomerDTO(updatedCustomer);
+        if(status == custCheck.getStatus()) {
+            throw new DuplicateStatusException("Customer status is already " + status);
         }
-        return customerMapper.toCustomerDTO(custCheck);
+
+        if (custCheck.getStatus() == Status.Active) {
+            custCheck.setStatus(Status.Deactive);
+        } else if (custCheck.getStatus() == Status.Deactive) {
+            custCheck.setStatus(Status.Active);
+        }
+        custCheck.setUpdatedAt(new Date());
+        Customer updatedCustomer = customerRepository.save(custCheck);
+        return customerMapper.toCustomerDTO(updatedCustomer);
     }
 }
