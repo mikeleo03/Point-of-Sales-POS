@@ -2,6 +2,7 @@ package com.example.fpt_midterm_pos.service;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.Date;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
+import com.example.fpt_midterm_pos.dto.RevenueShowDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 
 public interface InvoiceService {
@@ -16,4 +18,5 @@ public interface InvoiceService {
     InvoiceDTO createInvoice(InvoiceSaveDTO invoiceDTO);
     InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceDTO) throws BadRequestException;
     byte[] exportInvoiceToPDF(UUID id) throws IOException;
+    RevenueShowDTO getInvoicesRevenue(Date date, String revenueBy);
 }
