@@ -1,6 +1,7 @@
 package com.example.fpt_midterm_pos.service.impl;
 
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.InvoiceMapper;
 import com.example.fpt_midterm_pos.service.InvoiceService;
+import com.example.fpt_midterm_pos.utils.PDFGenerator;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -53,6 +55,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private InvoiceMapper invoiceMapper;
+
+    @Autowired
+    private PDFGenerator pdfGenerator;
 
     @Override
     public Page<InvoiceDTO> findByCriteria(InvoiceSearchCriteriaDTO criteria, Pageable pageable) {
@@ -255,7 +260,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void exportInvoiceToPDF(UUID id) {
-        System.out.println("Haii!");
+    public byte[] exportInvoiceToPDF(UUID id) throws IOException {
+        // Check if the invoice actually exists
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
+
+        return pdfGenerator.generateInvoicePDF(invoice);
     }
 }
