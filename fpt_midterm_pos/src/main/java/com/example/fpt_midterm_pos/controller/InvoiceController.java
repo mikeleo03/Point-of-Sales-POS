@@ -6,6 +6,11 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import com.example.fpt_midterm_pos.data.model.Customer;
+import com.example.fpt_midterm_pos.dto.*;
+import com.example.fpt_midterm_pos.service.CustomerService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,10 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.fpt_midterm_pos.dto.InvoiceDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
-import com.example.fpt_midterm_pos.dto.RevenueShowDTO;
 import com.example.fpt_midterm_pos.service.InvoiceService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,9 @@ public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private CustomerService customerService;
 
     /**
      * Retrieves all Invoices based on the provided search criteria.
@@ -114,6 +118,7 @@ public class InvoiceController {
         @ApiResponse(responseCode = "200", description = "Invoice updated successfully"),
         @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
+
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceSaveDTO invoiceDTO) {
         InvoiceDTO updatedInvoice = invoiceService.updateInvoice(id, invoiceDTO);
@@ -134,6 +139,8 @@ public class InvoiceController {
         @ApiResponse(responseCode = "200", description = "Invoice exported successfully"),
         @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
+
+
     @GetMapping("/{id}/export")
     public ResponseEntity<byte[]> exportInvoiceToPDF(@PathVariable UUID id) throws IOException {
         byte[] pdfBytes = invoiceService.exportInvoiceToPDF(id);
@@ -143,5 +150,51 @@ public class InvoiceController {
         headers.setContentDisposition(ContentDisposition.builder("attachment").filename("invoice.pdf").build());
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pdfBytes);
+    }
+
+    @GetMapping("/export/excel")
+    public void exportInvoiceToExcel(
+            InvoiceDetailsSearchCriteriaDTO criteria,
+            HttpServletResponse response) throws IOException {
+
+        if (criteria.getCustomerId() == null && criteria.getMonth() == null && criteria.getYear() == null) {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"message\": \"Please select at least one criterion: Customer ID, Month, or Year.\"}");
+            return;
+        }
+
+        StringBuilder fileNameBuilder = new StringBuilder("invoice_report");
+        String customerName = "";
+        String fileName;
+
+        if (criteria.getCustomerId() != null) {
+            Customer customer = customerService.findById(criteria.getCustomerId());
+            customerName = customer.getName().replaceAll("\\s+", "_");
+            fileNameBuilder.append("_").append(customerName);
+        }
+        if (criteria.getMonth() != null) {
+            fileNameBuilder.append("_").append(criteria.getMonth());
+        }
+        if (criteria.getYear() != null) {
+            fileNameBuilder.append("_").append(criteria.getYear());
+        }
+
+        if (criteria.getCustomerId() != null && criteria.getMonth() != null && criteria.getYear() != null) {
+            fileName = "invoice_report_" + customerName + "_" + criteria.getMonth() + "_" + criteria.getYear() + ".xlsx";
+        } else {
+            fileNameBuilder.append(".xlsx");
+            fileName = fileNameBuilder.toString();
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        try (Workbook workbook = invoiceService.exportInvoiceToExcelByFilter(criteria)) {
+            workbook.write(response.getOutputStream());
+            response.getOutputStream().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
