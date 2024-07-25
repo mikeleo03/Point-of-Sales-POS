@@ -18,7 +18,6 @@ public interface InvoiceService {
     InvoiceDTO createInvoice(InvoiceSaveDTO invoiceDTO);
     InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceDTO) throws BadRequestException;
     byte[] exportInvoiceToPDF(UUID id) throws IOException;
-    Workbook exportInvoiceToExcel(UUID id, int month, int year);
     Workbook exportInvoiceToExcelByFilter(InvoiceDetailsSearchCriteriaDTO invoiceDetailsSearchCriteriaDTO);
 
 }

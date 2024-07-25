@@ -270,11 +270,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return pdfGenerator.generateInvoicePDF(invoice);
     }
 
-    @Override
-    public Workbook exportInvoiceToExcel(UUID customerId, int month, int year) {
-        List<Invoice> invoices = invoiceRepository.findByFiltersForExcel(customerId, month, year);
-        return ExcelGenerator.generateInvoiceExcel(invoices);
-    }
 
     @Override
     public Workbook exportInvoiceToExcelByFilter(InvoiceDetailsSearchCriteriaDTO criteria) {
