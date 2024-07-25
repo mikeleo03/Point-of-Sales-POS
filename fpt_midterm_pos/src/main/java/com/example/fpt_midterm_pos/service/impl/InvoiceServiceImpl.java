@@ -1,6 +1,5 @@
 package com.example.fpt_midterm_pos.service.impl;
 
-
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -301,6 +300,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         return pdfGenerator.generateInvoicePDF(invoice);
     }
 
+    /**
+     * Generates an Excel file containing the specified invoices based on the provided search criteria.
+     *
+     * @param criteria The {@link InvoiceDetailsSearchCriteriaDTO} object containing various criteria for filtering the invoices.
+     * @return A {@link Workbook} object containing the Excel file with the specified invoices.
+     */
     @Override
     public Workbook exportInvoiceToExcelByFilter(InvoiceDetailsSearchCriteriaDTO criteria) {
         UUID customerId = criteria.getCustomerId();

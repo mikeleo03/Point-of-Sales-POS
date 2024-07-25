@@ -30,14 +30,14 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
                                    Pageable pageable);
 
        // Find all invoice data from the given filter criteria
-        @Query("SELECT i FROM Invoice i " +
-                "JOIN FETCH i.invoiceDetails d " +
-                "WHERE (:customerId IS NULL OR i.customer.id = :customerId) " +
-                "AND (:month IS NULL OR MONTH(i.date) = :month) " +
-                "AND (:year IS NULL OR YEAR(i.date) = :year)")
-        List<Invoice> findByFiltersForExcel(@Param("customerId") UUID customerId,
-                                            @Param("month") Integer month,
-                                            @Param("year") Integer year);
+       @Query("SELECT i FROM Invoice i " +
+              "JOIN FETCH i.invoiceDetails d " +
+              "WHERE (:customerId IS NULL OR i.customer.id = :customerId) " +
+              "AND (:month IS NULL OR MONTH(i.date) = :month) " +
+              "AND (:year IS NULL OR YEAR(i.date) = :year)")
+       List<Invoice> findByFiltersForExcel(@Param("customerId") UUID customerId,
+                                          @Param("month") Integer month,
+                                          @Param("year") Integer year);
 
        // Calculate total revenue by given year
        @Query("SELECT SUM(i.amount) FROM Invoice i WHERE YEAR(i.date) = :year")

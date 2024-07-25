@@ -1,4 +1,3 @@
-// ExcelGenerator.java
 package com.example.fpt_midterm_pos.utils;
 
 import com.example.fpt_midterm_pos.data.model.Invoice;
@@ -11,6 +10,24 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.List;
 
 public class ExcelGenerator {
+    
+    /**
+     * Generates an Excel workbook containing invoice data.
+     *
+     * @param invoices A list of Invoice objects containing invoice details.
+     * @return A workbook containing the invoice data in an Excel sheet.
+     *
+     * This method generates an Excel workbook with a sheet named "Invoices". The workbook contains a header row with column names and subsequent rows containing the invoice details. The columns in the Excel sheet are:
+     * - Invoice ID
+     * - Customer ID
+     * - Customer Name
+     * - Amount
+     * - Product ID
+     * - Product Name
+     * - Price
+     * - Quantity
+     * - Product Amount
+     */
     public static Workbook generateInvoiceExcel(List<Invoice> invoices) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Invoices");

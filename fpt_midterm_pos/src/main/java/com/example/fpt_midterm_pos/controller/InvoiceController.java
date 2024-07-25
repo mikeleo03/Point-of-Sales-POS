@@ -118,7 +118,6 @@ public class InvoiceController {
         @ApiResponse(responseCode = "200", description = "Invoice updated successfully"),
         @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
-
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceSaveDTO invoiceDTO) {
         InvoiceDTO updatedInvoice = invoiceService.updateInvoice(id, invoiceDTO);
@@ -139,24 +138,33 @@ public class InvoiceController {
         @ApiResponse(responseCode = "200", description = "Invoice exported successfully"),
         @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
-
-
     @GetMapping("/{id}/export")
     public ResponseEntity<byte[]> exportInvoiceToPDF(@PathVariable UUID id) throws IOException {
         byte[] pdfBytes = invoiceService.exportInvoiceToPDF(id);
+        String filename = "invoice_" + id + ".pdf";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("invoice.pdf").build());
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(filename).build());
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pdfBytes);
     }
 
+    /**
+     * Exports the Invoice details data into an Excel file based on the provided search criteria.
+     *
+     * @param criteria The search criteria to filter the invoices, including the customer ID, month, and year.
+     * @param response The HTTPServletResponse object to which the Excel file will be written.
+     * @throws IOException If an error occurs while exporting the Excel file.
+     * @apiNote If the Invoice is successfully exported, a ResponseEntity with status code 200 (OK) is returned. If the Invoice is not found, a ResponseEntity with status code 204 (No Content) is returned.
+     */
+    @Operation(summary = "Export the Invoice details data into Excel.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Invoice exported successfully"),
+        @ApiResponse(responseCode = "204", description = "Invoice not found")
+    })
     @GetMapping("/export/excel")
-    public void exportInvoiceToExcel(
-            InvoiceDetailsSearchCriteriaDTO criteria,
-            HttpServletResponse response) throws IOException {
-
+    public void exportInvoiceToExcel(InvoiceDetailsSearchCriteriaDTO criteria, HttpServletResponse response) throws IOException {
         if (criteria.getCustomerId() == null && criteria.getMonth() == null && criteria.getYear() == null) {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -194,7 +202,7 @@ public class InvoiceController {
             workbook.write(response.getOutputStream());
             response.getOutputStream().flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException(e.getMessage());
         }
     }
 }
