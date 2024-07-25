@@ -98,8 +98,10 @@ public class ProductServiceImpl implements ProductService {
             if(status != prodCheck.getStatus()) {
                 if(prodCheck.getStatus() == Status.Active) {
                     prodCheck.setStatus(Status.Deactive);
+                    prodCheck.setUpdatedAt(new Date());
                 } else if(prodCheck.getStatus() == Status.Deactive) {
                     prodCheck.setStatus(Status.Active);
+                    prodCheck.setUpdatedAt(new Date());
                 }
                 Product updatedProduct = productRepository.save(prodCheck);
                 return productMapper.toProductDTO(updatedProduct);
