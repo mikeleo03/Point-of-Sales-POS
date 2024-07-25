@@ -51,17 +51,25 @@ public class ProductServiceImpl implements ProductService {
 
         // Define the sort rules
         Sort sort = Sort.unsorted();
-        if (sortByName != null) {
-            sort = sort.and(Sort.by("name").ascending());
+
+        if (sortByName != null && !sortByName.isEmpty()) {
+            Sort nameSort = Sort.by("name");
             if (sortByName.equalsIgnoreCase("desc")) {
-                sort = sort.and(Sort.by("name").descending());
+                nameSort = nameSort.descending();
+            } else {
+                nameSort = nameSort.ascending();
             }
+            sort = sort.and(nameSort);
         }
-        if (sortByPrice != null) {
-            sort = sort.and(Sort.by("price").ascending());
+
+        if (sortByPrice != null && !sortByPrice.isEmpty()) {
+            Sort priceSort = Sort.by("price");
             if (sortByPrice.equalsIgnoreCase("desc")) {
-                sort = sort.and(Sort.by("price").descending());
+                priceSort = priceSort.descending();
+            } else {
+                priceSort = priceSort.ascending();
             }
+            sort = sort.and(priceSort);
         }
 
         // Set the pageable
@@ -71,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> products = productRepository.findByFilters(Status.Active, productName, minPrice, maxPrice, sortedPageable);
         return products.map(productMapper::toShowDTO);
     }
+
 
     /**
      * Creates a new product based on the provided {@link ProductSaveDTO} and saves it to the database.

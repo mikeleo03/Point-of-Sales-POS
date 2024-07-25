@@ -1,6 +1,5 @@
 package com.example.fpt_midterm_pos.service.impl;
 
-
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,26 +78,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         String sortByDate = criteria.getSortByDate();
         String sortByAmount = criteria.getSortByAmount();
 
-        // Define the sort rules
-        Sort sort = Sort.unsorted();
-        if (sortByDate != null) {
-            sort = sort.and(Sort.by("date").ascending());
-            if (sortByDate.equalsIgnoreCase("desc")) {
-                sort = sort.and(Sort.by("date").descending());
-            }
-        }
-        if (sortByAmount != null) {
-            sort = sort.and(Sort.by("amount").ascending());
-            if (sortByAmount.equalsIgnoreCase("desc")) {
-                sort = sort.and(Sort.by("amount").descending());
-            }
-        }
-
         // Set the pageable
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         
         // Get the invoices data from the repo
-        Page<Invoice> invoices = invoiceRepository.findByFilters(customerName, customerId, startDate, endDate, month, sortedPageable);
+        Page<Invoice> invoices = invoiceRepository.findByFilters(customerName, customerId, startDate, endDate, month, sortByDate, sortByAmount, sortedPageable);
         return invoices.map(invoiceMapper::toInvoiceDTO);
     }
 
@@ -301,6 +284,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         return pdfGenerator.generateInvoicePDF(invoice);
     }
 
+    /**
+     * Generates an Excel file containing the specified invoices based on the provided search criteria.
+     *
+     * @param criteria The {@link InvoiceDetailsSearchCriteriaDTO} object containing various criteria for filtering the invoices.
+     * @return A {@link Workbook} object containing the Excel file with the specified invoices.
+     */
     @Override
     public Workbook exportInvoiceToExcelByFilter(InvoiceDetailsSearchCriteriaDTO criteria) {
         UUID customerId = criteria.getCustomerId();

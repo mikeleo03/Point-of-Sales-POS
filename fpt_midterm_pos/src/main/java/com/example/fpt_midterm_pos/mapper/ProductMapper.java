@@ -18,10 +18,21 @@ public interface ProductMapper {
     // Product - ProductDTO
     ProductDTO toProductDTO(Product product);
 
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Product toProduct(ProductDTO productDTO);
+
     // Product - ProductShowDTO
     ProductShowDTO toShowDTO(Product product);
 
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    Product toProduct(ProductShowDTO productShowDTO);
+
     // Product - ProductSaveDTO
+    ProductSaveDTO toProductSaveDTO(Product product);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

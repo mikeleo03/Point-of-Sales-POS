@@ -26,21 +26,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Invoice")
 public class Invoice {
+    
     @Id
     @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
     @Column(name = "date", nullable = false)
     private Date date;
 
-    @Column(nullable = false)
+    @Column(name = "createdAt", nullable = false)
     private Date createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
