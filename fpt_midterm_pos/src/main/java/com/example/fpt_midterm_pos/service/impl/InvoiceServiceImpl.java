@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.example.fpt_midterm_pos.dto.*;
 import com.example.fpt_midterm_pos.utils.ExcelGenerator;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.*;
@@ -33,10 +34,6 @@ import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
 import com.example.fpt_midterm_pos.data.repository.InvoiceDetailRepository;
 import com.example.fpt_midterm_pos.data.repository.InvoiceRepository;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
-import com.example.fpt_midterm_pos.dto.InvoiceDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceDetailSaveDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.InvoiceMapper;
@@ -275,6 +272,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Workbook exportInvoiceToExcel(UUID customerId, int month, int year) {
+        List<Invoice> invoices = invoiceRepository.findByFiltersForExcel(customerId, month, year);
+        return ExcelGenerator.generateInvoiceExcel(invoices);
+    }
+
+    @Override
+    public Workbook exportInvoiceToExcelByFilter(InvoiceDetailsSearchCriteriaDTO criteria) {
+        UUID customerId = criteria.getCustomerId();
+        Integer month = criteria.getMonth();
+        Integer year = criteria.getYear();
         List<Invoice> invoices = invoiceRepository.findByFiltersForExcel(customerId, month, year);
         return ExcelGenerator.generateInvoiceExcel(invoices);
     }
