@@ -14,6 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,9 +31,13 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotBlank(message = "Name is mandatory")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
     @Column(nullable = false)
     private String name;
 
+    @NotBlank(message = "Phone is mandatory")
+    @Pattern(regexp = "^\\+62[0-9]{9,13}$", message = "Phone number must start with +62 and contain 9 to 13 digits")
     @Column(nullable = false)
     private String phoneNumber;
 
