@@ -73,11 +73,23 @@ public class ProductController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Product created successfully")
     })
+//    @PostMapping
+//    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductSaveDTO productSaveDTO) {
+//        ProductDTO productDTO = productService.createProduct(productSaveDTO);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(productDTO);
+//    }
     @PostMapping
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductSaveDTO productSaveDTO) {
-        ProductDTO productDTO = productService.createProduct(productSaveDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productDTO);
+    public ResponseEntity<?> createProduct(@RequestBody ProductSaveDTO productSaveDTO) {
+        try {
+            ProductDTO productDTO = productService.createProduct(productSaveDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(productDTO);
+        } catch (Exception e) {
+            // Log the exception with detailed information
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating product: " + e.getMessage());
+        }
     }
+
 
     /**
      * Updates an existing Product with the provided ProductSaveDTO object.
