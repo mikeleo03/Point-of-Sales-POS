@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class InvoiceDTO {
     private UUID id;
     private UUID customerId;
-    private List<InvoiceDetailSaveDTO> invoiceDetails;
+    private List<InvoiceDetailDTO> invoiceDetails;
 }

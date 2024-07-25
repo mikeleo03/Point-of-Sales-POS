@@ -20,8 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
+import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.service.InvoiceService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1/invoices")
@@ -30,6 +35,11 @@ public class InvoiceController {
     @Autowired
     private InvoiceService invoiceService;
 
+    @Operation(summary = "Retrieve all invoices with criteria.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Invoices retrieved successfully"),
+        @ApiResponse(responseCode = "204", description = "Invoices not found")
+    })
     @GetMapping
     public ResponseEntity<Page<InvoiceDTO>> getInvoices(InvoiceSearchCriteriaDTO criteria, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -39,21 +49,35 @@ public class InvoiceController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(invoices);
+        return ResponseEntity.status(HttpStatus.OK).body(invoices);
     }
 
+    @Operation(summary = "Create a new invoice.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Invoice created successfully")
+    })
     @PostMapping
-    public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
+    public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceSaveDTO invoiceDTO) {
         InvoiceDTO createdInvoice = invoiceService.createInvoice(invoiceDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
     }
 
+    @Operation(summary = "Update existing invoice.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Invoice updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Invoice not found")
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceDTO invoiceDTO) {
+    public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceSaveDTO invoiceDTO) {
         InvoiceDTO updatedInvoice = invoiceService.updateInvoice(id, invoiceDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedInvoice);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedInvoice);
     }
 
+    @Operation(summary = "Export the invoice details data into PDF.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Invoices exported successfully"),
+        @ApiResponse(responseCode = "204", description = "Invoices not found")
+    })
     @GetMapping("/{id}/export")
     public void exportInvoiceToPDF(@PathVariable UUID id) {
         invoiceService.exportInvoiceToPDF(id);
