@@ -1,5 +1,6 @@
 package com.example.fpt_midterm_pos.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -9,10 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvoiceDetailDTO {
-    private UUID productId;
-    private String productName;
-    private Integer quantity;
-    private Double price;
-    private Double amount;
+public class InvoiceSaveDTO {
+    private UUID customerId;
+    private List<InvoiceDetailSaveDTO> invoiceDetails;
 }

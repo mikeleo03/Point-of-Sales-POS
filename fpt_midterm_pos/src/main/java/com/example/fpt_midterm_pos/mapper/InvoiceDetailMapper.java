@@ -6,13 +6,15 @@ import org.mapstruct.factory.Mappers;
 
 import com.example.fpt_midterm_pos.data.model.InvoiceDetail;
 import com.example.fpt_midterm_pos.dto.InvoiceDetailDTO;
+import com.example.fpt_midterm_pos.dto.InvoiceDetailSaveDTO;
 
 @Mapper(componentModel = "spring")
 public interface InvoiceDetailMapper {
     InvoiceDetailMapper INSTANCE = Mappers.getMapper(InvoiceDetailMapper.class);
 
+    // InvoiceDetail - InvoiceDetailSaveDTO
     @Mapping(source = "id.productId", target = "productId")
-    InvoiceDetailDTO toInvoiceDetailDTO(InvoiceDetail invoiceDetail);
+    InvoiceDetailSaveDTO toInvoiceDetailSaveDTO(InvoiceDetail invoiceDetail);
 
     @Mapping(source = "productId", target = "id.productId")
     @Mapping(target = "invoice", ignore = true)
@@ -22,5 +24,16 @@ public interface InvoiceDetailMapper {
     @Mapping(target = "price", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    InvoiceDetail toInvoiceDetail(InvoiceDetailDTO invoiceDetail);
+    InvoiceDetail toInvoiceDetail(InvoiceDetailSaveDTO invoiceDetailSaveDTO);
+
+    // InvoiceDetail - InvoiceDetailDTO
+    @Mapping(source = "id.productId", target = "productId")
+    InvoiceDetailDTO toInvoiceDetailDTO(InvoiceDetail invoiceDetail);
+
+    @Mapping(source = "productId", target = "id.productId")
+    @Mapping(target = "invoice", ignore = true)
+    @Mapping(target = "product", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    InvoiceDetail toInvoiceDetail(InvoiceDetailDTO invoiceDetailDTO);
 }

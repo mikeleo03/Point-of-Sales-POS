@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceDTO {
+    private UUID id;
     private UUID customerId;
     private List<InvoiceDetailDTO> invoiceDetails;
 }

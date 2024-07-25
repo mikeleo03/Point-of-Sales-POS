@@ -28,7 +28,8 @@ import com.example.fpt_midterm_pos.data.repository.InvoiceDetailRepository;
 import com.example.fpt_midterm_pos.data.repository.InvoiceRepository;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
 import com.example.fpt_midterm_pos.dto.InvoiceDTO;
-import com.example.fpt_midterm_pos.dto.InvoiceDetailDTO;
+import com.example.fpt_midterm_pos.dto.InvoiceDetailSaveDTO;
+import com.example.fpt_midterm_pos.dto.InvoiceSaveDTO;
 import com.example.fpt_midterm_pos.dto.InvoiceSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
@@ -89,7 +90,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {
+    public InvoiceDTO createInvoice(InvoiceSaveDTO invoiceDTO) {
         // 1. Select the customer
         // The main idea is by looking the invoice customer ID and browse on customer repo
         Customer customer = customerRepository.findById(invoiceDTO.getCustomerId())
@@ -111,7 +112,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         double totalAmount = 0.00;
         List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
-        for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
+        for (InvoiceDetailSaveDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
             // Check whether the product actually exists using the ID on the product repo
             Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -168,7 +169,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public InvoiceDTO updateInvoice(UUID id, InvoiceDTO invoiceDTO) throws BadRequestException {
+    public InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceDTO) throws BadRequestException {
         // Check if the invoice actually exists
         Invoice existingInvoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
@@ -189,7 +190,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         double totalAmount = 0.00;
         List<InvoiceDetail> updatedInvoiceDetails = new ArrayList<>();
 
-        for (InvoiceDetailDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
+        for (InvoiceDetailSaveDTO detailDTO : invoiceDTO.getInvoiceDetails()) {
             // Check if the product exists
             Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
