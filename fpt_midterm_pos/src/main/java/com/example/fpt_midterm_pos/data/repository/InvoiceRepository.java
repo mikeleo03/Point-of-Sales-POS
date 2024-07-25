@@ -15,16 +15,24 @@ import com.example.fpt_midterm_pos.data.model.Invoice;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
 
-    @Query("SELECT i FROM Invoice i WHERE " +
-           "(:customerName IS NULL OR i.customer.name LIKE %:customerName%) AND " +
-           "(:customerId IS NULL OR i.customer.id = :customerId) AND " +
-           "(:startDate IS NULL OR :endDate IS NULL OR i.date BETWEEN :startDate AND :endDate) AND " +
-           "(:month IS NULL OR MONTH(i.date) = :month)")
-    Page<Invoice> findByFilters(@Param("customerName") String customerName,
-                                @Param("customerId") UUID customerId,
-                                @Param("startDate") Date startDate,
-                                @Param("endDate") Date endDate,
-                                @Param("month") Integer month,
-                                Pageable pageable);
-    
+       @Query("SELECT i FROM Invoice i WHERE " +
+              "(:customerName IS NULL OR i.customer.name LIKE %:customerName%) AND " +
+              "(:customerId IS NULL OR i.customer.id = :customerId) AND " +
+              "(:startDate IS NULL OR :endDate IS NULL OR i.date BETWEEN :startDate AND :endDate) AND " +
+              "(:month IS NULL OR MONTH(i.date) = :month)")
+       Page<Invoice> findByFilters(@Param("customerName") String customerName,
+                                   @Param("customerId") UUID customerId,
+                                   @Param("startDate") Date startDate,
+                                   @Param("endDate") Date endDate,
+                                   @Param("month") Integer month,
+                                   Pageable pageable);
+
+       @Query("SELECT SUM(i.amount) FROM Invoice i WHERE YEAR(i.date) = :year")
+       Double findTotalRevenueByYear(@Param("year") int year);
+
+       @Query("SELECT SUM(i.amount) FROM Invoice i WHERE YEAR(i.date) = :year AND MONTH(i.date) = :month")
+       Double findTotalRevenueByMonth(@Param("year") int year, @Param("month") int month);
+
+       @Query("SELECT SUM(i.amount) FROM Invoice i WHERE DATE(i.date) = :date")
+       Double findTotalRevenueByDay(@Param("date") Date date);
 }

@@ -1,6 +1,9 @@
 package com.example.fpt_midterm_pos.utils;
 
+import java.util.Date;
+
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -17,6 +20,9 @@ public class DateUtils {
     }
     public static String formatDate(LocalDate date) {
         return date.format(DATE_FORMATER);
+    }
+    public static LocalDate formatDateToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }
