@@ -5,6 +5,10 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import com.example.fpt_midterm_pos.data.model.Customer;
+import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +42,9 @@ public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Operation(summary = "Retrieve all invoices with criteria.")
     @ApiResponses(value = {
@@ -82,6 +89,7 @@ public class InvoiceController {
         @ApiResponse(responseCode = "200", description = "Invoice exported successfully"),
         @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
+
     @GetMapping("/{id}/export")
     public ResponseEntity<byte[]> exportInvoiceToPDF(@PathVariable UUID id) throws IOException {
         byte[] pdfBytes = invoiceService.exportInvoiceToPDF(id);
@@ -91,5 +99,29 @@ public class InvoiceController {
         headers.setContentDisposition(ContentDisposition.builder("attachment").filename("invoice.pdf").build());
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pdfBytes);
+    }
+
+    @Operation(summary = "Export data.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Export Excel successfully"),
+            @ApiResponse(responseCode = "404", description = "Invoice not found")
+    })
+
+    @GetMapping("/export/excel")
+    public void exportInvoiceToExcel(
+            @RequestParam UUID customerId,
+            @RequestParam int month,
+            @RequestParam int year,
+            HttpServletResponse response) {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=invoice_report_" + month + "_" + year + ".xlsx");
+
+
+        try (Workbook workbook = invoiceService.exportInvoiceToExcel(customerId, month, year)) {
+            workbook.write(response.getOutputStream());
+            response.getOutputStream().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

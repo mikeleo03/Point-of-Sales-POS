@@ -61,6 +61,12 @@
 			<scope>runtime</scope>
         </dependency>
 
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>5.2.5</version>
+		</dependency>
+
 		<!-- Lombok Annotation -->
         <dependency>
             <groupId>org.projectlombok</groupId>

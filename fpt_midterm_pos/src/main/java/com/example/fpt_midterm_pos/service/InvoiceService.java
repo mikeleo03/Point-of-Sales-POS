@@ -3,6 +3,7 @@ package com.example.fpt_midterm_pos.service;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +17,6 @@ public interface InvoiceService {
     InvoiceDTO createInvoice(InvoiceSaveDTO invoiceDTO);
     InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceDTO) throws BadRequestException;
     byte[] exportInvoiceToPDF(UUID id) throws IOException;
+    Workbook exportInvoiceToExcel(UUID id, int month, int year);
+
 }
