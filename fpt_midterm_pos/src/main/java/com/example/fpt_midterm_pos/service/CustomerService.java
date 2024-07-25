@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface CustomerService {
 
     // Retrieves a paginated list of all customers.
-    Page<CustomerShowDTO> findAll(Pageable pageable);
+    Page<CustomerShowDTO> findAllActiveCustomer(Pageable pageable);
 
     // Creating a new customer.
     CustomerDTO createCustomer(CustomerSaveDTO customerSaveDTO);

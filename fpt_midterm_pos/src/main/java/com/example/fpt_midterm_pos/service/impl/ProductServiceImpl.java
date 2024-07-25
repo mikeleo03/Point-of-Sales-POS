@@ -19,6 +19,7 @@ import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
+import com.example.fpt_midterm_pos.exception.DuplicateStatusException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.ProductMapper;
 import com.example.fpt_midterm_pos.service.ProductService;
@@ -130,17 +131,18 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProductStatus(UUID id, Status status) {
         Product prodCheck = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        if (status != prodCheck.getStatus()) {
-            if (prodCheck.getStatus() == Status.Active) {
-                prodCheck.setStatus(Status.Deactive);
-            } else if (prodCheck.getStatus() == Status.Deactive) {
-                prodCheck.setStatus(Status.Active);
-            }
-            prodCheck.setUpdatedAt(new Date());
-            Product updatedProduct = productRepository.save(prodCheck);
-            return productMapper.toProductDTO(updatedProduct);
+        if(status == prodCheck.getStatus()) {
+            throw new DuplicateStatusException("Product status is already " + status);
         }
-        return productMapper.toProductDTO(prodCheck);
+
+        if (prodCheck.getStatus() == Status.Active) {
+            prodCheck.setStatus(Status.Deactive);
+        } else if (prodCheck.getStatus() == Status.Deactive) {
+            prodCheck.setStatus(Status.Active);
+        }
+        prodCheck.setUpdatedAt(new Date());
+        Product updatedProduct = productRepository.save(prodCheck);
+        return productMapper.toProductDTO(updatedProduct);
     }
 
     /**

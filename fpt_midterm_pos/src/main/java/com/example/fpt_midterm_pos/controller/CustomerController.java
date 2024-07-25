@@ -42,7 +42,7 @@ public class CustomerController {
      * @return A {@link ResponseEntity} containing a {@link Page} of {@link CustomerShowDTO} objects representing the customers on the specified page.
      * @apiNote If no customers are found, a {@link ResponseEntity} with status status code 204 (No Content) is returned.
      */
-    @Operation(summary = "Retrieve all Customers.")
+    @Operation(summary = "Retrieve all Active Customers.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Customers retrieved successfully"),
         @ApiResponse(responseCode = "204", description = "Customers not found")
@@ -50,7 +50,7 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<Page<CustomerShowDTO>> getAllCustomer(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CustomerShowDTO> customerPage = customerService.findAll(pageable);
+        Page<CustomerShowDTO> customerPage = customerService.findAllActiveCustomer(pageable);
 
         if (customerPage.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
