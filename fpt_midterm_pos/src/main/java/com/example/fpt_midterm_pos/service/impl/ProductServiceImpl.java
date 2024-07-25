@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.example.fpt_midterm_pos.data.model.Customer;
+import com.example.fpt_midterm_pos.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
-import com.example.fpt_midterm_pos.dto.ProductDTO;
-import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
 import com.example.fpt_midterm_pos.mapper.ProductMapper;
 import com.example.fpt_midterm_pos.service.ProductService;
 import com.example.fpt_midterm_pos.utils.FileUtils;
@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper = ProductMapper.INSTANCE;
 
     @Override
-    public Page<ProductDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
+    public Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
         // Listing all the criteria
         String productName = criteria.getName();
         String sortByName = criteria.getSortByName();
@@ -61,66 +61,87 @@ public class ProductServiceImpl implements ProductService {
 
         // Get the product data from the repo
         Page<Product> products = productRepository.findByFilters(productName, minPrice, maxPrice, sortedPageable);
-        return products.map(productMapper::toDTO);
+        return products.map(productMapper::toShowDTO);
     }
 
     @Override
-    public Product save(ProductDTO productDTO) {
-        Product product = productMapper.toEntity(productDTO);
+    public ProductDTO save(ProductSaveDTO productSaveDTO) {
+        Product product = productMapper.toProduct(productSaveDTO);
         product.setStatus(Status.Active); // Ensure the product is set to active when saving
         product.setCreatedAt(new Date());
         product.setUpdatedAt(new Date());
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        return productMapper.toProductDTO(savedProduct);
     }
 
     @Override
-    public Product updateProduct(UUID id, ProductDTO productDTO) {
+    public ProductDTO updateProduct(UUID id, ProductSaveDTO productSaveDTO) {
         Optional<Product> productOpt = productRepository.findById(id);
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
-            product.setName(productDTO.getName());
-            product.setPrice(productDTO.getPrice());
-            product.setQuantity(productDTO.getQuantity());
+            product.setName(productSaveDTO.getName());
+            product.setPrice(productSaveDTO.getPrice());
+            product.setQuantity(productSaveDTO.getQuantity());
             product.setUpdatedAt(new Date());
-            return productRepository.save(product);
+            Product updateProduct = productRepository.save(product);
+            return productMapper.toProductDTO(updateProduct);
         } else {
             throw new RuntimeException("Product not found");
         }
     }
 
+//    @Override
+//    public ProductDTO updateProductStatus(UUID id, Status status) {
+//        Optional<Product> productOpt = productRepository.findById(id);
+//        if (productOpt.isPresent()) {
+//            Product product = productOpt.get();
+//            product.setStatus(status);
+//            Product updateProduct = productRepository.save(product);
+//            return productMapper.toProductDTO(updateProduct);
+//        } else {
+//            throw new RuntimeException("Product not found");
+//        }
+//    }
     @Override
-    public Product updateProductStatus(UUID id, Status status) {
-        Optional<Product> productOpt = productRepository.findById(id);
-        if (productOpt.isPresent()) {
-            Product product = productOpt.get();
-            product.setStatus(status);
-            return productRepository.save(product);
-        } else {
-            throw new RuntimeException("Product not found");
+    public ProductDTO updateProductStatus(UUID id, Status status) {
+        Product prodCheck = productRepository.findById(id).orElse(null);
+        if(prodCheck != null) {
+            if(status != prodCheck.getStatus()) {
+                if(prodCheck.getStatus() == Status.Active) {
+                    prodCheck.setStatus(Status.Deactive);
+                } else if(prodCheck.getStatus() == Status.Deactive) {
+                    prodCheck.setStatus(Status.Active);
+                }
+                Product updatedProduct = productRepository.save(prodCheck);
+                return productMapper.toProductDTO(updatedProduct);
+            }
+            return productMapper.toProductDTO(prodCheck);
         }
+        return null;
     }
 
-    @Override
-    public List<ProductDTO> saveProductsFromCSV(MultipartFile file) {
-        if (!FileUtils.hasCSVFormat(file)) {
-            throw new IllegalArgumentException("Invalid file format. Only CSV files are accepted.");
-        }
-
-        try {
-            List<Product> products = FileUtils.readProductsFromCSV(file);
-
-            // Save products to the database
-            List<Product> savedProducts = productRepository.saveAll(products);
-
-            // Convert saved products to DTO
-            List<ProductDTO> productDTOs = savedProducts.stream()
-                    .map(productMapper::toDTO)
-                    .collect(Collectors.toList());
-
-            return productDTOs;
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading CSV file: " + e.getMessage(), e);
-        }
-    }
+//
+//    @Override
+//    public List<ProductDTO> saveProductsFromCSV(MultipartFile file) {
+//        if (!FileUtils.hasCSVFormat(file)) {
+//            throw new IllegalArgumentException("Invalid file format. Only CSV files are accepted.");
+//        }
+//
+//        try {
+//            List<Product> products = FileUtils.readProductsFromCSV(file);
+//
+//            // Save products to the database
+//            List<Product> savedProducts = productRepository.saveAll(products);
+//
+//            // Convert saved products to DTO
+//            List<ProductDTO> productDTOs = savedProducts.stream()
+//                    .map(productMapper::toDTO)
+//                    .collect(Collectors.toList());
+//
+//            return productDTOs;
+//        } catch (IOException e) {
+//            throw new RuntimeException("Error reading CSV file: " + e.getMessage(), e);
+//        }
+//    }
 
 }
