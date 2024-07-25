@@ -2,6 +2,7 @@ package com.example.fpt_midterm_pos.controller;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,26 +24,37 @@ import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
 import com.example.fpt_midterm_pos.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1/customers")
-@AllArgsConstructor
 public class CustomerController {
-    private final CustomerService customerService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @Operation(summary = "Retrieve all Customers.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Customers retrieved successfully"),
+        @ApiResponse(responseCode = "204", description = "Customers not found")
+    })
     @GetMapping
     public ResponseEntity<Page<CustomerShowDTO>> getAllCustomer(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CustomerShowDTO> customerPage = customerService.findAll(pageable);
+
         if (customerPage.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
+        
         return ResponseEntity.status(HttpStatus.OK).body(customerPage);
     }
 
     @Operation(summary = "Create a new Customer.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Customer created successfully")
+    })
     @PostMapping
     public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerSaveDTO customerSaveDTO) {
         CustomerDTO customer = customerService.createCustomer(customerSaveDTO);
@@ -50,6 +62,10 @@ public class CustomerController {
     }
 
     @Operation(summary = "Update existing Customer.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Customer updated successfully"),
+        @ApiResponse(responseCode = "204", description = "Customer not found")
+    })
     @PutMapping(value = "/{id}")
     public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") UUID id, @RequestBody CustomerSaveDTO customerSaveDTO) {
         CustomerDTO customer = customerService.updateCustomer(id, customerSaveDTO);
@@ -57,6 +73,10 @@ public class CustomerController {
     }
 
     @Operation(summary = "Update existing Customer status from Deactive to Active.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Customer successfully activated"),
+        @ApiResponse(responseCode = "204", description = "Customer not found")
+    })
     @PutMapping(value = "/active/{id}")
     public ResponseEntity<CustomerDTO> updateCustomerStatusActive(@PathVariable("id") UUID id) {
         CustomerDTO customer = customerService.updateCustomerStatus(id, Status.Active);
@@ -64,6 +84,10 @@ public class CustomerController {
     }
 
     @Operation(summary = "Update existing Customer status from Active to Deactive.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Customer successfully deactivated"),
+        @ApiResponse(responseCode = "204", description = "Customer not found")
+    })
     @PutMapping(value = "/deactive/{id}")
     public ResponseEntity<CustomerDTO> updateCustomerStatusDeactive(@PathVariable("id") UUID id) {
         CustomerDTO customer = customerService.updateCustomerStatus(id, Status.Deactive);

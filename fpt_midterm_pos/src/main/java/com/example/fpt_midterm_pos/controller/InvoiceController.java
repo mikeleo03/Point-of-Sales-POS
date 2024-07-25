@@ -39,7 +39,7 @@ public class InvoiceController {
     @Autowired
     private InvoiceService invoiceService;
 
-    @Operation(summary = "Retrieve all invoices with criteria.")
+    @Operation(summary = "Retrieve all Invoices with criteria.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Invoices retrieved successfully"),
         @ApiResponse(responseCode = "204", description = "Invoices not found")
@@ -56,7 +56,7 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.OK).body(invoices);
     }
 
-    @Operation(summary = "Create a new invoice.")
+    @Operation(summary = "Create a new Invoice.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Invoice created successfully")
     })
@@ -66,10 +66,10 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdInvoice);
     }
 
-    @Operation(summary = "Update existing invoice.")
+    @Operation(summary = "Update existing Invoice.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Invoice updated successfully"),
-        @ApiResponse(responseCode = "404", description = "Invoice not found")
+        @ApiResponse(responseCode = "204", description = "Invoice not found")
     })
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable UUID id, @Valid @RequestBody InvoiceSaveDTO invoiceDTO) {
@@ -77,7 +77,7 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedInvoice);
     }
 
-    @Operation(summary = "Export the invoice details data into PDF.")
+    @Operation(summary = "Export the Invoice details data into PDF.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Invoice exported successfully"),
         @ApiResponse(responseCode = "204", description = "Invoice not found")
