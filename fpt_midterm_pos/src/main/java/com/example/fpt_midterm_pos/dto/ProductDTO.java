@@ -17,6 +17,4 @@ public class ProductDTO {
     private Double price;
     private Status status;
     private Integer quantity;
-    private Date createdAt;
-    private Date updatedAt;
 }

@@ -4,15 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import com.example.fpt_midterm_pos.dto.ProductSaveDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.example.fpt_midterm_pos.data.model.Product;
-import com.example.fpt_midterm_pos.data.model.Status;
 
 public class FileUtils {
     public static String TYPE = "text/csv";
@@ -27,34 +24,32 @@ public class FileUtils {
         return true;
     }
 
-    public static List<Product> readProductsFromCSV(MultipartFile file) throws IOException {
-        List<Product> products = new ArrayList<>();
+    public static List<ProductSaveDTO> readProductsFromCSV(MultipartFile file) throws IOException {
+        List<ProductSaveDTO> productSaveDTOs = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String line;
             br.readLine(); // Skip header
             while ((line = br.readLine()) != null) {
                 String[] attributes = line.split(",");
-                Product product = fromCSV(attributes);
-                products.add(product);
+                ProductSaveDTO productSaveDTO = fromCSV(attributes);
+                productSaveDTOs.add(productSaveDTO);
             }
         } catch (IOException e) {
             throw new IOException("Error reading CSV file: " + e.getMessage(), e);
         }
-        return products;
+        return productSaveDTOs;
     }
 
-    public static Product fromCSV(String[] attributes) {
+    public static ProductSaveDTO fromCSV(String[] attributes) {
         // Ensure the length of attributes array matches the CSV header length
         if (attributes.length < HEADERS.length) {
             throw new IllegalArgumentException("Invalid CSV format");
         }
-        Product product = new Product();
-        product.setName(attributes[0]);
-        product.setPrice((double) Integer.parseInt(attributes[1]));
-        product.setQuantity(Integer.valueOf(attributes[2]));
-        product.setStatus(Status.Active);
-        product.setCreatedAt(new Date());
-        product.setUpdatedAt(new Date());
-        return product;
+        ProductSaveDTO productSaveDTO = new ProductSaveDTO();
+        productSaveDTO.setName(attributes[0]);
+        productSaveDTO.setPrice(Double.parseDouble(attributes[1]));
+        productSaveDTO.setQuantity(Integer.parseInt(attributes[2]));
+        // No need to set status, createdAt, or updatedAt in ProductSaveDTO
+        return productSaveDTO;
     }
 }

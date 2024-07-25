@@ -68,11 +68,11 @@ public class ProductController {
         ProductDTO productDTO = productService.updateProductStatus(id, Status.Deactive);
         return ResponseEntity.ok(productDTO);
     }
-//
+
 //    @PostMapping("/upload")
-//    public ResponseEntity<List<ProductDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
+//    public ResponseEntity<List<ProductSaveDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
 //        try {
-//            List<ProductDTO> products = productService.saveProductsFromCSV(file);
+//            List<ProductSaveDTO> products = productService.saveProductsFromCSV(file);
 //            return new ResponseEntity<>(products, HttpStatus.OK);
 //        } catch (IllegalArgumentException e) {
 //            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -80,4 +80,16 @@ public class ProductController {
 //            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
 //    }
+    @PostMapping("/upload")
+    public ResponseEntity<List<ProductDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
+        try {
+            List<ProductDTO> products = productService.saveProductsFromCSV(file);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

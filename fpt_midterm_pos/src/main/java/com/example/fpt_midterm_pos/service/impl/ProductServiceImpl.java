@@ -90,18 +90,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-//    @Override
-//    public ProductDTO updateProductStatus(UUID id, Status status) {
-//        Optional<Product> productOpt = productRepository.findById(id);
-//        if (productOpt.isPresent()) {
-//            Product product = productOpt.get();
-//            product.setStatus(status);
-//            Product updateProduct = productRepository.save(product);
-//            return productMapper.toProductDTO(updateProduct);
-//        } else {
-//            throw new RuntimeException("Product not found");
-//        }
-//    }
     @Override
     public ProductDTO updateProductStatus(UUID id, Status status) {
         Product prodCheck = productRepository.findById(id).orElse(null);
@@ -120,28 +108,24 @@ public class ProductServiceImpl implements ProductService {
         return null;
     }
 
-//
-//    @Override
-//    public List<ProductDTO> saveProductsFromCSV(MultipartFile file) {
-//        if (!FileUtils.hasCSVFormat(file)) {
-//            throw new IllegalArgumentException("Invalid file format. Only CSV files are accepted.");
-//        }
-//
-//        try {
-//            List<Product> products = FileUtils.readProductsFromCSV(file);
-//
-//            // Save products to the database
-//            List<Product> savedProducts = productRepository.saveAll(products);
-//
-//            // Convert saved products to DTO
-//            List<ProductDTO> productDTOs = savedProducts.stream()
-//                    .map(productMapper::toDTO)
-//                    .collect(Collectors.toList());
-//
-//            return productDTOs;
-//        } catch (IOException e) {
-//            throw new RuntimeException("Error reading CSV file: " + e.getMessage(), e);
-//        }
-//    }
+
+    @Override
+    public List<ProductDTO> saveProductsFromCSV(MultipartFile file) {
+        if (!FileUtils.hasCSVFormat(file)) {
+            throw new IllegalArgumentException("Invalid file format. Only CSV files are accepted.");
+        }
+
+        try {
+            List<ProductSaveDTO> productSaveDTOs = FileUtils.readProductsFromCSV(file);
+            List<Product> products = productMapper.toProductList(productSaveDTOs);
+            List<Product> savedProducts = productRepository.saveAll(products);
+
+            return productMapper.toProductDTOList(savedProducts);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading CSV file: " + e.getMessage(), e);
+        }
+    }
+
 
 }

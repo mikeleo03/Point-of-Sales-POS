@@ -19,6 +19,6 @@ public interface ProductService {
     ProductDTO updateProduct(UUID id, ProductSaveDTO productSaveDTO);
 
     ProductDTO updateProductStatus(UUID id, Status status);
-//
-//    List<ProductShowDTO> saveProductsFromCSV(MultipartFile file);
+
+    List<ProductDTO> saveProductsFromCSV(MultipartFile file);
 }
