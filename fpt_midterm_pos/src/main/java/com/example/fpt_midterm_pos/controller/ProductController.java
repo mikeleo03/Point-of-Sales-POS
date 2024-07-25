@@ -69,17 +69,6 @@ public class ProductController {
         return ResponseEntity.ok(productDTO);
     }
 
-//    @PostMapping("/upload")
-//    public ResponseEntity<List<ProductSaveDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
-//        try {
-//            List<ProductSaveDTO> products = productService.saveProductsFromCSV(file);
-//            return new ResponseEntity<>(products, HttpStatus.OK);
-//        } catch (IllegalArgumentException e) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
     @PostMapping("/upload")
     public ResponseEntity<List<ProductDTO>> uploadCSV(@RequestParam("file") MultipartFile file) {
         try {
