@@ -14,9 +14,19 @@ import com.example.fpt_midterm_pos.dto.RevenueShowDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 
 public interface InvoiceService {
+
+    // Find invoices based on the provided criteria.
     Page<InvoiceDTO> findByCriteria(InvoiceSearchCriteriaDTO criteria, Pageable pageable);
-    InvoiceDTO createInvoice(InvoiceSaveDTO invoiceDTO);
-    InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceDTO) throws BadRequestException;
+
+    // Creating a new invoice.
+    InvoiceDTO createInvoice(InvoiceSaveDTO invoiceSaveDTO);
+
+    // Updates an existing invoice with the provided invoice details.
+    InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceSaveDTO) throws BadRequestException;
+
+    // Generates a PDF representation of the specified invoice.
     byte[] exportInvoiceToPDF(UUID id) throws IOException;
+
+    // Retrieves the total revenue for a given date, month, or year based on the provided revenueBy parameter.
     RevenueShowDTO getInvoicesRevenue(Date date, String revenueBy);
 }

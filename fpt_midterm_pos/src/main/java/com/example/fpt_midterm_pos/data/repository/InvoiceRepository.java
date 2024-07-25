@@ -15,6 +15,7 @@ import com.example.fpt_midterm_pos.data.model.Invoice;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
 
+       // Find all invoice data from the given filter criteria
        @Query("SELECT i FROM Invoice i WHERE " +
               "(:customerName IS NULL OR i.customer.name LIKE %:customerName%) AND " +
               "(:customerId IS NULL OR i.customer.id = :customerId) AND " +
@@ -27,12 +28,15 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
                                    @Param("month") Integer month,
                                    Pageable pageable);
 
+       // Calculate total revenue by given year
        @Query("SELECT SUM(i.amount) FROM Invoice i WHERE YEAR(i.date) = :year")
        Double findTotalRevenueByYear(@Param("year") int year);
 
+       // Calculate total revenue by given month
        @Query("SELECT SUM(i.amount) FROM Invoice i WHERE YEAR(i.date) = :year AND MONTH(i.date) = :month")
        Double findTotalRevenueByMonth(@Param("year") int year, @Param("month") int month);
 
+       // Calculate total revenue by given date
        @Query("SELECT SUM(i.amount) FROM Invoice i WHERE DATE(i.date) = :date")
        Double findTotalRevenueByDay(@Param("date") Date date);
 }

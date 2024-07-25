@@ -11,8 +11,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,25 +25,26 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Invoice")
 public class Invoice {
+    
     @Id
     @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
     @Column(name = "date", nullable = false)
     private Date date;
 
-    @Column(nullable = false)
+    @Column(name = "createdAt", nullable = false)
     private Date createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @MapsId("customerId")
     private Customer customer;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -10,7 +10,19 @@ import com.example.fpt_midterm_pos.dto.InvoiceDetailSaveDTO;
 
 @Mapper(componentModel = "spring")
 public interface InvoiceDetailMapper {
+    
     InvoiceDetailMapper INSTANCE = Mappers.getMapper(InvoiceDetailMapper.class);
+
+    // InvoiceDetail - InvoiceDetailDTO
+    @Mapping(source = "id.productId", target = "productId")
+    InvoiceDetailDTO toInvoiceDetailDTO(InvoiceDetail invoiceDetail);
+
+    @Mapping(source = "productId", target = "id.productId")
+    @Mapping(target = "invoice", ignore = true)
+    @Mapping(target = "product", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    InvoiceDetail toInvoiceDetail(InvoiceDetailDTO invoiceDetailDTO);
 
     // InvoiceDetail - InvoiceDetailSaveDTO
     @Mapping(source = "id.productId", target = "productId")
@@ -25,15 +37,4 @@ public interface InvoiceDetailMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     InvoiceDetail toInvoiceDetail(InvoiceDetailSaveDTO invoiceDetailSaveDTO);
-
-    // InvoiceDetail - InvoiceDetailDTO
-    @Mapping(source = "id.productId", target = "productId")
-    InvoiceDetailDTO toInvoiceDetailDTO(InvoiceDetail invoiceDetail);
-
-    @Mapping(source = "productId", target = "id.productId")
-    @Mapping(target = "invoice", ignore = true)
-    @Mapping(target = "product", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    InvoiceDetail toInvoiceDetail(InvoiceDetailDTO invoiceDetailDTO);
 }

@@ -11,8 +11,16 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface CustomerService {
+
+    // Retrieves a paginated list of all customers.
     Page<CustomerShowDTO> findAll(Pageable pageable);
-    CustomerDTO createCustomer(CustomerSaveDTO customerDTO);
+
+    // Creating a new customer.
+    CustomerDTO createCustomer(CustomerSaveDTO customerSaveDTO);
+
+    // Updates an existing customer with the provided customer details.
     CustomerDTO updateCustomer(UUID id, CustomerSaveDTO customerSaveDTO);
+
+    // Updates the status of an existing customer.
     CustomerDTO updateCustomerStatus(UUID id, Status status);
 }

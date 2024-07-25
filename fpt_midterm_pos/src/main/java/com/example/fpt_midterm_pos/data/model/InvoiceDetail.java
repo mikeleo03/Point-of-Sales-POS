@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "InvoiceDetails")
 public class InvoiceDetail {
+    
     @EmbeddedId
     private InvoiceDetailKey id;
 
@@ -30,21 +31,21 @@ public class InvoiceDetail {
     @MapsId("productId")
     private Product product;
 
-    @Column(nullable = false)
+    @Column(name = "productName", nullable = false)
     private String productName;
 
-    @Column(nullable = false)
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(nullable = false)
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Column(nullable = false)
+    @Column(name = "createdAt", nullable = false)
     private Date createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 }

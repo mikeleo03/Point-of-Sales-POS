@@ -15,18 +15,22 @@ public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
+    // Product - ProductDTO
     ProductDTO toProductDTO(Product product);
 
+    // Product - ProductShowDTO
     ProductShowDTO toShowDTO(Product product);
 
+    // Product - ProductSaveDTO
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Product toProduct(ProductSaveDTO productSaveDTO);
 
+    // List of Product - List of ProductDTO
     List<ProductDTO> toProductDTOList(List<Product> products);
 
+    // List of Product - List of ProductSaveDTO
     List<Product> toProductList(List<ProductSaveDTO> productSaveDTOs);
-
 }
