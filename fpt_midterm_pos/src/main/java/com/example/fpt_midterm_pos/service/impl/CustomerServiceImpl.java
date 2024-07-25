@@ -3,6 +3,7 @@ package com.example.fpt_midterm_pos.service.impl;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
 import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
+import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.service.CustomerService;
 import com.example.fpt_midterm_pos.mapper.CustomerMapper;
 import com.example.fpt_midterm_pos.data.model.Customer;
@@ -27,6 +28,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Page<CustomerShowDTO> findAll(Pageable pageable) {
         return customerRepository.findAll(pageable).map(customerMapper::toCustomerShowDTO);
+    }
+
+    public Customer findById(UUID customerId) {
+        return customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     }
 
     @Override

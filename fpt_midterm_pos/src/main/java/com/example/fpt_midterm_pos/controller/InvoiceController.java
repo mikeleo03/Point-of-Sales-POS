@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
+import com.example.fpt_midterm_pos.service.CustomerService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     CustomerRepository customerRepository;
@@ -113,8 +117,12 @@ public class InvoiceController {
             @RequestParam int month,
             @RequestParam int year,
             HttpServletResponse response) {
+        Customer customer = customerService.findById(customerId);
+        String customerName = customer.getName().replaceAll("\\s+", "_"); // Replace spaces with underscores
+        String fileName = "invoice_report_" + customerName + "_" + month + "_" + year + ".xlsx";
+
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=invoice_report_" + month + "_" + year + ".xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
 
         try (Workbook workbook = invoiceService.exportInvoiceToExcel(customerId, month, year)) {
