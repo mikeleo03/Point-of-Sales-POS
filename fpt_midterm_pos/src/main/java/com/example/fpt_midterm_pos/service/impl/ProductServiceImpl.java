@@ -118,6 +118,15 @@ public class ProductServiceImpl implements ProductService {
         try {
             List<ProductSaveDTO> productSaveDTOs = FileUtils.readProductsFromCSV(file);
             List<Product> products = productMapper.toProductList(productSaveDTOs);
+
+            products.forEach(product -> {
+                if (product.getQuantity() == 0) {
+                    product.setStatus(Status.Deactive);
+                } else {
+                    product.setStatus(Status.Active);
+                }
+            });
+
             List<Product> savedProducts = productRepository.saveAll(products);
 
             return productMapper.toProductDTOList(savedProducts);
@@ -126,6 +135,5 @@ public class ProductServiceImpl implements ProductService {
             throw new RuntimeException("Error reading CSV file: " + e.getMessage(), e);
         }
     }
-
 
 }

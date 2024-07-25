@@ -49,7 +49,6 @@ public class FileUtils {
         productSaveDTO.setName(attributes[0]);
         productSaveDTO.setPrice(Double.parseDouble(attributes[1]));
         productSaveDTO.setQuantity(Integer.parseInt(attributes[2]));
-        // No need to set status, createdAt, or updatedAt in ProductSaveDTO
         return productSaveDTO;
     }
 }
