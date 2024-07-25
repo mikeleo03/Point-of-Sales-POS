@@ -32,38 +32,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper = ProductMapper.INSTANCE;
 
-//    @Override
-//    public Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
-//        // Listing all the criteria
-//        String productName = criteria.getName();
-//        String sortByName = criteria.getSortByName();
-//        String sortByPrice = criteria.getSortByPrice();
-//        Double minPrice = criteria.getMinPrice();
-//        Double maxPrice = criteria.getMaxPrice();
-//
-//        // Define the sort rules
-//        Sort sort = Sort.unsorted();
-//        if (sortByName != null) {
-//            sort = sort.and(Sort.by("name").ascending());
-//            if (sortByName.equalsIgnoreCase("desc")) {
-//                sort = sort.and(Sort.by("name").descending());
-//            }
-//        }
-//        if (sortByPrice != null) {
-//            sort = sort.and(Sort.by("price").ascending());
-//            if (sortByPrice.equalsIgnoreCase("desc")) {
-//                sort = sort.and(Sort.by("price").descending());
-//            }
-//        }
-//
-//        // Set the pageable
-//        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-//
-//        // Get the product data from the repo
-//        Page<Product> products = productRepository.findByFilters(productName, minPrice, maxPrice, sortedPageable);
-//        return products.map(productMapper::toShowDTO);
-//    }
-
     @Override
     public Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
         // Listing all the criteria
