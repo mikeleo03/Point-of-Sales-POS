@@ -38,6 +38,10 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll(pageable).map(customerMapper::toCustomerShowDTO);
     }
 
+    @Override
+    public Customer findById(UUID customerId) {
+        return customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    }
     /**
      * Creates a new customer in the repository and returns the corresponding {@link CustomerDTO} object.
      *

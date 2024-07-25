@@ -5,17 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,9 +34,10 @@ public class Invoice {
     @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("customerId")
-    private Customer customer;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @MapsId("customerId")
+//    private Customer customer;
+    @JoinColumn(name = "customer_id", nullable=false)
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
