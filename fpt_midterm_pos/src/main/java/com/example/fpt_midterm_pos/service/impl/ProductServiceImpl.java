@@ -5,9 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

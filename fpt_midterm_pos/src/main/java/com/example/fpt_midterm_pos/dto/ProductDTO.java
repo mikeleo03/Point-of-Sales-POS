@@ -1,12 +1,12 @@
 package com.example.fpt_midterm_pos.dto;
 
+import java.util.UUID;
+
 import com.example.fpt_midterm_pos.data.model.Status;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
