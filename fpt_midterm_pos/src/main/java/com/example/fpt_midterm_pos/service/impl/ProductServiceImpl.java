@@ -5,12 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.example.fpt_midterm_pos.dto.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.data.repository.ProductRepository;
+import com.example.fpt_midterm_pos.dto.ProductDTO;
+import com.example.fpt_midterm_pos.dto.ProductSaveDTO;
+import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
+import com.example.fpt_midterm_pos.dto.ProductShowDTO;
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 import com.example.fpt_midterm_pos.exception.DuplicateStatusException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
@@ -169,6 +171,8 @@ public class ProductServiceImpl implements ProductService {
                 } else {
                     product.setStatus(Status.Active);
                 }
+                product.setCreatedAt(new Date());
+                product.setUpdatedAt(new Date());
             });
 
             List<Product> savedProducts = productRepository.saveAll(products);
