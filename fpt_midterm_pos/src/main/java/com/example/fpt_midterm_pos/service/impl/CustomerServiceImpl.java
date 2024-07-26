@@ -1,23 +1,23 @@
 package com.example.fpt_midterm_pos.service.impl;
 
-import com.example.fpt_midterm_pos.dto.CustomerDTO;
-import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
-import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
-import com.example.fpt_midterm_pos.service.CustomerService;
-import com.example.fpt_midterm_pos.mapper.CustomerMapper;
-import com.example.fpt_midterm_pos.data.model.Customer;
-import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
-import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
-import com.example.fpt_midterm_pos.exception.DuplicateStatusException;
-import com.example.fpt_midterm_pos.data.model.Status;
+import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-import java.util.Date;
+import com.example.fpt_midterm_pos.data.model.Customer;
+import com.example.fpt_midterm_pos.data.model.Status;
+import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
+import com.example.fpt_midterm_pos.dto.CustomerDTO;
+import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
+import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
+import com.example.fpt_midterm_pos.exception.DuplicateStatusException;
+import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
+import com.example.fpt_midterm_pos.mapper.CustomerMapper;
+import com.example.fpt_midterm_pos.service.CustomerService;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -39,10 +39,18 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findByStatus(Status.Active, pageable).map(customerMapper::toCustomerShowDTO);
     }
 
+    /**
+     * Retrieves a customer from the repository based on the provided unique identifier.
+     *
+     * @param customerId The unique identifier of the customer to be retrieved.
+     * @return A {@link Customer} object representing the customer with the given ID.
+     * @throws ResourceNotFoundException if no customer is found with the given ID.
+     */
     @Override
     public Customer findById(UUID customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     }
+    
     /**
      * Creates a new customer in the repository and returns the corresponding {@link CustomerDTO} object.
      *
