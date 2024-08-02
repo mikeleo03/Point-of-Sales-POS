@@ -1,56 +1,54 @@
 package com.example.fpt_midterm_pos.data.model;
 
-import jakarta.persistence.*;
+import java.util.Date;
+import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.io.Serializable;
-import java.sql.Date;
-import java.time.LocalDate;
-
-@Entity
-@Table(name = "product")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+@Entity
+@Table(name = "Product")
+public class Product {
+    
     @Id
-    @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id")
-    private String id;
+    @Column(name = "ID", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NotBlank(message = "Name is mandatory")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Name can only contain letters and spaces")
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "price")
-    private int price;
+    @NotNull(message = "Price is mandatory")
+    @Column(name = "price", nullable = false)
+    private Double price;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    @Column(name = "status", nullable = false)
+    private Status status = Status.Active;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "createdAt")
-    private LocalDate createdAt;
+    @Column(name = "createdAt", nullable = false)
+    private Date createdAt;
 
-    @Column(name = "updatedAt")
-    private LocalDate updatedAt;
-
-    public enum Status {
-        Active,
-        Deactive
-    }
+    @Column(name = "updatedAt", nullable = false)
+    private Date updatedAt;
 }

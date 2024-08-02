@@ -1,27 +1,29 @@
 package com.example.fpt_midterm_pos.service;
 
-import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.UUID;
+
+import com.example.fpt_midterm_pos.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.example.fpt_midterm_pos.dto.ProductDTO;
-import com.example.fpt_midterm_pos.data.model.Product;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.fpt_midterm_pos.data.model.Status;
 
 public interface ProductService {
 
-    List<ProductDTO> findAll();
+    // Find products based on the provided criteria.
+    Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable);
 
-    Page<ProductDTO> findAll(Pageable pageable);
+    // Creating a new product.
+    ProductDTO createProduct(ProductSaveDTO productSaveDTO);
 
-    List<ProductDTO> findByNameLike(String name);
+    // Updates an existing product with the provided product details.
+    ProductDTO updateProduct(UUID id, ProductSaveDTO productSaveDTO);
 
-    Page<ProductDTO> findAllByStatusAndName(String name, Pageable pageable);
+    // Updates the status of an existing product.
+    ProductDTO updateProductStatus(UUID id, Status status);
 
-    Product save(ProductDTO productDTO);
-
-    Product updateProduct(String id, ProductDTO productDTO);
-
-    Product updateProductStatus(String id, Product.Status status);
-
+    // Saves a list of products from a CSV file to the database.
     List<ProductDTO> saveProductsFromCSV(MultipartFile file);
 }

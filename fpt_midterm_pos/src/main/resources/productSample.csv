@@ -1,4 +1,4 @@
-id,name,price,quantity
-1234,Widget,150,10
-5678,Gadget,250,5
-9012,Thingamajig,100,20
+name,price,quantity
+Widget,150,10
+Gadget,250,5
+Thingamajig,100,20
