@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         // Get the product data from the repo
-        Page<Product> products = productRepository.findByFilters(Status.ACTIVE, productName, minPrice, maxPrice, sortedPageable);
+        Page<Product> products = productRepository.findByFilters(Status.ACTIVE.toString(), productName, minPrice, maxPrice, sortedPageable);
         return products.map(productMapper::toShowDTO);
     }
 
@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO createProduct(@Valid ProductSaveDTO productSaveDTO) {
         Product product = productMapper.toProduct(productSaveDTO);
-        product.setStatus(Status.ACTIVE); // Ensure the product is set to active when saving
+        product.setStatus(Status.ACTIVE.toString()); // Ensure the product is set to active when saving
         product.setCreatedAt(new Date());
         product.setUpdatedAt(new Date());
         Product savedProduct = productRepository.save(product);
@@ -139,15 +139,16 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProductStatus(UUID id, Status status) {
         Product prodCheck = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        if(status == prodCheck.getStatus()) {
+        if(status.toString().equals(prodCheck.getStatus())) {
             throw new DuplicateStatusException("Product status is already " + status);
         }
 
-        if (prodCheck.getStatus() == Status.ACTIVE) {
-            prodCheck.setStatus(Status.DEACTIVE);
-        } else if (prodCheck.getStatus() == Status.DEACTIVE) {
-            prodCheck.setStatus(Status.ACTIVE);
+        if (prodCheck.getStatus().equals(Status.ACTIVE.toString())) {
+            prodCheck.setStatus(Status.DEACTIVE.toString());
+        } else if (prodCheck.getStatus().equals(Status.DEACTIVE.toString())) {
+            prodCheck.setStatus(Status.ACTIVE.toString());
         }
+
         prodCheck.setUpdatedAt(new Date());
         Product updatedProduct = productRepository.save(prodCheck);
         return productMapper.toProductDTO(updatedProduct);
@@ -169,9 +170,9 @@ public class ProductServiceImpl implements ProductService {
     
             for (Product product : products) {
                 if (product.getQuantity() == 0) {
-                    product.setStatus(Status.DEACTIVE);
+                    product.setStatus(Status.DEACTIVE.toString());
                 } else {
-                    product.setStatus(Status.ACTIVE);
+                    product.setStatus(Status.ACTIVE.toString());
                 }
             }
     

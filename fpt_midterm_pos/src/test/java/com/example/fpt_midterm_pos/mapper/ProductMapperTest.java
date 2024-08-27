@@ -33,7 +33,7 @@ class ProductMapperTest {
             UUID.randomUUID(),
             "Test Product",
             100.0,
-            Status.ACTIVE,
+            Status.ACTIVE.toString(),
             10,
             new Date(),
             new Date()
@@ -71,7 +71,7 @@ class ProductMapperTest {
         assertEquals(product.getId(), productDTO.getId());
         assertEquals(product.getName(), productDTO.getName());
         assertEquals(product.getPrice(), productDTO.getPrice());
-        assertEquals(product.getStatus(), productDTO.getStatus());
+        assertEquals(product.getStatus(), productDTO.getStatus().toString());
         assertEquals(product.getQuantity(), productDTO.getQuantity());
     }
 

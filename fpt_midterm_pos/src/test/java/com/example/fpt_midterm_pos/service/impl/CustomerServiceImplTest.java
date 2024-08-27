@@ -60,7 +60,7 @@ class CustomerServiceImplTest {
         Customer customer = new Customer();
         customer.setId(customerId);
         customer.setName("Test Customer");
-        customer.setStatus(Status.ACTIVE);
+        customer.setStatus(Status.ACTIVE.toString());
         customer.setPhoneNumber("+62123456789");
         customer.setCreatedAt(new java.util.Date());
         customer.setUpdatedAt(new java.util.Date());
@@ -70,7 +70,7 @@ class CustomerServiceImplTest {
         pageable = PageRequest.of(0, 10);
         customerPage = new PageImpl<>(Collections.singletonList(customer));
 
-        when(customerRepository.findByStatus(Status.ACTIVE, pageable)).thenReturn(customerPage);
+        when(customerRepository.findByStatus(Status.ACTIVE.toString(), pageable)).thenReturn(customerPage);
         when(customerMapper.toCustomerShowDTO(customer)).thenReturn(customerShowDTO);
 
         Page<CustomerShowDTO> result = customerService.findAllActiveCustomer(pageable);
@@ -86,7 +86,7 @@ class CustomerServiceImplTest {
         Customer customer = new Customer();
         customer.setId(customerId);
         customer.setName("Test Customer");
-        customer.setStatus(Status.ACTIVE);
+        customer.setStatus(Status.ACTIVE.toString());
         customer.setPhoneNumber("+62123456789");
         customer.setCreatedAt(new java.util.Date());
         customer.setUpdatedAt(new java.util.Date());
@@ -169,7 +169,7 @@ class CustomerServiceImplTest {
         UUID id = UUID.randomUUID();
         Customer customer = new Customer();
         customer.setId(id);
-        customer.setStatus(Status.ACTIVE);
+        customer.setStatus(Status.ACTIVE.toString());
         CustomerDTO updatedCustomerDTO = new CustomerDTO(id, "Customer", "+62123456789", Status.DEACTIVE);
 
         when(customerRepository.findById(id)).thenReturn(Optional.of(customer));
@@ -187,7 +187,7 @@ class CustomerServiceImplTest {
         UUID id = UUID.randomUUID();
         Customer customer = new Customer();
         customer.setId(id);
-        customer.setStatus(Status.DEACTIVE);  // Customer starts as DEACTIVE
+        customer.setStatus(Status.DEACTIVE.toString());  // Customer starts as DEACTIVE
         CustomerDTO updatedCustomerDTO = new CustomerDTO(id, "Customer", "+62123456789", Status.ACTIVE);
 
         when(customerRepository.findById(id)).thenReturn(Optional.of(customer));
@@ -205,7 +205,7 @@ class CustomerServiceImplTest {
         UUID id = UUID.randomUUID();
         Customer customer = new Customer();
         customer.setId(id);
-        customer.setStatus(Status.ACTIVE);
+        customer.setStatus(Status.ACTIVE.toString());
 
         when(customerRepository.findById(id)).thenReturn(Optional.of(customer));
 
@@ -221,7 +221,7 @@ class CustomerServiceImplTest {
         UUID id = UUID.randomUUID();
         Customer customer = new Customer();
         customer.setId(id);
-        customer.setStatus(Status.DEACTIVE);
+        customer.setStatus(Status.DEACTIVE.toString());
 
         when(customerRepository.findById(id)).thenReturn(Optional.of(customer));
 

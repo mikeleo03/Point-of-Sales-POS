@@ -122,7 +122,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             // Re-validate the product status
-            if (product.getStatus() != Status.ACTIVE) {
+            if (!product.getStatus().equals(Status.ACTIVE.toString())) {
                 throw new IllegalArgumentException("Product is not active");
             }
             
@@ -208,7 +208,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             // Validate the product status
-            if (product.getStatus() != Status.ACTIVE) {
+            if (!product.getStatus().equals(Status.ACTIVE.toString())) {
                 throw new BadRequestException("Product is not active");
             }
 

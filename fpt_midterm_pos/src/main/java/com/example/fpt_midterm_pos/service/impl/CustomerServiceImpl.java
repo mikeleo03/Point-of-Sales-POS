@@ -45,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Page<CustomerShowDTO> findAllActiveCustomer(Pageable pageable) {
-        return customerRepository.findByStatus(Status.ACTIVE, pageable).map(customerMapper::toCustomerShowDTO);
+        return customerRepository.findByStatus(Status.ACTIVE.toString(), pageable).map(customerMapper::toCustomerShowDTO);
     }
 
     /**
@@ -107,14 +107,14 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO updateCustomerStatus(UUID id, Status status) {
         Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
 
-        if(status == custCheck.getStatus()) {
+        if(status.toString().equals(custCheck.getStatus())) {
             throw new DuplicateStatusException("Customer status is already " + status);
         }
 
-        if (custCheck.getStatus() == Status.ACTIVE) {
-            custCheck.setStatus(Status.DEACTIVE);
-        } else if (custCheck.getStatus() == Status.DEACTIVE) {
-            custCheck.setStatus(Status.ACTIVE);
+        if (custCheck.getStatus().equals(Status.ACTIVE.toString())) {
+            custCheck.setStatus(Status.DEACTIVE.toString());
+        } else if (custCheck.getStatus().equals(Status.DEACTIVE.toString())) {
+            custCheck.setStatus(Status.ACTIVE.toString());
         }
         custCheck.setUpdatedAt(new Date());
         Customer updatedCustomer = customerRepository.save(custCheck);

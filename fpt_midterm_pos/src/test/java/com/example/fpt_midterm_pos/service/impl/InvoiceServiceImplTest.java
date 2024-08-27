@@ -146,7 +146,7 @@ class InvoiceServiceImplTest {
         Customer customer = new Customer();
         Invoice savedInvoice = new Invoice();
         Product product = new Product();
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
         product.setQuantity(10);
         product.setPrice(100.0);
         InvoiceDTO invoiceDTO = new InvoiceDTO();
@@ -201,7 +201,7 @@ class InvoiceServiceImplTest {
 
         Customer customer = new Customer();
         Product product = new Product();
-        product.setStatus(Status.DEACTIVE);
+        product.setStatus(Status.DEACTIVE.toString());
 
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer)); // Mock customer repository
         when(productRepository.findById(any(UUID.class))).thenReturn(Optional.of(product));
@@ -226,7 +226,7 @@ class InvoiceServiceImplTest {
 
         Customer customer = new Customer();
         Product product = new Product();
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
         product.setQuantity(10);
 
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer)); // Mock customer repository
@@ -252,7 +252,7 @@ class InvoiceServiceImplTest {
 
         Customer customer = new Customer();
         Product product = new Product();
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
         product.setQuantity(-8); // Negative stock to trigger the exception
 
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer)); // Mock customer repository
@@ -306,7 +306,7 @@ class InvoiceServiceImplTest {
 
         Product availableProduct = new Product();
         availableProduct.setQuantity(10);
-        availableProduct.setStatus(Status.ACTIVE);
+        availableProduct.setStatus(Status.ACTIVE.toString());
         availableProduct.setPrice(100.0); // Ensure price is initialized
 
         // Mock repository responses
@@ -337,7 +337,7 @@ class InvoiceServiceImplTest {
         Product availableProduct = new Product();
         availableProduct.setId(productId);
         availableProduct.setQuantity(10);
-        availableProduct.setStatus(Status.ACTIVE);
+        availableProduct.setStatus(Status.ACTIVE.toString());
         availableProduct.setPrice(100.0);
 
         Customer customer = new Customer();
@@ -458,7 +458,7 @@ class InvoiceServiceImplTest {
         Invoice existingInvoice = new Invoice();
         existingInvoice.setCreatedAt(new Date()); // Ensure this is initialized
         Product inactiveProduct = new Product();
-        inactiveProduct.setStatus(Status.DEACTIVE);
+        inactiveProduct.setStatus(Status.DEACTIVE.toString());
 
         when(invoiceRepository.findById(invoiceId)).thenReturn(Optional.of(existingInvoice));
         when(productRepository.findById(productId)).thenReturn(Optional.of(inactiveProduct)); // Mock inactive product
@@ -487,7 +487,7 @@ class InvoiceServiceImplTest {
         existingInvoice.setInvoiceDetails(new ArrayList<>()); // Initialize to avoid null pointer
         Product productWithInsufficientStock = new Product();
         productWithInsufficientStock.setQuantity(10);
-        productWithInsufficientStock.setStatus(Status.ACTIVE);
+        productWithInsufficientStock.setStatus(Status.ACTIVE.toString());
 
         when(invoiceRepository.findById(invoiceId)).thenReturn(Optional.of(existingInvoice));
         when(productRepository.findById(productId)).thenReturn(Optional.of(productWithInsufficientStock));

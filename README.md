@@ -131,7 +131,7 @@ CREATE TABLE Customer (
     ID BINARY(16) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     phoneNumber VARCHAR(255),
-    status ENUM('Active', 'Deactivate') NOT NULL,
+    status ENUM('ACTIVE', 'DEACTIVE') NOT NULL,
     createdAt DATETIME,
     updatedAt DATETIME
 );
@@ -141,7 +141,7 @@ CREATE TABLE Product (
     ID BINARY(16) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
-    status ENUM('Active', 'Deactivate') NOT NULL,
+    status ENUM('ACTIVE', 'DEACTIVE') NOT NULL,
     quantity INT(10),
     createdAt DATETIME,
     updatedAt DATETIME

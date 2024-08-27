@@ -70,7 +70,7 @@ class ProductServiceImplTest {
         product.setName("Test Product");
         product.setPrice(100.0);
         product.setQuantity(10);
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
 
         criteria = new ProductSearchCriteriaDTO();
         criteria.setName("Test");
@@ -99,7 +99,7 @@ class ProductServiceImplTest {
         product.setName("Test Product");
         product.setPrice(100.0);
         product.setQuantity(10);
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
 
         criteria = new ProductSearchCriteriaDTO();
         criteria.setName("Test");
@@ -176,7 +176,7 @@ class ProductServiceImplTest {
         UUID id = UUID.randomUUID();
         Product product = new Product();
         product.setId(id);
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
         ProductDTO updatedProductDTO = new ProductDTO(id, "Product", 100.0, Status.DEACTIVE, 10);
 
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
@@ -194,7 +194,7 @@ class ProductServiceImplTest {
         UUID id = UUID.randomUUID();
         Product product = new Product();
         product.setId(id);
-        product.setStatus(Status.DEACTIVE);
+        product.setStatus(Status.DEACTIVE.toString());
         ProductDTO updatedProductDTO = new ProductDTO(id, "Product B", 100.0, Status.ACTIVE, 10);
 
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
@@ -212,7 +212,7 @@ class ProductServiceImplTest {
         UUID id = UUID.randomUUID();
         Product product = new Product();
         product.setId(id);
-        product.setStatus(Status.DEACTIVE);
+        product.setStatus(Status.DEACTIVE.toString());
         ProductDTO updatedProductDTO = new ProductDTO(id, "Product B", 100.0, Status.ACTIVE, 10);
 
         when(productRepository.findById(id)).thenReturn(Optional.empty());
@@ -231,7 +231,7 @@ class ProductServiceImplTest {
         UUID id = UUID.randomUUID();
         Product product = new Product();
         product.setId(id);
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
         ProductDTO updatedProductDTO = new ProductDTO(id, "Product B", 100.0, Status.DEACTIVE, 10);
 
         when(productRepository.findById(id)).thenReturn(Optional.empty());
@@ -250,7 +250,7 @@ class ProductServiceImplTest {
         UUID id = UUID.randomUUID();
         Product product = new Product();
         product.setId(id);
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
 
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
@@ -270,7 +270,7 @@ class ProductServiceImplTest {
         // Mock the Product object
         Product product = products.get(0);
         when(product.getQuantity()).thenReturn(10); // Ensure quantity is not null
-        when(product.getStatus()).thenReturn(Status.ACTIVE);
+        when(product.getStatus()).thenReturn(Status.ACTIVE.toString());
         // Mock the InputStream with Excel file content
         MockMultipartFile fileExcel = new MockMultipartFile("file", "products.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "name,price,quantity\nProduct,100.0,10".getBytes());
 
@@ -300,7 +300,7 @@ class ProductServiceImplTest {
         // Mock the Product object
         Product product = products.get(0);
         when(product.getQuantity()).thenReturn(0);
-        when(product.getStatus()).thenReturn(Status.DEACTIVE);
+        when(product.getStatus()).thenReturn(Status.DEACTIVE.toString());
 
         // Mock the InputStream with Excel file content
         MockMultipartFile fileExcel = new MockMultipartFile("file", "products.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "name,price,quantity\nProduct,100.0,10".getBytes());

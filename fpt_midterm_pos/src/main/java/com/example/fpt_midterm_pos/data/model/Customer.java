@@ -7,8 +7,6 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,9 +41,8 @@ public class Customer {
     @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.ACTIVE;
+    private String status = Status.ACTIVE.toString();
 
     @Column(name = "createdAt", nullable = false)
     private Date createdAt;

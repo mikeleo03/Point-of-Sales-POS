@@ -27,7 +27,7 @@ class CustomerRepositoryTest {
         customer = new Customer();
         customer.setId(UUID.randomUUID());
         customer.setName("Test Customer");
-        customer.setStatus(Status.ACTIVE);
+        customer.setStatus(Status.ACTIVE.toString());
         customer.setPhoneNumber("+62123456789");
         customer.setCreatedAt(new java.util.Date());
         customer.setUpdatedAt(new java.util.Date());
@@ -36,13 +36,13 @@ class CustomerRepositoryTest {
 
     @Test
     void findByStatus() {
-        Page<Customer> customers = customerRepository.findByStatus(Status.ACTIVE, PageRequest.of(0, 10));
+        Page<Customer> customers = customerRepository.findByStatus(Status.ACTIVE.toString(), PageRequest.of(0, 10));
         assertThat(customers.getTotalElements()).isPositive();
     }
 
     @Test
     void findByStatusEmptyResult() {
-        Page<Customer> customers = customerRepository.findByStatus(Status.DEACTIVE, PageRequest.of(0, 10));
+        Page<Customer> customers = customerRepository.findByStatus(Status.DEACTIVE.toString(), PageRequest.of(0, 10));
         assertThat(customers.getTotalElements()).isZero();
     }
 }

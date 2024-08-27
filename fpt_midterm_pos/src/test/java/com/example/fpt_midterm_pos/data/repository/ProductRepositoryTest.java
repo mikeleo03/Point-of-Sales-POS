@@ -34,7 +34,7 @@ class ProductRepositoryTest {
         product.setId(UUID.randomUUID());
         product.setName("Test Product");
         product.setPrice(100.0);
-        product.setStatus(Status.ACTIVE);
+        product.setStatus(Status.ACTIVE.toString());
         product.setQuantity(10);
         product.setCreatedAt(new java.util.Date());
         product.setUpdatedAt(new java.util.Date());
@@ -43,30 +43,30 @@ class ProductRepositoryTest {
 
     @Test
     void findProductByNameContainingAndStatus() {
-        List<Product> products = productRepository.findByNameContainingAndStatus("Test", Status.ACTIVE);
+        List<Product> products = productRepository.findByNameContainingAndStatus("Test", Status.ACTIVE.toString());
         assertThat(products).isNotEmpty();
     }
 
     @Test
     void findProductByStatus() {
-        Page<Product> products = productRepository.findAllByStatus(Status.ACTIVE, PageRequest.of(0, 10));
+        Page<Product> products = productRepository.findAllByStatus(Status.ACTIVE.toString(), PageRequest.of(0, 10));
         assertThat(products.getTotalElements()).isPositive();
     }
 
     @Test
     void findProductByFilters() {
-        Page<Product> products = productRepository.findByFilters(Status.ACTIVE, "Test", 50.0, 150.0, PageRequest.of(0, 10));
+        Page<Product> products = productRepository.findByFilters(Status.ACTIVE.toString(), "Test", 50.0, 150.0, PageRequest.of(0, 10));
         assertThat(products.getTotalElements()).isPositive();
     }
 
     @Test
     void findByNameContainingEmptyResult() {
-        assertThat(productRepository.findByNameContainingAndStatus("NonExistent", Status.ACTIVE)).isEmpty();
+        assertThat(productRepository.findByNameContainingAndStatus("NonExistent", Status.ACTIVE.toString())).isEmpty();
     }
 
     @Test
     void findAllByStatusEmptyResult() {
-        assertThat(productRepository.findAllByStatus(Status.DEACTIVE, Pageable.unpaged())).isEmpty();
+        assertThat(productRepository.findAllByStatus(Status.DEACTIVE.toString(), Pageable.unpaged())).isEmpty();
     }
 
     @Test
@@ -75,7 +75,7 @@ class ProductRepositoryTest {
         Product product1 = new Product();
         product1.setName("Test Product A");
         product1.setPrice(100.0);
-        product1.setStatus(Status.ACTIVE);
+        product1.setStatus(Status.ACTIVE.toString());
         product1.setCreatedAt(new java.util.Date());
         product1.setUpdatedAt(new java.util.Date());
         productRepository.save(product1);
@@ -83,14 +83,14 @@ class ProductRepositoryTest {
         Product product2 = new Product();
         product2.setName("Test Product B");
         product2.setPrice(200.0);
-        product2.setStatus(Status.ACTIVE);
+        product2.setStatus(Status.ACTIVE.toString());
         product2.setCreatedAt(new java.util.Date());
         product2.setUpdatedAt(new java.util.Date());
         productRepository.save(product2);
 
         // Test with pagination
         Pageable pageable = PageRequest.of(0, 1, Sort.by("name"));
-        Page<Product> result = productRepository.findByFilters(Status.ACTIVE, "Test", null, null, pageable);
+        Page<Product> result = productRepository.findByFilters(Status.ACTIVE.toString(), "Test", null, null, pageable);
 
         assertThat(result.getTotalElements()).isEqualTo(3);
         assertThat(result.getNumberOfElements()).isEqualTo(1);
@@ -101,7 +101,7 @@ class ProductRepositoryTest {
         try {
             Product invalidProduct = new Product();
             invalidProduct.setName("Test Product 2");
-            invalidProduct.setStatus(Status.ACTIVE);
+            invalidProduct.setStatus(Status.ACTIVE.toString());
             productRepository.save(invalidProduct);
         } catch (Exception e) {
             // Validate that the exception contains details about constraint violation

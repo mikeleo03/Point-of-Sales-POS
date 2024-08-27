@@ -31,7 +31,7 @@ class CustomerMapperTest {
         customer.setId(UUID.randomUUID());
         customer.setName("John Doe");
         customer.setPhoneNumber("+621234567890");
-        customer.setStatus(Status.ACTIVE);
+        customer.setStatus(Status.ACTIVE.toString());
         customer.setCreatedAt(new Date());
         customer.setUpdatedAt(new Date());
         return customer;
@@ -72,7 +72,7 @@ class CustomerMapperTest {
         assertEquals(customer.getId(), customerDTO.getId());
         assertEquals(customer.getName(), customerDTO.getName());
         assertEquals(customer.getPhoneNumber(), customerDTO.getPhoneNumber());
-        assertEquals(customer.getStatus(), customerDTO.getStatus());
+        assertEquals(customer.getStatus(), customerDTO.getStatus().toString());
     }
 
     @Test
@@ -108,7 +108,7 @@ class CustomerMapperTest {
         assertEquals(customerDTO.getId(), customer.getId());
         assertEquals(customerDTO.getName(), customer.getName());
         assertEquals(customerDTO.getPhoneNumber(), customer.getPhoneNumber());
-        assertEquals(customerDTO.getStatus(), customer.getStatus());
+        assertEquals(customerDTO.getStatus().toString(), customer.getStatus());
         // createdAt, updatedAt, and invoice are ignored, so we won't check them
     }
 
