@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Invoice } from '../models/invoice.model';
 
 @Injectable({
@@ -15,6 +15,10 @@ export class InvoiceService {
     return this.http.get<Invoice[]>(this.apiUrl);
   }
 
+  getInvoiceById(id: string): Observable<Invoice> {
+    return this.http.get<Invoice>(`${this.apiUrl}/${id}`);
+  }
+
   createInvoice(invoice: Invoice): Observable<Invoice> {
     return this.http.post<Invoice>(this.apiUrl, invoice);
   }
@@ -25,5 +29,17 @@ export class InvoiceService {
 
   deleteInvoice(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  updateInvoiceStatus(id: string, status: boolean): Observable<Invoice> {
+    return this.getInvoiceById(id).pipe(
+      switchMap((product) => {
+        const updatedInvoice: Invoice = {
+          ...product,
+          status: status as boolean,
+        };
+        return this.updateInvoice(updatedInvoice);
+      })
+    );
   }
 }

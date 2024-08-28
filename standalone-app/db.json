@@ -139,7 +139,7 @@
           "amount": 333
         }
       ],
-      "status": true,
+      "status": false,
       "date": "2024-08-28T10:10:56.000+00:00",
       "customer": {
         "id": "321312",

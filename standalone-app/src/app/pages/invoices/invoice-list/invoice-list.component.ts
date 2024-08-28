@@ -30,6 +30,7 @@ import { Invoice } from '../../../models/invoice.model';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
 import { ActionCellRendererComponent } from './action-cell-renderer.component';
 import { TimeAgoPipe } from '../../../core/pipes/time-ago.pipe';
+import { StatusCellRendererComponent } from './status-cell-renderer.component';
 
 @Component({
   selector: 'app-invoice-list',
@@ -71,6 +72,13 @@ export class InvoiceListComponent implements OnInit {
         new PriceFormatPipe().transform(params.value),
     },
     {
+      field: 'status',
+      headerClass: 'text-center',
+      cellClass: 'text-center',
+      minWidth: 200,
+      cellRenderer: StatusCellRendererComponent,
+    },
+    {
       field: 'date',
       sortable: true,
       filter: 'agDateColumnFilter',
@@ -83,6 +91,7 @@ export class InvoiceListComponent implements OnInit {
       headerName: 'Time Ago',
       field: 'date',
       sortable: true,
+      filter: 'agDateColumnFilter',
       headerClass: 'text-center',
       minWidth: 200,
       valueFormatter: (params: any) =>
@@ -104,6 +113,9 @@ export class InvoiceListComponent implements OnInit {
   };
 
   public gridOptions: GridOptions = {
+    context: {
+      componentParent: this,
+    },
     getRowStyle: (params) => {
       return undefined;
     },
@@ -147,6 +159,14 @@ export class InvoiceListComponent implements OnInit {
         this.loadInvoices();
       });
     }
+  }
+
+  onStatusToggle(invoice: any) {
+    this.invoiceService
+      .updateInvoiceStatus(invoice.id, invoice.status)
+      .subscribe(() => {
+        this.loadInvoices();
+      });
   }
 
   onGridSizeChanged(params: GridSizeChangedEvent) {

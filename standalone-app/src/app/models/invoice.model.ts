@@ -7,5 +7,5 @@ export interface Invoice {
   date: Date;
   customer: Customer;
   invoiceDetails: InvoiceDetail[];
+  status: boolean;
 }
-
