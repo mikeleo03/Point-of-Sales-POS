@@ -5,6 +5,7 @@ import { Customer } from '../../../models/customer.model';
 import { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { StatusCellRendererComponent } from './status-cell-customer-renderer.component';
+import { PhoneNumberFormatPipe } from '../../../core/pipes/phone-number/phone-number-format.pipe';
 
 @Component({
   selector: 'app-customer-list',
@@ -67,7 +68,12 @@ export class CustomerListComponent implements OnInit {
     this.colDefs = [
       {field: 'id', headerName: 'Id', filter: 'agTextColumnFilter'},
       {field: 'name', headerName: 'Name', filter: 'agTextColumnFilter'},
-      {field: 'phoneNumber', headerName: 'Phone Number', filter: 'agTextColumnFilter'},
+      {
+        field: 'phoneNumber',
+        headerName: 'Phone Number',
+        filter: 'agTextColumnFilter',
+        valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value)
+      },
       {
         field: 'status',
         headerName: 'Status',
