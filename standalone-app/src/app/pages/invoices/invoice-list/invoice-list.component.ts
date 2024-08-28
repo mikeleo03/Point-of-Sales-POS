@@ -28,12 +28,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { Invoice } from '../../../models/invoice.model';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
+import { ActionCellRendererComponent } from './action-cell-renderer.component';
+import { TimeAgoPipe } from '../../../core/pipes/time-ago.pipe';
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
   imports: [
     AgGridAngular,
+    TimeAgoPipe,
     DateFormatPipe,
     PriceFormatPipe,
     CommonModule,
@@ -48,7 +51,7 @@ import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
     HlmLabelDirective,
-    InvoiceFormComponent
+    InvoiceFormComponent,
   ],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
@@ -75,6 +78,22 @@ export class InvoiceListComponent implements OnInit {
       minWidth: 200,
       valueFormatter: (params: any) =>
         new DateFormatPipe().transform(params.value),
+    },
+    {
+      headerName: 'Time Ago',
+      field: 'date',
+      sortable: true,
+      headerClass: 'text-center',
+      minWidth: 200,
+      valueFormatter: (params: any) =>
+        new TimeAgoPipe().transform(params.value), // Use the new pipe here
+    },
+    {
+      headerName: 'Actions',
+      cellRenderer: ActionCellRendererComponent,
+      headerClass: 'text-center',
+      minWidth: 225,
+      cellClass: 'text-center',
     },
   ];
 

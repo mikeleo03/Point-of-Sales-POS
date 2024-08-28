@@ -30,7 +30,10 @@
               Fill out the form below to add a new invoice.
             </p>
           </hlm-sheet-header>
-          <app-invoice-form (invoiceAdded)="onAddProduct($event)" (formClosed)="ctx.close()"></app-invoice-form>
+          <app-invoice-form
+            (invoiceSaved)="onAddInvoice($event)"
+            (formClosed)="ctx.close()"
+          ></app-invoice-form>
         </hlm-sheet-content>
       </hlm-sheet>
     </div>
@@ -42,6 +45,8 @@
       [rowData]="invoices"
       [columnDefs]="colDefs"
       [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [paginationPageSize]="10"
       [gridOptions]="gridOptions"
       (gridReady)="onGridReady($event)"
       (gridSizeChanged)="onGridSizeChanged($event)"

@@ -100,12 +100,13 @@
       "invoiceDetails": [
         {
           "productId": "223e4567-e89b-12d3-a456-426614174003",
-          "productName": "",
+          "productName": "Unknown Product",
           "quantity": 1,
-          "price": 0,
+          "price": 150,
           "amount": 150
         }
-      ]
+      ],
+      "status": false
     },
     {
       "id": "323e4567-e89b-12d3-a456-426614174005",
@@ -118,12 +119,13 @@
       "invoiceDetails": [
         {
           "productId": "223e4567-e89b-12d3-a456-426614174003",
-          "productName": "",
+          "productName": "Unknown Product",
           "quantity": 1,
-          "price": 0,
+          "price": 150,
           "amount": 150
         }
-      ]
+      ],
+      "status": false
     },
     {
       "id": "1e9b",
@@ -131,10 +133,47 @@
       "invoiceDetails": [
         {
           "productId": "1",
-          "quantity": 333
+          "quantity": 333,
+          "productName": "Unknown Product",
+          "price": 1,
+          "amount": 333
         }
       ],
-      "status": true
+      "status": true,
+      "date": "2024-08-28T10:10:56.000+00:00",
+      "customer": {
+        "id": "321312",
+        "name": "Unknown Customer"
+      },
+      "amount": 333
+    },
+    {
+      "id": "3372",
+      "customerId": "4321321321",
+      "invoiceDetails": [
+        {
+          "productId": "1",
+          "quantity": 2
+        },
+        {
+          "productId": "5",
+          "quantity": 23
+        }
+      ],
+      "status": true,
+      "date": "2024-08-28T04:50:18.869Z"
+    },
+    {
+      "id": "d144",
+      "customerId": "4323321321",
+      "invoiceDetails": [
+        {
+          "productId": "4",
+          "quantity": 2
+        }
+      ],
+      "status": true,
+      "date": "2024-08-28T05:02:41.091Z"
     }
   ]
 }

@@ -14,6 +14,7 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceService } from '../../../services/invoice.service';
 import { Product } from '../../../models/product.model';
+import { InvoiceDetail } from '../../../models/invoiceDetails.model';
 
 @Component({
   selector: 'app-invoice-form',
@@ -32,7 +33,7 @@ import { Product } from '../../../models/product.model';
 export class InvoiceFormComponent implements OnInit {
   @Input() invoice: any;
   @Input() isEditMode = false; // Flag to differentiate between add and edit mode
-  @Output() invoiceAdded = new EventEmitter<any>();
+  @Output() invoiceSaved = new EventEmitter<any>();
   @Output() formClosed = new EventEmitter<void>();
 
   invoiceForm!: FormGroup;
@@ -48,10 +49,32 @@ export class InvoiceFormComponent implements OnInit {
     this.invoiceForm = this.fb.group({
       customerId: ['', Validators.required],
       invoiceDetails: this.fb.array([this.createInvoiceDetail()]),
-      status: [false],
+      status: [true],
+      date: [new Date()],
     });
+
     if (this.isEditMode) {
-      this.invoiceForm.patchValue(this.invoice); // Pre-fill the form with existing invoice data
+      // Correct way to patch the form with existing invoice data
+      this.invoiceForm.patchValue({
+        customerId: this.invoice.customerId,
+        status: this.invoice.status,
+      });
+
+      // Patch the FormArray separately
+      this.invoiceForm.setControl(
+        'invoiceDetails',
+        this.fb.array(
+          this.invoice.invoiceDetails.map((detail: any) =>
+            this.fb.group({
+              productId: [detail.productId, Validators.required],
+              quantity: [
+                detail.quantity,
+                [Validators.required, Validators.min(1)],
+              ],
+            })
+          )
+        )
+      );
     }
 
     this.loadProducts();
@@ -80,13 +103,14 @@ export class InvoiceFormComponent implements OnInit {
     const invoiceData = this.invoiceForm.value;
     if (this.isEditMode) {
       this.invoiceService.updateInvoice(invoiceData).subscribe(() => {
-        this.invoiceAdded.emit(invoiceData);
+        this.invoiceSaved.emit(invoiceData);
         this.formClosed.emit(); // Close the form
       });
     } else {
       this.invoiceService.createInvoice(invoiceData).subscribe(() => {
+        invoiceData.date;
         alert('Successfully Created Data');
-        this.invoiceAdded.emit(invoiceData);
+        this.invoiceSaved.emit(invoiceData);
         this.formClosed.emit(); // Close the form
       });
     }

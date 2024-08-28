@@ -1,7 +1,13 @@
+
 <div class="py-4 grid gap-4">
   <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="space-y-4">
-    <div class="items-center grid grid-cols-4 gap-4">
-      <label hlmLabel for="customerId" class="text-right">Customer Id</label>
+    <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
+      <label
+        hlmLabel
+        for="customerId"
+        class="text-right col-span-2 lg:col-span-1"
+        >Customer Id</label
+      >
       <div class="col-span-3">
         <input
           hlmInput
@@ -26,8 +32,13 @@
       *ngFor="let detail of invoiceDetails.controls; let i = index"
     >
       <div [formGroupName]="i" class="w-full space-y-4">
-        <div class="items-center grid grid-cols-4 gap-4">
-          <label hlmLabel class="text-right" for="productId">Product:</label>
+        <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
+          <label
+            hlmLabel
+            class="text-right col-span-2 lg:col-span-1"
+            for="productId"
+            >Product:</label
+          >
           <div class="col-span-3">
             <select
               id="productId"
@@ -56,8 +67,13 @@
           </div>
         </div>
 
-        <div class="items-center grid grid-cols-4 gap-4">
-          <label hlmLabel class="text-right" for="quantity">Quantity:</label>
+        <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
+          <label
+            hlmLabel
+            class="text-right col-span-2 lg:col-span-1"
+            for="quantity"
+            >Quantity:</label
+          >
           <div class="col-span-3">
             <input
               hlmInput
@@ -80,7 +96,7 @@
           </div>
         </div>
 
-        <div class="col-span-4 text-right text-sm">
+        <div class="col-span-5 lg:col-span-4 text-right text-sm">
           <button
             type="button"
             class="hover:font-bold animation duration-300"
@@ -92,7 +108,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-4 text-right text-sm">
+    <div class="col-span-5 lg:col-span-4 text-right text-sm">
       <button
         type="button"
         class="hover:font-bold animation duration-300"
