@@ -11,9 +11,7 @@ export interface RouteLink {
   
 export const RouterConfig = {
     HOME: {path: '', link: '/'},
-    LOGIN: {path: 'login', link: '/login', title: 'Login'},
-    PRODUCT: {path: 'products', link: '/product', title: 'List of Products'},
-    ADD_PRODUCT: {path: 'product/new', link: '/product/new', title: 'Add Product'},
-    UPDATE_PRODUCT: {path: 'product/update', link: '/product/update', title: 'Update Product'},
+    LOGIN: {path: 'login', link: '/login', title: 'Login', data: {header: true}},
+    PRODUCT: {path: 'products', link: '/product', title: 'List of Products', data: {header: true}},
     NOT_FOUND: {path: '**', link: null, title: 'Page Not Found'}
 };
