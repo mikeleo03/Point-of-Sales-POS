@@ -27,7 +27,7 @@ export class CustomerService {
   updateCustomerStatus(id: string, status: string): Observable<Customer> {
     return this.getCustomerById(id).pipe(
       switchMap( customer => {
-        const updatedCustomer: Customer = { ...customer, status: status };  
+        const updatedCustomer: Customer = { ...customer, status: status, updatedAt: new Date() };  
         return this.updateCustomer(updatedCustomer);
       })
     );

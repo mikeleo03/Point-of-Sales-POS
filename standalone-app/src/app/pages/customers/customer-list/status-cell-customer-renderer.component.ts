@@ -31,7 +31,7 @@ export class StatusCellRendererComponent {
     } else {
       updatedCustomer.status = 'Active';
     }
-    
+
     this.params.context.componentParent.onStatusToggle(updatedCustomer);
   }
 }

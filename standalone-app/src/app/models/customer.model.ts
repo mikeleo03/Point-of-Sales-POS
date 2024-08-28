@@ -3,6 +3,6 @@ export interface Customer {
     name: string;
     phoneNumber: string;
     status: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }  

@@ -21,7 +21,6 @@ export class CustomerListComponent implements OnInit {
   colDefs: ColDef[] = [];
 
   public defaultColDef: ColDef = {
-    filter: 'agTextColumnFilter',
     floatingFilter: true,
     flex: 1
   };
@@ -66,9 +65,9 @@ export class CustomerListComponent implements OnInit {
 
   initColumnDefs() {
     this.colDefs = [
-      {field: 'id', headerName: 'Id'},
-      {field: 'name', headerName: 'Name'},
-      {field: 'phoneNumber', headerName: 'Phone Number'},
+      {field: 'id', headerName: 'Id', filter: 'agTextColumnFilter'},
+      {field: 'name', headerName: 'Name', filter: 'agTextColumnFilter'},
+      {field: 'phoneNumber', headerName: 'Phone Number', filter: 'agTextColumnFilter'},
       {
         field: 'status',
         headerName: 'Status',
