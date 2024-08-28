@@ -1,1 +1,10 @@
-<p>customer-list works!</p>
+<div class="container mx-auto p-6">
+    <div class="flex items-center justify-center">
+        <ag-grid-angular
+            class="ag-theme-quartz w-full h-[100vh] mt-4 my-6"
+            [rowData]="customers"
+            [columnDefs]="colDefs"
+            [defaultColDef]="defaultColDef">
+        </ag-grid-angular>
+    </div>
+</div>

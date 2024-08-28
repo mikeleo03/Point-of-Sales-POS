@@ -1,4 +1,14 @@
 {
+  "customers": [
+    {
+      "id": "1",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-27T10:00:00Z"
+    }
+  ],
   "products": [
     {
       "id": "1",

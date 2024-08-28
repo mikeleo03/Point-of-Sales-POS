@@ -23,7 +23,7 @@ export const RouterConfig = {
         link: '/product/update',
         title: 'Update Product'
     },
-    CUSTOMER: {path: 'customer', link: '/customer', title: 'List of Customers'},
+    CUSTOMER: {path: 'customers', link: '/customer', title: 'List of Customers'},
     ADD_CUSTOMER: {
         path: 'customer/new',
         link: '/customer/new',
