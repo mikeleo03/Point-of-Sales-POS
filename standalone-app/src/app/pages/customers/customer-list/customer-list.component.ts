@@ -6,6 +6,7 @@ import { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { StatusCellRendererComponent } from './status-cell-customer-renderer.component';
 import { PhoneNumberFormatPipe } from '../../../core/pipes/phone-number/phone-number-format.pipe';
+import { ActionCellRendererComponent } from './action-cell-customer-renderer.component';
 
 @Component({
   selector: 'app-customer-list',
@@ -79,7 +80,13 @@ export class CustomerListComponent implements OnInit {
         headerName: 'Status',
         cellClass: 'text-center',
         cellRenderer: StatusCellRendererComponent
-      }
+      },
+      {
+        headerName: 'Actions',
+        cellClass: 'text-center',
+        minWidth: 300,
+        cellRenderer: ActionCellRendererComponent
+      },
     ];
   }
 
