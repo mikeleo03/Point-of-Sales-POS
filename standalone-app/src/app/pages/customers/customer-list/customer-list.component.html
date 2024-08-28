@@ -1,10 +1,21 @@
 <div class="container mx-auto p-6">
+    <div class="flex md:flex-row flex-col justify-between">
+        <div class="flex flex-col justify-start text-start md:my-4 my-2">
+            <h1 class="md:text-3xl text-2xl font-bold text-green-1 text-start">Customer Management</h1>
+            <h3 class="mt-1 text-slate-600">Master Your Customer: Streamline and Optimize with Our Customer Management Hub!</h3>
+        </div>
+    </div>
     <div class="flex items-center justify-center">
         <ag-grid-angular
             class="ag-theme-quartz w-full h-[100vh] mt-4 my-6"
             [rowData]="customers"
             [columnDefs]="colDefs"
-            [defaultColDef]="defaultColDef">
+            [defaultColDef]="defaultColDef"
+            [gridOptions]="gridOptions"
+            [pagination]="true"
+            [paginationPageSize]="10"
+            [context]="{ componentParent: this }"
+            (cellValueChanged)="onCustomerToggle($event)">
         </ag-grid-angular>
     </div>
 </div>
