@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
+import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 import {
   BrnSheetContentDirective,
   BrnSheetTriggerDirective,
 } from '@spartan-ng/ui-sheet-brain';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
-import { ICellRendererParams } from 'ag-grid-community';
 import {
   HlmSheetComponent,
   HlmSheetContentComponent,
-  HlmSheetDescriptionDirective,
-  HlmSheetFooterComponent,
   HlmSheetHeaderComponent,
   HlmSheetTitleDirective,
+  HlmSheetDescriptionDirective,
 } from '@spartan-ng/ui-sheet-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
@@ -26,7 +25,6 @@ import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
     HlmSheetComponent,
     HlmSheetContentComponent,
     HlmSheetHeaderComponent,
-    HlmSheetFooterComponent,
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
     HlmLabelDirective,
@@ -36,8 +34,9 @@ import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
       <button
         class="bg-blue-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-blue-600 mr-1.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
         brnSheetTrigger
-        [disabled]="!params.data.status || isTimeAgoMoreThan10Minutes()"
-        (click)="onEditClick()"
+        [disabled]="
+          !params.data || !params.data.status || isTimeAgoMoreThan10Minutes()
+        "
       >
         <i class="fas fa-pencil-alt"></i>&nbsp; Update
       </button>
@@ -66,7 +65,7 @@ import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
     <button
       class="bg-red-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed"
       (click)="onDeleteClick()"
-      [disabled]="!params.data.status"
+      [disabled]="!params.data || !params.data.status"
     >
       <i class="fas fa-trash"></i>&nbsp; Delete
     </button>
@@ -79,16 +78,13 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     this.params = params;
   }
 
-  refresh(params: ICellRendererParams) {
+  refresh(params: ICellRendererParams): boolean {
+    this.params = params;
     return true;
   }
 
   onInvoiceSaved(invoice: any) {
-    this.params.context.componentParent.onAddInvoice(invoice);
-  }
-
-  onEditClick() {
-    this.params.context.componentParent.onInvoiceEdited(this.params.data);
+    this.params.context.componentParent.onInvoiceSaved(invoice);
   }
 
   onDeleteClick() {

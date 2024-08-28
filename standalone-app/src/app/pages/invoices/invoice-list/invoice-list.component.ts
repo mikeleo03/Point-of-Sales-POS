@@ -11,6 +11,7 @@ import {
 import { Router } from '@angular/router';
 import { DateFormatPipe } from '../../../core/pipes/date-format.pipe';
 import { PriceFormatPipe } from '../../../core/pipes/price-format.pipe';
+import { TimeAgoPipe } from '../../../core/pipes/time-ago.pipe';
 import {
   HlmSheetComponent,
   HlmSheetContentComponent,
@@ -29,7 +30,6 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { Invoice } from '../../../models/invoice.model';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
 import { ActionCellRendererComponent } from './action-cell-renderer.component';
-import { TimeAgoPipe } from '../../../core/pipes/time-ago.pipe';
 import { StatusCellRendererComponent } from './status-cell-renderer.component';
 
 @Component({
@@ -43,6 +43,8 @@ import { StatusCellRendererComponent } from './status-cell-renderer.component';
     CommonModule,
     ReactiveFormsModule,
     AgGridModule,
+    InvoiceFormComponent,
+
     BrnSheetTriggerDirective,
     BrnSheetContentDirective,
     HlmSheetComponent,
@@ -52,7 +54,6 @@ import { StatusCellRendererComponent } from './status-cell-renderer.component';
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
     HlmLabelDirective,
-    InvoiceFormComponent,
   ],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
@@ -113,10 +114,10 @@ export class InvoiceListComponent implements OnInit {
   };
 
   public gridOptions: GridOptions = {
-    context: {
-      componentParent: this,
-    },
     getRowStyle: (params) => {
+      if (!params.data.status) {
+        return { backgroundColor: '#f5f5f5', color: '#aaa' }; // Dark background for entire row when inactive
+      }
       return undefined;
     },
   };
@@ -133,10 +134,6 @@ export class InvoiceListComponent implements OnInit {
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.adjustGridForScreenSize(); // Initial check
-  }
-
-  onAddProduct(product: any) {
-    this.loadInvoices(); // Reload products after adding
   }
 
   loadInvoices() {
