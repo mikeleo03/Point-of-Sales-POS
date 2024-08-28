@@ -1,12 +1,140 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { InvoiceService } from '../../../services/invoice.service';
+import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
+import {
+  ColDef,
+  GridSizeChangedEvent,
+  FirstDataRenderedEvent,
+  GridOptions,
+  GridApi,
+} from 'ag-grid-community';
+import { Router } from '@angular/router';
+import { DateFormatPipe } from '../../../core/pipes/date-format.pipe';
+import { PriceFormatPipe } from '../../../core/pipes/price-format.pipe';
+import {
+  HlmSheetComponent,
+  HlmSheetContentComponent,
+  HlmSheetHeaderComponent,
+  HlmSheetFooterComponent,
+  HlmSheetTitleDirective,
+  HlmSheetDescriptionDirective,
+} from '@spartan-ng/ui-sheet-helm';
+import {
+  BrnSheetContentDirective,
+  BrnSheetTriggerDirective,
+} from '@spartan-ng/ui-sheet-brain';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
+import { Invoice } from '../../../models/invoice.model';
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [],
+  imports: [
+    AgGridAngular,
+    DateFormatPipe,
+    PriceFormatPipe,
+    CommonModule,
+    ReactiveFormsModule,
+    AgGridModule,
+    BrnSheetTriggerDirective,
+    BrnSheetContentDirective,
+    HlmSheetComponent,
+    HlmSheetContentComponent,
+    HlmSheetHeaderComponent,
+    HlmSheetFooterComponent,
+    HlmSheetTitleDirective,
+    HlmSheetDescriptionDirective,
+    HlmLabelDirective,
+  ],
   templateUrl: './invoice-list.component.html',
-  styleUrl: './invoice-list.component.css'
+  styleUrl: './invoice-list.component.css',
 })
-export class InvoiceListComponent {
+export class InvoiceListComponent implements OnInit {
+  invoices: Invoice[] = [];
+  colDefs: ColDef[] = [
+    { field: 'id', headerClass: 'text-center', minWidth: 200 },
+    { field: 'customer.name', headerClass: 'text-center', minWidth: 200 },
+    {
+      field: 'amount',
+      sortable: true,
+      filter: 'agNumberColumnFilter',
+      headerClass: 'text-center',
+      minWidth: 200,
+      valueFormatter: (params: any) =>
+        new PriceFormatPipe().transform(params.value),
+    },
+    {
+      field: 'date',
+      sortable: true,
+      filter: 'agDateColumnFilter',
+      headerClass: 'text-center',
+      minWidth: 200,
+      valueFormatter: (params: any) =>
+        new DateFormatPipe().transform(params.value),
+    },
+  ];
 
+  public defaultColDef: ColDef = {
+    filter: 'agTextColumnFilter',
+    floatingFilter: true,
+    resizable: true,
+  };
+
+  public gridOptions: GridOptions = {
+    getRowStyle: (params) => {
+      return undefined;
+    },
+  };
+
+  private gridApi!: GridApi;
+
+  constructor(private invoiceService: InvoiceService, private router: Router) {}
+
+  ngOnInit() {
+    this.loadInvoices();
+    window.addEventListener('resize', this.adjustGridForScreenSize.bind(this)); // Listen for resize events
+  }
+
+  onGridReady(params: any) {
+    this.gridApi = params.api;
+    this.adjustGridForScreenSize(); // Initial check
+  }
+
+  loadInvoices() {
+    this.invoiceService.getInvoices().subscribe((invoices) => {
+      this.invoices = invoices;
+    });
+  }
+
+  onAddInvoice(invoice: any) {
+    this.loadInvoices(); // Reload invoices after adding
+  }
+
+  onInvoiceEdited(invoice: any) {
+    this.loadInvoices(); // Reload invoices after edited
+  }
+
+  onDeleteInvoice(invoice: any) {
+    if (confirm(`Are you sure you want to delete this invoice?`)) {
+      this.invoiceService.deleteInvoice(invoice.id).subscribe(() => {
+        this.loadInvoices();
+      });
+    }
+  }
+
+  onGridSizeChanged(params: GridSizeChangedEvent) {
+    params.api.sizeColumnsToFit(); // Ensure columns fit the grid width
+  }
+
+  onFirstDataRendered(params: FirstDataRenderedEvent) {
+    params.api.sizeColumnsToFit(); // Fit columns on initial render
+  }
+
+  adjustGridForScreenSize() {
+    if (this.gridApi) {
+      this.gridApi.sizeColumnsToFit(); // Adjust columns for screen size
+    }
+  }
 }
