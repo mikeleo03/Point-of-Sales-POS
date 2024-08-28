@@ -33,7 +33,13 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) 
             throws ServletException, IOException {
         
-        logger.info("[Filter][" + request + "]" + "[" + request.getMethod()+ "] " + request.getRequestURI());
+        logger.info("[Filter][" + request + "]" + "[" + request.getMethod() + "] " + request.getRequestURI());
+        
+        if (request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         String requestApiKey = request.getHeader("api-key");
 
         Optional<ApiKey> apiKeyOpt = apiKeyRepository.findFirstByActiveTrueOrderById();

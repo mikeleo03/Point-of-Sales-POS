@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import com.example.fpt_midterm_pos.dto.JwtResponse;
 import com.example.fpt_midterm_pos.service.AuthService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1/authentication")
 public class AuthenticationController {
 
@@ -33,11 +35,9 @@ public class AuthenticationController {
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authRequest) {
         // Authenticate the user first
         authService.authenticate(authRequest.getUsername(), authRequest.getPassword());
-        System.out.println("Lewat pass 1" + authRequest.getUsername());
 
         // Generate JWT token
         final String jwt = jwtUtil.generateToken(authRequest.getUsername());
-        System.out.println("Lewat pass 2" + jwt);
 
         // Return the token as a response
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwt));

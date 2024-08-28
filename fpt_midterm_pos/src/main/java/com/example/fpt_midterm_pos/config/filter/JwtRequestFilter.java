@@ -37,7 +37,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
         
-        logger.info("[Filter][" + request + "]" + "[" + request.getMethod()+ "] " + requestURI);
+        logger.info("[JWTFilter][" + request + "]" + "[" + request.getMethod()+ "] " + requestURI);
 
         // Exclude the /api/v1/authentication endpoint and any nested routes
         if (requestURI.startsWith("/api/v1/authentication")) {
@@ -68,9 +68,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (userDetails != null) {
                 if (Boolean.TRUE.equals(jwtUtil.validateToken(jwt, userDetails))) {
                     // Only if JWT token is valid
-                    logger.info("[Filter] doFilter starts.");
+                    logger.info("[JWTFilter] doFilter starts.");
                     filterChain.doFilter(request, response);
-                    logger.info("[Filter] doFilter done.");
+                    logger.info("[JWTFilter] doFilter done.");
                 }
             } else {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -85,7 +85,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 
-        logger.info("[Filter] Logging Response : {}", response.getStatus());
+        logger.info("[JWTFilter] Logging Response : {}", response.getStatus());
     }
 }
 
