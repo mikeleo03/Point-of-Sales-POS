@@ -15,7 +15,9 @@
             [pagination]="true"
             [paginationPageSize]="10"
             [context]="{ componentParent: this }"
-            (cellValueChanged)="onCustomerToggle($event)">
+            (cellValueChanged)="onCustomerToggle($event)"
+            (gridSizeChanged)="onGridSizeChanged($event)"
+            (firstDataRendered)="onFirstDataRendered($event)">
         </ag-grid-angular>
     </div>
 </div>

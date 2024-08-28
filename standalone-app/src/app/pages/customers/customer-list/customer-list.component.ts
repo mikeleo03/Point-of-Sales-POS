@@ -2,18 +2,38 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { Customer } from '../../../models/customer.model';
-import { ColDef, GridApi, GridOptions } from 'ag-grid-community';
+import { ColDef, FirstDataRenderedEvent, GridApi, GridOptions, GridSizeChangedEvent } from 'ag-grid-community';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { StatusCellRendererComponent } from './status-cell-customer-renderer.component';
 import { PhoneNumberFormatPipe } from '../../../core/pipes/phone-number/phone-number-format.pipe';
 import { ActionCellRendererComponent } from './action-cell-customer-renderer.component';
+import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/ui-sheet-brain';
+import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetDescriptionDirective, HlmSheetFooterComponent, HlmSheetHeaderComponent, HlmSheetTitleDirective } from '@spartan-ng/ui-sheet-helm';
+import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CustomerFormComponent } from '../customer-form/customer-form.component';
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
   imports: [
     CommonModule,
-    AgGridAngular
+    AgGridAngular,
+    PhoneNumberFormatPipe,
+    ReactiveFormsModule,
+    CustomerFormComponent,
+
+    BrnSheetTriggerDirective,
+    BrnSheetContentDirective,
+    HlmSheetComponent,
+    HlmSheetContentComponent,
+    HlmSheetHeaderComponent,
+    HlmSheetFooterComponent,
+    HlmSheetTitleDirective,
+    HlmSheetDescriptionDirective,
+    HlmLabelDirective,
+    ActionCellRendererComponent,
+    StatusCellRendererComponent
   ],
   templateUrl: './customer-list.component.html',
   styleUrl: './customer-list.component.css'
@@ -63,6 +83,22 @@ export class CustomerListComponent implements OnInit {
     this.customerService.updateCustomerStatus(customer.id, customer.status).subscribe(() => {
       this.loadCustomers();
     });
+  }
+
+  onGridSizeChanged(params: GridSizeChangedEvent) {
+    params.api.sizeColumnsToFit();
+  }
+
+  onFirstDataRendered(params: FirstDataRenderedEvent) {
+    params.api.sizeColumnsToFit();
+  }
+
+  onAddCustomer(product: any) {
+    this.loadCustomers(); // Reload products after adding
+  }
+
+  onCustomerEdited(product: any) {
+    this.loadCustomers(); // Reload products after edited
   }
 
   initColumnDefs() {

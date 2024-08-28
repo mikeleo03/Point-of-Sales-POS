@@ -6,7 +6,39 @@
       "phoneNumber": "+628283749958312",
       "status": "Active",
       "createdAt": "2024-08-27T10:00:00Z",
-      "updatedAt": "2024-08-28T05:53:26.513Z"
+      "updatedAt": "2024-08-28T23:40:28.374Z"
+    },
+    {
+      "id": "2",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:17.974Z"
+    },
+    {
+      "id": "3",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:23.638Z"
+    },
+    {
+      "id": "4",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:19.279Z"
+    },
+    {
+      "id": "5",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:19.287Z"
     }
   ],
   "products": [
