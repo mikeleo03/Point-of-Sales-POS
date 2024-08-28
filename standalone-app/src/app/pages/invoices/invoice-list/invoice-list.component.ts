@@ -27,6 +27,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { Invoice } from '../../../models/invoice.model';
+import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
 
 @Component({
   selector: 'app-invoice-list',
@@ -47,6 +48,7 @@ import { Invoice } from '../../../models/invoice.model';
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
     HlmLabelDirective,
+    InvoiceFormComponent
   ],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
@@ -100,6 +102,10 @@ export class InvoiceListComponent implements OnInit {
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.adjustGridForScreenSize(); // Initial check
+  }
+
+  onAddProduct(product: any) {
+    this.loadInvoices(); // Reload products after adding
   }
 
   loadInvoices() {

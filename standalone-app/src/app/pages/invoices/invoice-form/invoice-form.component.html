@@ -1,1 +1,115 @@
-<p>invoice-form works!</p>
+<div class="py-4 grid gap-4">
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="items-center grid grid-cols-4 gap-4">
+      <label hlmLabel for="customerId" class="text-right">Customer Id</label>
+      <div class="col-span-3">
+        <input
+          hlmInput
+          id="customerId"
+          formControlName="customerId"
+          class="w-full"
+          placeholder="Enter customer id"
+        />
+        <span
+          *ngIf="
+            customerId?.invalid && (customerId?.dirty || customerId?.touched)
+          "
+          class="text-red-500 text-sm block mt-1"
+        >
+          Customer is required.
+        </span>
+      </div>
+    </div>
+
+    <div
+      formArrayName="invoiceDetails"
+      *ngFor="let detail of invoiceDetails.controls; let i = index"
+    >
+      <div [formGroupName]="i" class="w-full space-y-4">
+        <div class="items-center grid grid-cols-4 gap-4">
+          <label hlmLabel class="text-right" for="productId">Product:</label>
+          <div class="col-span-3">
+            <select
+              id="productId"
+              formControlName="productId"
+              hlmInput
+              class="w-full"
+            >
+              <option
+                class="py-4 border border-black"
+                *ngFor="let product of products"
+                [value]="product.id"
+              >
+                {{ product.name }}
+              </option>
+            </select>
+            <span
+              *ngIf="
+                detail.get('productId')?.invalid &&
+                (detail.get('productId')?.dirty ||
+                  detail.get('productId')?.touched)
+              "
+              class="text-red-500 text-sm block mt-1"
+            >
+              Product is required.
+            </span>
+          </div>
+        </div>
+
+        <div class="items-center grid grid-cols-4 gap-4">
+          <label hlmLabel class="text-right" for="quantity">Quantity:</label>
+          <div class="col-span-3">
+            <input
+              hlmInput
+              id="quantity"
+              type="number"
+              formControlName="quantity"
+              class="w-full"
+              placeholder="Enter quantity"
+            />
+            <span
+              *ngIf="
+                detail.get('quantity')?.invalid &&
+                (detail.get('quantity')?.dirty ||
+                  detail.get('quantity')?.touched)
+              "
+              class="text-red-500 text-sm block mt-1"
+            >
+              Quantity is required.
+            </span>
+          </div>
+        </div>
+
+        <div class="col-span-4 text-right text-sm">
+          <button
+            type="button"
+            class="hover:font-bold animation duration-300"
+            (click)="removeInvoiceDetail(i)"
+            *ngIf="invoiceDetails.length > 1"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-4 text-right text-sm">
+      <button
+        type="button"
+        class="hover:font-bold animation duration-300"
+        (click)="addInvoiceDetail()"
+      >
+        Add More Products
+      </button>
+    </div>
+    <div class="pt-5 w-full text-right">
+      <button
+        hlmBtn
+        class="bg-green-2 hover:bg-green-2/80"
+        type="submit"
+        [disabled]="invoiceForm.invalid"
+      >
+        {{ isEditMode ? "Update Invoice" : "Save Invoice" }}
+      </button>
+    </div>
+  </form>
+</div>

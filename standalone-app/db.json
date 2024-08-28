@@ -124,6 +124,17 @@
           "amount": 150
         }
       ]
+    },
+    {
+      "id": "1e9b",
+      "customerId": "321312",
+      "invoiceDetails": [
+        {
+          "productId": "1",
+          "quantity": 333
+        }
+      ],
+      "status": true
     }
   ]
 }
