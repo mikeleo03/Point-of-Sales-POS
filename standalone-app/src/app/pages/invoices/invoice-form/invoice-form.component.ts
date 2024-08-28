@@ -14,7 +14,6 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceService } from '../../../services/invoice.service';
 import { Product } from '../../../models/product.model';
-import { InvoiceDetail } from '../../../models/invoiceDetails.model';
 
 @Component({
   selector: 'app-invoice-form',
@@ -32,7 +31,8 @@ import { InvoiceDetail } from '../../../models/invoiceDetails.model';
 })
 export class InvoiceFormComponent implements OnInit {
   @Input() invoice: any;
-  @Input() isEditMode = false; // Flag to differentiate between add and edit mode
+  @Input() isEditMode = false;
+  @Input() isViewMode = false; // New flag for View Mode
   @Output() invoiceSaved = new EventEmitter<any>();
   @Output() formClosed = new EventEmitter<void>();
 
@@ -42,48 +42,65 @@ export class InvoiceFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    private invoiceService: InvoiceService // Inject InvoiceService here
+    private invoiceService: InvoiceService
   ) {}
 
   ngOnInit() {
     this.invoiceForm = this.fb.group({
-      customerId: ['', Validators.required],
+      customerId: [
+        { value: '', disabled: this.isViewMode },
+        Validators.required,
+      ],
       invoiceDetails: this.fb.array([this.createInvoiceDetail()]),
-      status: [true],
-      date: [new Date()],
+      status: [{ value: true, disabled: this.isViewMode }],
+      date: [{ value: new Date(), disabled: this.isViewMode }],
     });
 
-    if (this.isEditMode) {
-      // Correct way to patch the form with existing invoice data
-      this.invoiceForm.patchValue({
-        customerId: this.invoice.customerId,
-        status: this.invoice.status,
-      });
-
-      // Patch the FormArray separately
-      this.invoiceForm.setControl(
-        'invoiceDetails',
-        this.fb.array(
-          this.invoice.invoiceDetails.map((detail: any) =>
-            this.fb.group({
-              productId: [detail.productId, Validators.required],
-              quantity: [
-                detail.quantity,
-                [Validators.required, Validators.min(1)],
-              ],
-            })
-          )
-        )
-      );
+    if (!this.isViewMode && this.isEditMode) {
+      this.patchFormWithData();
+    } else if (this.isViewMode) {
+      this.patchFormWithData();
+      this.invoiceForm.disable(); // Disable all controls for view mode
     }
 
     this.loadProducts();
   }
 
+  patchFormWithData() {
+    this.invoiceForm.patchValue({
+      customerId: this.invoice.customerId,
+      status: this.invoice.status,
+    });
+
+    this.invoiceForm.setControl(
+      'invoiceDetails',
+      this.fb.array(
+        this.invoice.invoiceDetails.map((detail: any) =>
+          this.fb.group({
+            productId: [
+              { value: detail.productId, disabled: this.isViewMode },
+              Validators.required,
+            ],
+            quantity: [
+              { value: detail.quantity, disabled: this.isViewMode },
+              [Validators.required, Validators.min(1)],
+            ],
+          })
+        )
+      )
+    );
+  }
+
   createInvoiceDetail(): FormGroup {
     return this.fb.group({
-      productId: ['', Validators.required],
-      quantity: [0, [Validators.required, Validators.min(1)]],
+      productId: [
+        { value: '', disabled: this.isViewMode },
+        Validators.required,
+      ],
+      quantity: [
+        { value: 0, disabled: this.isViewMode },
+        [Validators.required, Validators.min(1)],
+      ],
     });
   }
 
@@ -100,18 +117,21 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.isViewMode) {
+      return; // Do nothing if in view mode
+    }
+
     const invoiceData = this.invoiceForm.value;
     if (this.isEditMode) {
       this.invoiceService.updateInvoice(invoiceData).subscribe(() => {
         this.invoiceSaved.emit(invoiceData);
-        this.formClosed.emit(); // Close the form
+        this.formClosed.emit();
       });
     } else {
       this.invoiceService.createInvoice(invoiceData).subscribe(() => {
-        invoiceData.date;
         alert('Successfully Created Data');
         this.invoiceSaved.emit(invoiceData);
-        this.formClosed.emit(); // Close the form
+        this.formClosed.emit();
       });
     }
   }

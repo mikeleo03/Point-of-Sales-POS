@@ -1,0 +1,14 @@
+<p>invoice-modal works!</p>
+<p><strong>Customer ID:</strong> {{ invoice.customerId }}</p>
+<p><strong>Date:</strong> {{ invoice.date}}</p>
+<p><strong>ID:</strong> {{ invoice.id }}</p>
+<p>
+  <strong>Status:</strong>
+  {{ invoice.status ? 'Active' : 'Inactive' }}
+</p>
+<p><strong>Invoice Details:</strong></p>
+<ul>
+  <li *ngFor="let detail of invoice.invoiceDetails">
+    Product ID: {{ detail.productId }}, Quantity: {{ detail.quantity }}
+  </li>
+</ul>

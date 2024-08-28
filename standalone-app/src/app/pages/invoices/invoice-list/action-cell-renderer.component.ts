@@ -12,24 +12,70 @@ import {
   HlmSheetTitleDirective,
   HlmSheetDescriptionDirective,
 } from '@spartan-ng/ui-sheet-helm';
+import {
+  BrnDialogModule,
+  BrnDialogContentDirective,
+  BrnDialogTriggerDirective,
+} from '@spartan-ng/ui-dialog-brain';
+import {
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+  HlmDialogDescriptionDirective,
+  HlmDialogFooterComponent,
+  HlmDialogHeaderComponent,
+  HlmDialogTitleDirective,
+} from '@spartan-ng/ui-dialog-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
+import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component';
 
 @Component({
   selector: 'app-action-cell-renderer',
   standalone: true,
   imports: [
     InvoiceFormComponent,
+    InvoiceModalComponent,
     BrnSheetTriggerDirective,
     BrnSheetContentDirective,
+    BrnDialogTriggerDirective,
+    BrnDialogModule,
+    BrnDialogContentDirective,
     HlmSheetComponent,
     HlmSheetContentComponent,
     HlmSheetHeaderComponent,
     HlmSheetTitleDirective,
     HlmSheetDescriptionDirective,
+    HlmDialogComponent,
+    HlmDialogContentComponent,
+    HlmDialogHeaderComponent,
+    HlmDialogFooterComponent,
+    HlmDialogTitleDirective,
+    HlmDialogDescriptionDirective,
     HlmLabelDirective,
   ],
   template: `
+    <!-- Dialog Content for Viewing Invoice -->
+    <hlm-dialog>
+      <button
+        class="bg-gray-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-gray-600 mr-1.5 disabled:bg-gray-300 disabled:cursor-not-allowed"
+        brnDialogTrigger
+        hlmBtn
+        [disabled]="!params.data || !params.data.status"
+      >
+        <i class="fas fa-eye"></i>&nbsp; View
+      </button>
+      <hlm-dialog-content class="sm:max-w-[700px]" *brnDialogContent="let ctx">
+        <hlm-dialog-header>
+          <h3 hlmDialogTitle>Invoice Details</h3>
+          <p hlmDialogDescription>Invoice Details</p>
+        </hlm-dialog-header>
+        <app-invoice-modal [invoice]="params.data"></app-invoice-modal>
+        <hlm-dialog-footer>
+          <button hlmButton hlmDialogClose>Close</button>
+        </hlm-dialog-footer>
+      </hlm-dialog-content>
+    </hlm-dialog>
+
     <hlm-sheet side="right">
       <button
         class="bg-blue-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-blue-600 mr-1.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
@@ -89,6 +135,11 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
 
   onDeleteClick() {
     this.params.context.componentParent.onDeleteInvoice(this.params.data);
+  }
+
+  onViewClick() {
+    // Logic to view the invoice details
+    this.params.context.componentParent.onViewInvoice(this.params.data);
   }
 
   isTimeAgoMoreThan10Minutes(): boolean {

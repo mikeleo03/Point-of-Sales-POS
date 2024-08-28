@@ -150,6 +150,12 @@ export class InvoiceListComponent implements OnInit {
     this.loadInvoices(); // Reload invoices after edited
   }
 
+  onViewInvoice(invoiceData: any) {
+    // Open a modal or navigate to a page to view the invoice details
+    console.log('Viewing invoice:', invoiceData);
+    // Your logic to view the invoice details here
+  }
+
   onDeleteInvoice(invoice: any) {
     if (confirm(`Are you sure you want to delete this invoice?`)) {
       this.invoiceService.deleteInvoice(invoice.id).subscribe(() => {
