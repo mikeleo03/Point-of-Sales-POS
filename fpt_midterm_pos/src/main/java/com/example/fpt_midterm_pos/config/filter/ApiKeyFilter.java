@@ -21,10 +21,13 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class ApiKeyFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private ApiKeyRepository apiKeyRepository;
-
+    private final ApiKeyRepository apiKeyRepository;
     private static final Logger logger = LoggerFactory.getLogger(ApiKeyFilter.class);
+
+    @Autowired
+    public ApiKeyFilter(ApiKeyRepository apiKeyRepository) {
+        this.apiKeyRepository = apiKeyRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) 
