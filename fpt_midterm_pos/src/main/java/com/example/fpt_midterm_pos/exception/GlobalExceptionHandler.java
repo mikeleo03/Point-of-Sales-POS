@@ -109,5 +109,19 @@ public class GlobalExceptionHandler {
         errorResponse.put(ERROR, e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * Handles {@link AuthException} by creating a response entity containing an error message.
+     *
+     * @param e the {@link AuthException} to handle
+     * @return a {@link AuthException} containing a map with an error message
+     */
+    @ExceptionHandler(AuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<Map<String, String>> handleAuthException(AuthException e) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put(ERROR, e.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
 }
 
