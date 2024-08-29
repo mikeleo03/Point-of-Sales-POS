@@ -14,6 +14,7 @@ import {
   FormArray,
 } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
+import { CustomerService } from '../../../services/customer/customer.service';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
@@ -22,6 +23,8 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceService } from '../../../services/invoice.service';
 import { Product } from '../../../models/product.model';
 import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
+import { Customer } from '../../../models/customer.model';
+
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
@@ -45,6 +48,7 @@ export class InvoiceFormComponent implements OnInit {
 
   invoiceForm!: FormGroup;
   products: Product[] = [];
+  customers: Customer[] = [];
 
   @ViewChild(ToastContainerDirective, { static: true })
   toastContainer!: ToastContainerDirective;
@@ -52,6 +56,7 @@ export class InvoiceFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
+    private customerService: CustomerService,
     private invoiceService: InvoiceService,
     private toastrService: ToastrService
   ) {}
@@ -68,6 +73,7 @@ export class InvoiceFormComponent implements OnInit {
       this.patchFormWithData();
     }
     this.loadProducts();
+    this.loadCustomers();
   }
 
   patchFormWithData() {
@@ -155,6 +161,12 @@ export class InvoiceFormComponent implements OnInit {
   loadProducts() {
     this.productService.getProducts({}, 0, 20).subscribe((products) => {
       this.products = products.content;
+    });
+  }
+
+  loadCustomers() {
+    this.customerService.getCustomers(0, 20).subscribe((customers) => {
+      this.customers = customers.content;
     });
   }
 

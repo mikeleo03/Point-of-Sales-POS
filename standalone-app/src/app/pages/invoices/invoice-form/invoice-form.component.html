@@ -1,29 +1,40 @@
 <div class="py-4 grid gap-4">
   <div aria-live="polite" class="z-50 absolute" toastContainer></div>
   <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="space-y-4">
-    <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
-      <label
-        hlmLabel
-        for="customerId"
-        class="text-right col-span-2 lg:col-span-1"
-        >Customer Id</label
-      >
-      <div class="col-span-3">
-        <input
-          hlmInput
-          id="customerId"
-          formControlName="customerId"
-          class="w-full"
-          placeholder="Enter customer id"
-        />
-        <span
-          *ngIf="
-            customerId?.invalid && (customerId?.dirty || customerId?.touched)
-          "
-          class="text-red-500 text-sm block mt-1"
+    <div class="w-full">
+      <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
+        <label
+          hlmLabel
+          class="text-right col-span-2 lg:col-span-1"
+          for="customerId"
+          >Customer:</label
         >
-          Customer is required.
-        </span>
+        <div class="col-span-3">
+          <select
+            id="customerId"
+            formControlName="customerId"
+            hlmInput
+            class="w-full"
+          >
+            <option
+              class="py-4 border border-black"
+              *ngFor="let customer of customers"
+              [value]="customer.id"
+            >
+              {{ customer.name }}
+            </option>
+          </select>
+          <span
+            *ngIf="
+              invoiceForm.get('customerId')?.invalid &&
+              (invoiceForm.get('customerId')?.dirty ||
+                invoiceForm.get('customerId')?.touched)
+            "
+            class="text-red-500 text-sm block mt-1"
+          >
+            Customer is required.
+          </span>
+        </div>
       </div>
     </div>
     <div class="h-40 lg:h-80 overflow-y-auto p-2">
@@ -31,7 +42,7 @@
         formArrayName="invoiceDetails"
         *ngFor="let detail of invoiceDetails.controls; let i = index"
       >
-        <div [formGroupName]="i" class="w-full mt-2 space-y-4">
+        <div [formGroupName]="i" class="w-full space-y-4">
           <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
             <label
               hlmLabel
