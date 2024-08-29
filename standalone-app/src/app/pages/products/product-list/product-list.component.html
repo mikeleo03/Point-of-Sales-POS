@@ -30,7 +30,7 @@
             [pagination]="true"
             [paginationPageSize]="10"
             [context]="{ componentParent: this }"
-            (cellValueChanged)="onProductToggle($event)"
+            (gridReady)="onGridReady($event)" 
             (gridSizeChanged)="onGridSizeChanged($event)"
             (firstDataRendered)="onFirstDataRendered($event)">
         </ag-grid-angular>
