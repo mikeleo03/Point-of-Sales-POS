@@ -1,4 +1,38 @@
 {
+  "customers": [
+    {
+      "id": "1",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-29T03:41:50.861Z"
+    },
+    {
+      "id": "2",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-29T02:46:09.779Z"
+    },
+    {
+      "id": "3",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:23.638Z"
+    },
+    {
+      "id": "4",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:19.279Z"
+    }
+  ],
   "products": [
     {
       "id": "1",

@@ -1,0 +1,25 @@
+<div class="py-4 grid gap-4">
+    <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="name" class="text-right">Name</label>
+            <div class="col-span-3">
+                <input hlmInput id="name" formControlName="name" class="w-full" placeholder="Enter Customer Name" />
+                <span *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="text-red-500 text-sm block mt-1">
+                    Name is required.
+                </span>
+            </div>
+        </div>
+        <div class="items-center grid grid-cols-4 gap-4">
+            <label hlmLabel for="price" class="text-right">Phone Number</label>
+            <div class="col-span-3">
+                <input hlmInput id="phoneNumber" formControlName="phoneNumber" class="w-full" placeholder="Enter Customer Phone Number" />
+                <span *ngIf="phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)" class="text-red-500 text-sm block mt-1">
+                    Phone Number must start with +62 and be 13 to 16 characters long.
+                </span>
+            </div>
+        </div>
+        <div class="pt-5 w-full justify-end">
+            <button hlmBtn class="bg-green-2 hover:bg-green-2/80" type="submit" [disabled]="customerForm.invalid">{{ isEditMode ? 'Update Customer' : 'Save Customer' }}</button>
+        </div>
+    </form>
+</div>

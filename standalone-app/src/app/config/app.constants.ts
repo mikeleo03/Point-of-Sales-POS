@@ -23,6 +23,11 @@ export const RouterConfig = {
     title: 'List of Products',
     data: { header: true },
   },
+  CUSTOMER: {
+    path: 'customers',
+    link: '/customer',
+    title: 'List of Customers',
+    data: { header: true }},
   INVOICE: {
     path: 'invoices',
     link: '/invoice',

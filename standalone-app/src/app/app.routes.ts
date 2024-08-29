@@ -30,12 +30,15 @@ export const routes: Routes = [
         title: RouterConfig.PRODUCT.title,
         data: RouterConfig.PRODUCT.data,
       },
-      // {
-      //     path: RouterConfig.CUSTOMER.path,
-      //     loadChildren: () => import('./pages/customer/customer.routes').then(m => m.customerRoutes),
-      //     title: RouterConfig.CUSTOMER.title,
-      //     data: RouterConfig.CUSTOMER.data,
-      // },
+      {
+          path: RouterConfig.CUSTOMER.path,
+          loadChildren: () => 
+            import('./pages/customers/customer.routes').then(
+              m => m.customerRoutes
+            ),
+          title: RouterConfig.CUSTOMER.title,
+          data: RouterConfig.CUSTOMER.data,
+      },
       {
         path: RouterConfig.INVOICE.path,
         loadChildren: () =>
