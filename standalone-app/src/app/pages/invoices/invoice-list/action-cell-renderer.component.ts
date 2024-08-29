@@ -64,7 +64,7 @@ import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component'
       >
         <i class="fas fa-eye"></i>&nbsp; View
       </button>
-      <hlm-dialog-content class="sm:max-w-[300px] lg:max-w-[500px] text-left h-[90vh]" *brnDialogContent="let ctx">
+      <hlm-dialog-content class="max-w-[300px] lg:max-w-[700px] text-left h-[90vh]" *brnDialogContent="let ctx">
         <hlm-dialog-header class="w-full text-left">
           <h3 hlmDialogTitle>Invoice Details</h3>
           <p hlmDialogDescription>Invoice Details</p>
