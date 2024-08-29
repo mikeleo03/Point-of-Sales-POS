@@ -60,7 +60,7 @@ import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component'
         class="bg-gray-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-gray-600 mr-1.5 disabled:bg-gray-300 disabled:cursor-not-allowed"
         brnDialogTrigger
         hlmBtn
-        [disabled]="!params.data || !params.data.status"
+        [disabled]="!params.data"
       >
         <i class="fas fa-eye"></i>&nbsp; View
       </button>
@@ -80,9 +80,7 @@ import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component'
       <button
         class="bg-blue-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-blue-600 mr-1.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
         brnSheetTrigger
-        [disabled]="
-          !params.data || !params.data.status || isTimeAgoMoreThan10Minutes()
-        "
+        [disabled]="!params.data || isTimeAgoMoreThan10Minutes()"
       >
         <i class="fas fa-pencil-alt"></i>&nbsp; Update
       </button>
@@ -130,7 +128,7 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
   }
 
   onInvoiceSaved(invoice: any) {
-    this.params.context.componentParent.onInvoiceSaved(invoice);
+    this.params.context.componentParent.onInvoiceEdited(invoice);
   }
 
   onDeleteClick() {

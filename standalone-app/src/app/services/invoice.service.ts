@@ -70,8 +70,15 @@ export class InvoiceService {
     return this.http.post<InvoiceDTO>(this.apiUrl, invoice, { headers });
   }
 
-  updateInvoice(invoice: InvoiceSaveDTO): Observable<InvoiceSaveDTO> {
-    return this.http.put<InvoiceSaveDTO>(`${this.apiUrl}/${invoice}`, invoice);
+  // Update an existing invoice
+  updateInvoice(
+    id: string,
+    invoice: InvoiceSaveDTO
+  ): Observable<InvoiceSaveDTO> {
+    const headers = this.getHeaders();
+    return this.http.put<InvoiceSaveDTO>(`${this.apiUrl}/${id}`, invoice, {
+      headers,
+    });
   }
 
   deleteInvoice(id: string): Observable<void> {

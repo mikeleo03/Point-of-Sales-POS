@@ -53,21 +53,15 @@ export class InvoiceFormComponent implements OnInit {
       ],
       invoiceDetails: this.fb.array([this.createInvoiceDetail()]),
     });
-
-    if (!this.isViewMode && this.isEditMode) {
+    if (this.isEditMode) {
       this.patchFormWithData();
-    } else if (this.isViewMode) {
-      this.patchFormWithData();
-      this.invoiceForm.disable(); // Disable all controls for view mode
     }
-
     this.loadProducts();
   }
 
   patchFormWithData() {
     this.invoiceForm.patchValue({
-      customerId: this.invoice.customerId,
-      status: this.invoice.status,
+      customerId: this.invoice.customer.id,
     });
 
     this.invoiceForm.setControl(
@@ -102,10 +96,6 @@ export class InvoiceFormComponent implements OnInit {
     });
   }
 
-  get invoiceDetails(): FormArray {
-    return this.invoiceForm.get('invoiceDetails') as FormArray;
-  }
-
   addInvoiceDetail() {
     this.invoiceDetails.push(this.createInvoiceDetail());
   }
@@ -121,10 +111,12 @@ export class InvoiceFormComponent implements OnInit {
 
     const invoiceData = this.invoiceForm.value;
     if (this.isEditMode) {
-      this.invoiceService.updateInvoice(invoiceData).subscribe(() => {
-        this.invoiceSaved.emit(invoiceData);
-        this.formClosed.emit();
-      });
+      this.invoiceService
+        .updateInvoice(this.invoice.id, invoiceData)
+        .subscribe(() => {
+          this.invoiceSaved.emit(invoiceData);
+          this.formClosed.emit();
+        });
     } else {
       this.invoiceService.createInvoice(invoiceData).subscribe(() => {
         alert('Successfully Created Data');
@@ -137,16 +129,15 @@ export class InvoiceFormComponent implements OnInit {
   loadProducts() {
     this.productService.getProducts({}, 0, 20).subscribe((products) => {
       this.products = products.content;
-      console.log(products);
     });
+  }
+
+  get invoiceDetails(): FormArray {
+    return this.invoiceForm.get('invoiceDetails') as FormArray;
   }
 
   get customerId() {
     return this.invoiceForm.get('customerId');
-  }
-
-  get status() {
-    return this.invoiceForm.get('status');
   }
 
   get productId() {
