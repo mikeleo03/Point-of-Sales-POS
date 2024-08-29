@@ -134,6 +134,11 @@ export class CustomerListComponent implements OnInit {
         cellClass: 'text-center',
         cellRenderer: ActionCellRendererComponent
       },
+      {
+        field: 'updatedAt',
+        sort: 'desc',   // Sort by this field automatically
+        hide: true     // Hide this field from the grid
+      }
     ];
   }
 
