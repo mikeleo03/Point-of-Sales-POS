@@ -49,33 +49,25 @@ export class CustomerListComponent implements OnInit {
 
   public defaultColDef: ColDef = {
     floatingFilter: true,
-    flex: 1
+    flex: 1,
+    sortable: true, // Enable client-side sorting
+    filter: true    // Enable client-side filtering
   };
 
-  dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
-      this.customerService.getCustomers(this.gridApi.paginationGetCurrentPage(), this.gridApi.paginationGetPageSize()).subscribe( response => {
-        params.successCallback(
-          response["content"], response["page"]["totalElements"]
-        );
-      })
-    }
-  }
-
   public gridOptions: GridOptions = {
+    pagination: true, // Enable client-side pagination
+    paginationPageSize: 10, // Default page size
+    context: { componentParent: this },
     getRowStyle: (params) => {
       if (params.data && params.data.status === 'DEACTIVE') {
         return { backgroundColor: '#f5f5f5', color: '#aaa' }; // Dark background for entire row when inactive
       }
       return { backgroundColor: '#FFFFFF', color: '#000000' };
-    },
-    rowModelType: 'infinite',
-    datasource: this.dataSource,
-    context: { componentParent: this }
+    }
   };
 
   constructor(private customerService: CustomerService) {}
-  
+
   ngOnInit(): void {
     this.initColumnDefs();
     this.loadCustomers();
@@ -83,33 +75,34 @@ export class CustomerListComponent implements OnInit {
   }
 
   loadCustomers() {
-    this.customerService.getCustomers(0, 20).subscribe( (customer) => {
-      console.log(customer);
-      this.customers = customer;
+    this.customerService.getCustomers(0, 100).subscribe( (response) => {
+      console.log(response);
+      this.customers = response.content; // Set the response data to customers array
     })
   }
 
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.adjustGridForScreenSize(); // Initial check
+    (this.gridApi as any).setRowData(this.customers);
   }
 
   onStatusToggle(customer: any) {
     if (customer.status === 'ACTIVE') {
       this.customerService.updateCustomerStatusActive(customer.id).subscribe(() => {
         setTimeout(() => {
-          this.gridApi.refreshInfiniteCache();
+          this.gridApi.refreshCells();
         }, 0);
       });
     } else if (customer.status === 'DEACTIVE') {
       this.customerService.updateCustomerStatusDeactive(customer.id).subscribe(() => {
         setTimeout(() => {
-          this.gridApi.refreshInfiniteCache();
+          this.gridApi.refreshCells();
         }, 0);
       });
     }
   }
-  
+
   onGridSizeChanged(params: GridSizeChangedEvent) {
     params.api.sizeColumnsToFit();
   }
@@ -119,7 +112,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   onAddCustomer(customer: any) {
-    this.gridApi.refreshInfiniteCache(); // Refresh the data cache after adding a product
+    this.loadCustomers(); // Reload data after adding a customer
   }
 
   initColumnDefs() {
@@ -127,7 +120,8 @@ export class CustomerListComponent implements OnInit {
       {
         field: 'name',
         headerName: 'Name',
-        filter: 'agTextColumnFilter'},
+        filter: 'agTextColumnFilter'
+      },
       {
         field: 'phoneNumber',
         headerName: 'Phone Number',

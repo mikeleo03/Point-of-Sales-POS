@@ -102,40 +102,39 @@ export class InvoiceListComponent implements OnInit {
   ];
 
   public defaultColDef: ColDef = {
+    filter: 'agTextColumnFilter',
     floatingFilter: true,
-    flex: 1,
-    sortable: true, // Enable client-side sorting
-    filter: true, // Enable client-side filtering
+    resizable: true,
   };
 
-  // dataSource: IDatasource = {
-  //   getRows: (params: IGetRowsParams) => {
-  //     this.invoiceService
-  //       .getInvoices(
-  //         {},
-  //         this.gridApi.paginationGetCurrentPage(),
-  //         this.gridApi.paginationGetPageSize()
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           params.successCallback(
-  //             response['content'],
-  //             response['page']['totalElements']
-  //           );
-  //         },
-  //         (error) => {
-  //           console.error('Error fetching invoices:', error);
-  //         }
-  //       );
-  //   },
-  // };
+  dataSource: IDatasource = {
+    getRows: (params: IGetRowsParams) => {
+      this.invoiceService
+        .getInvoices(
+          {},
+          this.gridApi.paginationGetCurrentPage(),
+          this.gridApi.paginationGetPageSize()
+        )
+        .subscribe(
+          (response) => {
+            params.successCallback(
+              response['content'],
+              response['page']['totalElements']
+            );
+          },
+          (error) => {
+            console.error('Error fetching invoices:', error);
+          }
+        );
+    },
+  };
 
   public gridOptions: GridOptions = {
     getRowStyle: (params) => {
       return undefined;
     },
-    pagination: true, // Enable client-side pagination
-    paginationPageSize: 10, // Default page size
+    rowModelType: 'infinite',
+    datasource: this.dataSource,
     context: { componentParent: this },
   };
 
@@ -144,15 +143,7 @@ export class InvoiceListComponent implements OnInit {
   constructor(private invoiceService: InvoiceService, private router: Router) {}
 
   ngOnInit() {
-    this.loadInvoices();
     window.addEventListener('resize', this.adjustGridForScreenSize.bind(this)); // Listen for resize events
-  }
-
-  loadInvoices() {
-    this.invoiceService.getInvoices({}, 0, 100).subscribe((response) => {
-      console.log(response);
-      this.invoices = response.content;
-    });
   }
 
   onGridReady(params: any) {
@@ -161,11 +152,11 @@ export class InvoiceListComponent implements OnInit {
   }
 
   onAddInvoice(invoice: any) {
-    this.loadInvoices();// Reload invoices after adding
+    this.gridApi.refreshInfiniteCache(); // Reload invoices after adding
   }
 
   onInvoiceEdited(invoice: any) {
-    this.loadInvoices();// Reload invoices after edited
+    this.gridApi.refreshInfiniteCache(); // Reload invoices after edited
   }
 
   onViewInvoice(invoiceData: any) {
