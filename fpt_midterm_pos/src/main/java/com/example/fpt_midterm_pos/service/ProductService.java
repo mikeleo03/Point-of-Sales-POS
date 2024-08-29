@@ -3,20 +3,22 @@ package com.example.fpt_midterm_pos.service;
 import java.util.List;
 import java.util.UUID;
 
-import com.example.fpt_midterm_pos.dto.*;
-
-import jakarta.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
+import com.example.fpt_midterm_pos.dto.ProductDTO;
+import com.example.fpt_midterm_pos.dto.ProductSaveDTO;
+import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
+
+import jakarta.validation.Valid;
 
 public interface ProductService {
 
     // Find products based on the provided criteria.
-    Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable);
+    Page<Product> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable);
 
     // Creating a new product.
     ProductDTO createProduct(@Valid ProductSaveDTO productSaveDTO);

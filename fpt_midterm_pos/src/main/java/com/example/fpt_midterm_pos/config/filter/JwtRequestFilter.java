@@ -45,6 +45,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Skip method OPTIONS
+        if (request.getMethod().equals("OPTIONS") || request.getMethod().equals("PUT")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // Extract JWT and validate it
         final String authorizationHeader = request.getHeader("Authorization");
 
