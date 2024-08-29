@@ -71,6 +71,7 @@ export class InvoiceFormComponent implements OnInit {
     });
     if (this.isEditMode) {
       this.patchFormWithData();
+      this.invoiceForm.get('customerId')?.disable();
     }
     this.loadProducts();
     this.loadCustomers();
