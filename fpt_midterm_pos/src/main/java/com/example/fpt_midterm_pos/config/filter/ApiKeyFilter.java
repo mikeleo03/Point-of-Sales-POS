@@ -35,7 +35,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         
         logger.info("[Filter][" + request + "]" + "[" + request.getMethod() + "] " + request.getRequestURI());
         
-        if (request.getMethod().equals("OPTIONS")) {
+        if (request.getMethod().equals("OPTIONS") || request.getMethod().equals("PUT")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,6 +46,9 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         response.addHeader("source", "fpt-software");
         if (apiKeyOpt.isPresent()) {
             String storedApiKey = apiKeyOpt.get().getApiKey();
+
+            logger.info("[Filter] storedApiKey " + storedApiKey);
+            logger.info("[Filter] requestApiKey " + requestApiKey);
 
             if (storedApiKey.equals(requestApiKey)) {
                 logger.info("[Filter] doFilter starts.");

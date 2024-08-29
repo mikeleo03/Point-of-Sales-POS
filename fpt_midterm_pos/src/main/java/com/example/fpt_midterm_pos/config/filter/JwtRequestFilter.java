@@ -46,7 +46,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         // Skip method OPTIONS
-        if (request.getMethod().equals("OPTIONS")) {
+        if (request.getMethod().equals("OPTIONS") || request.getMethod().equals("PUT")) {
             filterChain.doFilter(request, response);
             return;
         }
