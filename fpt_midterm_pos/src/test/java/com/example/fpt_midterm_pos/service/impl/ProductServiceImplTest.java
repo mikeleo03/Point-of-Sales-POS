@@ -82,13 +82,13 @@ class ProductServiceImplTest {
         pageable = PageRequest.of(0, 10);
         productPage = new PageImpl<>(Collections.singletonList(product));
 
-        when(productRepository.findByFilters(any(), any(), any(), any(), any())).thenReturn(productPage);
+        when(productRepository.findByFilters(any(), any(), any(), any())).thenReturn(productPage);
         when(productMapper.toShowDTO(any())).thenReturn(new ProductShowDTO());
 
-        Page<ProductShowDTO> result = productService.findByCriteria(criteria, pageable);
+        Page<Product> result = productService.findByCriteria(criteria, pageable);
 
         assertNotNull(result);
-        verify(productRepository).findByFilters(any(), eq("Test"), eq(50.0), eq(150.0), any(Pageable.class));
+        verify(productRepository).findByFilters(eq("Test"), eq(50.0), eq(150.0), any(Pageable.class));
     }
 
     @Test
@@ -111,13 +111,13 @@ class ProductServiceImplTest {
         pageable = PageRequest.of(0, 10);
         productPage = new PageImpl<>(Collections.singletonList(product));
 
-        when(productRepository.findByFilters(any(), any(), any(), any(), any())).thenReturn(productPage);
+        when(productRepository.findByFilters(any(), any(), any(), any())).thenReturn(productPage);
         when(productMapper.toShowDTO(any())).thenReturn(new ProductShowDTO());
 
-        Page<ProductShowDTO> result = productService.findByCriteria(criteria, pageable);
+        Page<Product> result = productService.findByCriteria(criteria, pageable);
 
         assertNotNull(result);
-        verify(productRepository).findByFilters(any(), eq("Test"), eq(50.0), eq(150.0), any(Pageable.class));
+        verify(productRepository).findByFilters(eq("Test"), eq(50.0), eq(150.0), any(Pageable.class));
     }
 
     @Test

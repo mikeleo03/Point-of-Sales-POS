@@ -55,7 +55,7 @@ class ProductRepositoryTest {
 
     @Test
     void findProductByFilters() {
-        Page<Product> products = productRepository.findByFilters(Status.ACTIVE.toString(), "Test", 50.0, 150.0, PageRequest.of(0, 10));
+        Page<Product> products = productRepository.findByFilters("Test", 50.0, 150.0, PageRequest.of(0, 10));
         assertThat(products.getTotalElements()).isPositive();
     }
 
@@ -90,7 +90,7 @@ class ProductRepositoryTest {
 
         // Test with pagination
         Pageable pageable = PageRequest.of(0, 1, Sort.by("name"));
-        Page<Product> result = productRepository.findByFilters(Status.ACTIVE.toString(), "Test", null, null, pageable);
+        Page<Product> result = productRepository.findByFilters("Test", null, null, pageable);
 
         assertThat(result.getTotalElements()).isEqualTo(3);
         assertThat(result.getNumberOfElements()).isEqualTo(1);

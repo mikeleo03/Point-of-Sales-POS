@@ -24,13 +24,11 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
         // Find all product data from the given filter criteria
         @Query("SELECT p FROM Product p WHERE " +
-                "p.status = :status AND " +
                 "(:name IS NULL OR p.name LIKE %:name%) AND " +
                 "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
                 "(:maxPrice IS NULL OR p.price <= :maxPrice)")
-        Page<Product> findByFilters(@Param("status") String status,
-                                        @Param("name") String name,
-                                        @Param("minPrice") Double minPrice,
-                                        @Param("maxPrice") Double maxPrice,
-                                        Pageable pageable);
+        Page<Product> findByFilters(@Param("name") String name,
+                                    @Param("minPrice") Double minPrice,
+                                    @Param("maxPrice") Double maxPrice,
+                                    Pageable pageable);
 }
