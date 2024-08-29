@@ -100,19 +100,11 @@ import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component'
         <app-invoice-form
           [invoice]="params.data"
           [isEditMode]="true"
-          (invoiceSaved)="onInvoiceSaved($event)"
+          (invoiceSaved)="onInvoiceEdited($event)"
           (formClosed)="ctx.close()"
         ></app-invoice-form>
       </hlm-sheet-content>
     </hlm-sheet>
-
-    <button
-      class="bg-red-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed"
-      (click)="onDeleteClick()"
-      [disabled]="!params.data || !params.data.status"
-    >
-      <i class="fas fa-trash"></i>&nbsp; Delete
-    </button>
   `,
 })
 export class ActionCellRendererComponent implements ICellRendererAngularComp {
@@ -127,17 +119,8 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     return true;
   }
 
-  onInvoiceSaved(invoice: any) {
+  onInvoiceEdited(invoice: any) {
     this.params.context.componentParent.onInvoiceEdited(invoice);
-  }
-
-  onDeleteClick() {
-    this.params.context.componentParent.onDeleteInvoice(this.params.data);
-  }
-
-  onViewClick() {
-    // Logic to view the invoice details
-    this.params.context.componentParent.onViewInvoice(this.params.data);
   }
 
   isTimeAgoMoreThan10Minutes(): boolean {

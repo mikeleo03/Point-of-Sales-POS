@@ -157,23 +157,6 @@ export class InvoiceListComponent implements OnInit {
     console.log('Viewing invoice:', invoiceData);
     // Your logic to view the invoice details here
   }
-
-  onDeleteInvoice(invoice: any) {
-    if (confirm(`Are you sure you want to delete this invoice?`)) {
-      this.invoiceService.deleteInvoice(invoice.id).subscribe(() => {
-        this.gridApi.refreshInfiniteCache();
-      });
-    }
-  }
-
-  // onStatusToggle(invoice: any) {
-  //   this.invoiceService
-  //     .updateInvoiceStatus(invoice.id, invoice.status)
-  //     .subscribe(() => {
-  //       this.loadInvoices();
-  //     });
-  // }
-
   onGridSizeChanged(params: GridSizeChangedEvent) {
     params.api.sizeColumnsToFit(); // Ensure columns fit the grid width
   }
