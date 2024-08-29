@@ -6,6 +6,7 @@ import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
+import { CustomerSaveDTO } from '../../../models/customer.model';
 
 @Component({
   selector: 'app-customer-form',
@@ -34,7 +35,7 @@ export class CustomerFormComponent implements OnInit {
 
   ngOnInit() {
     this.customerForm = this.fb.group({
-      id: [''],
+      id: [this.customer?.id],
       name: [this.customer?.name || '', Validators.required],
       phoneNumber: [this.customer?.phoneNumber || '', Validators.required],
       status: [this.customer?.status || 'Active'],
@@ -44,13 +45,6 @@ export class CustomerFormComponent implements OnInit {
 
     if(this.isEditMode) {
       this.customerForm.patchValue(this.customer);
-    } else {
-      this.customerService.getLastCustomerId().subscribe((lastId: number) => {
-        this.lastCustomerId = lastId;
-        this.customerForm.patchValue({
-          id: (this.lastCustomerId + 1).toString()
-        });
-      });
     }
   }
 
@@ -61,14 +55,18 @@ export class CustomerFormComponent implements OnInit {
       customerData.phoneNumber = (customerData.phoneNumber).slice(0, 16);
     }
 
+    const saveData: CustomerSaveDTO = {
+      name: customerData.name,
+      phoneNumber: customerData.phoneNumber
+    };
+
     if(this.isEditMode) {
-      customerData.updatedAt = new Date();
-      this.customerService.updateCustomer(customerData).subscribe(() => {
+      this.customerService.updateCustomer(customerData.id, saveData).subscribe(() => {
         this.customerSaved.emit(customerData);
         this.formClosed.emit();
       });
     } else {
-      this.customerService.addCustomer(customerData).subscribe(() => {
+      this.customerService.addCustomer(saveData).subscribe(() => {
         this.customerSaved.emit(customerData);
         this.formClosed.emit();
       })

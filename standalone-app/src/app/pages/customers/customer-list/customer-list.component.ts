@@ -120,10 +120,6 @@ export class CustomerListComponent implements OnInit {
     this.gridApi.refreshInfiniteCache(); // Refresh the data cache after adding a product
   }
 
-  onCustomerEdit(customer: any) {
-    this.gridApi.refreshInfiniteCache();
-  }
-
   initColumnDefs() {
     this.colDefs = [
       {
@@ -145,7 +141,7 @@ export class CustomerListComponent implements OnInit {
       {
         headerName: 'Actions',
         cellClass: 'text-center',
-        // cellRenderer: ActionCellRendererComponent
+        cellRenderer: ActionCellRendererComponent
       },
     ];
   }

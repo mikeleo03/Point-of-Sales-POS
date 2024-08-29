@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Customer, CustomerDTO } from '../../models/customer.model';
+import { CustomerDTO, CustomerSaveDTO } from '../../models/customer.model';
 import { environment } from '../../../environment/environment';
 
 @Injectable({
@@ -31,24 +31,14 @@ export class CustomerService {
     return this.http.get<any>(this.apiUrl, { headers, params });
   }
 
-  getLastCustomerId(): Observable<number> {
-    return new Observable<number>(observer => {
-      this.http.get<any[]>(this.apiUrl).subscribe(customer => {
-        const lastId = customer.reduce((max, customer) => Math.max(max, customer.id), 0);
-        observer.next(lastId);
-        observer.complete();
-      });
-    });
+  addCustomer(customerSave: CustomerSaveDTO): Observable<CustomerDTO> {
+    const headers = this.getHeaders();
+    return this.http.post<CustomerDTO>(this.apiUrl, customerSave, { headers });
   }
 
-  addCustomer(customer: CustomerDTO): Observable<CustomerDTO> {
+  updateCustomer(id: string, customerSave: CustomerSaveDTO): Observable<CustomerDTO> {
     const headers = this.getHeaders();
-    return this.http.post<CustomerDTO>(this.apiUrl, customer, { headers });
-  }
-
-  updateCustomer(customer: Customer): Observable<Customer> {
-    const headers = this.getHeaders();
-    return this.http.put<Customer>(`${this.apiUrl}/${customer.id}`, customer, { headers })
+    return this.http.put<CustomerDTO>(`${this.apiUrl}/${id}`, customerSave, { headers })
   }
 
   updateCustomerStatusActive(id: string): Observable<CustomerDTO> {

@@ -23,12 +23,15 @@ import { CustomerFormComponent } from "../customer-form/customer-form.component"
     CustomerFormComponent
 ],
   template: `
+    <button
+    class="bg-gray-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-gray-600 mr-1.5 disabled:bg-gray-300 disabled:cursor-not-allowed">
+    <i class="fas fa-eye"></i>&nbsp; View</button>
+
     <hlm-sheet side="right">
         <button
           class="bg-blue-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-blue-600 mr-1.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
           brnSheetTrigger
-          [disabled]="params.data.status === 'Deactive'"
-          (click)="onEditClick()">
+          [disabled]="isDisabled()">
           <i class="fas fa-pencil-alt"></i>&nbsp; Update
         </button>
         <hlm-sheet-content *brnSheetContent="let ctx">
@@ -52,11 +55,11 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
       return true;
     }
 
-    onCustomerSaved(customer: any) {
-      this.params.context.componentParent.onAddCustomer(customer);
+    isDisabled():boolean {
+      return this.params?.data?.status === 'DEACTIVE';
     }
 
-    onEditClick() {
-      this.params.context.componentParent.onEditCustomer(this.params.data);
+    onCustomerSaved(customer: any) {
+      this.params.context.componentParent.onAddCustomer(customer);
     }
 }
