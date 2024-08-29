@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -14,7 +21,7 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceService } from '../../../services/invoice.service';
 import { Product } from '../../../models/product.model';
-
+import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
@@ -39,10 +46,14 @@ export class InvoiceFormComponent implements OnInit {
   invoiceForm!: FormGroup;
   products: Product[] = [];
 
+  @ViewChild(ToastContainerDirective, { static: true })
+  toastContainer!: ToastContainerDirective;
+
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    private invoiceService: InvoiceService
+    private invoiceService: InvoiceService,
+    private toastrService: ToastrService
   ) {}
 
   ngOnInit() {
@@ -113,15 +124,30 @@ export class InvoiceFormComponent implements OnInit {
     if (this.isEditMode) {
       this.invoiceService
         .updateInvoice(this.invoice.id, invoiceData)
-        .subscribe(() => {
-          this.invoiceSaved.emit(invoiceData);
-          this.formClosed.emit();
+        .subscribe({
+          next: (response) => {
+            this.invoiceSaved.emit(invoiceData);
+            this.formClosed.emit();
+          },
+          error: (error) => {
+            if (error.status === 400) {
+              this.toastrService.error(error.error.error);
+            }
+          },
         });
     } else {
-      this.invoiceService.createInvoice(invoiceData).subscribe(() => {
-        alert('Successfully Created Data');
-        this.invoiceSaved.emit(invoiceData);
-        this.formClosed.emit();
+      this.invoiceService.createInvoice(invoiceData).subscribe({
+        next: (response) => {
+          if (response) {
+            this.invoiceSaved.emit(invoiceData);
+            this.formClosed.emit();
+          }
+        },
+        error: (error) => {
+          if (error.status === 400) {
+            this.toastrService.error(error.error.error);
+          }
+        },
       });
     }
   }

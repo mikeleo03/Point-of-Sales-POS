@@ -10,9 +10,24 @@ export interface RouteLink {
 }
 
 export const RouterConfig = {
-    HOME: {path: '', link: '/'},
-    LOGIN: {path: 'login', link: '/login', title: 'Login', data: {header: true}},
-    PRODUCT: {path: 'products', link: '/product', title: 'List of Products', data: {header: true}},
-    INVOICE: { path: 'invoices', link: '/invoice', title: 'List of Invoices', data: {header: true} },
-    NOT_FOUND: {path: '**', link: null, title: 'Page Not Found'}
+  HOME: { path: '', link: '/', title: 'Home' },
+  LOGIN: {
+    path: 'login',
+    link: '/login',
+    title: 'Login',
+    data: { header: true },
+  },
+  PRODUCT: {
+    path: 'products',
+    link: '/product',
+    title: 'List of Products',
+    data: { header: true },
+  },
+  INVOICE: {
+    path: 'invoices',
+    link: '/invoice',
+    title: 'List of Invoices',
+    data: { header: true },
+  },
+  NOT_FOUND: { path: '**', link: null, title: 'Page Not Found' },
 };
