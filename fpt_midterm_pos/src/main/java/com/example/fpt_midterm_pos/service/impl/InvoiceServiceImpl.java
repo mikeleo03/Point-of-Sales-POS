@@ -15,10 +15,10 @@ import com.example.fpt_midterm_pos.utils.ExcelGenerator;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.model.Invoice;
@@ -35,33 +35,43 @@ import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.InvoiceMapper;
 import com.example.fpt_midterm_pos.service.InvoiceService;
 import com.example.fpt_midterm_pos.utils.PDFGenerator;
+
+import jakarta.validation.Valid;
+
 import com.example.fpt_midterm_pos.utils.DateUtils;
 
 @Service
+@Validated
 public class InvoiceServiceImpl implements InvoiceService {
 
-    @Autowired
-    private InvoiceRepository invoiceRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final CustomerRepository customerRepository;
+    private final ProductRepository productRepository;
+    private final InvoiceDetailRepository invoiceDetailRepository;
+    private final InvoiceMapper invoiceMapper;
+    private final PDFGenerator pdfGenerator;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    public InvoiceServiceImpl(
+        InvoiceRepository invoiceRepository, 
+        CustomerRepository customerRepository, 
+        ProductRepository productRepository, 
+        InvoiceDetailRepository invoiceDetailRepository,
+        InvoiceMapper invoiceMapper,
+        PDFGenerator pdfGenerator) {
+        this.invoiceRepository = invoiceRepository;
+        this.customerRepository = customerRepository;
+        this.productRepository = productRepository;
+        this.invoiceDetailRepository = invoiceDetailRepository;
+        this.invoiceMapper = invoiceMapper;
+        this.pdfGenerator = pdfGenerator;
+    }
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private InvoiceDetailRepository invoiceDetailRepository;
-
-    @Autowired
-    private InvoiceMapper invoiceMapper;
-
-    @Autowired
-    private PDFGenerator pdfGenerator;
+    private static final String INSUFFICIENT_PRODUCT_STOCK = "Insufficient product stock";
 
     /**
      * Find invoices based on the provided criteria. It takes an {@link InvoiceSearchCriteriaDTO} object and a {@link Pageable} object as input parameters. The {@link InvoiceSearchCriteriaDTO} object contains various criteria such as customer name, customer ID, start date, end date, month, sort by date, and sort by amount. The {@link Pageable} object is used to specify the pagination details.
-     * The method first extracts the various criteria from the {@link InvoiceSearchCriteriaDTO} object. It then defines the sort rules based on the sort by date and sort by amount criteria. If the sort by date is not null, it adds a sorting rule based on the invoice date in ascending or descending order depending on the value of the sort by date. Similarly, it adds a sorting rule based on the invoice amount in ascending or descending order depending on the value of the sort by amount.
-     * The method then sets the pageable object with the provided page number, page size, and the defined sort rules. It then retrieves the invoices data from the repository based on the provided filters and sorts the data using the defined sort rules. Finally, it maps the retrieved invoices to their corresponding DTOs using the {@link InvoiceMapper} and returns the mapped invoices as a paginated list.
+     * The method retrieves the invoices data from the repository based on the provided filters and sorts the data using the defined sort rules. Finally, it maps the retrieved invoices to their corresponding DTOs using the {@link InvoiceMapper} and returns the mapped invoices as a paginated list.
      *
      * @param criteria The {@link InvoiceSearchCriteriaDTO} object containing various criteria for filtering the invoices.
      * @param pageable The {@link Pageable} object containing the pagination details.
@@ -69,20 +79,8 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     public Page<InvoiceDTO> findByCriteria(InvoiceSearchCriteriaDTO criteria, Pageable pageable) {
-        // Listing all the criterias
-        String customerName = criteria.getCustomerName();
-        UUID customerId = criteria.getCustomerId();
-        Date startDate = criteria.getStartDate();
-        Date endDate = criteria.getEndDate();
-        Integer month = criteria.getMonth();
-        String sortByDate = criteria.getSortByDate();
-        String sortByAmount = criteria.getSortByAmount();
-
-        // Set the pageable
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        
         // Get the invoices data from the repo
-        Page<Invoice> invoices = invoiceRepository.findByFilters(customerName, customerId, startDate, endDate, month, sortByDate, sortByAmount, sortedPageable);
+        Page<Invoice> invoices = invoiceRepository.findByFilters(criteria, pageable);
         return invoices.map(invoiceMapper::toInvoiceDTO);
     }
 
@@ -96,7 +94,7 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     @Transactional
-    public InvoiceDTO createInvoice(InvoiceSaveDTO invoiceSaveDTO) {
+    public InvoiceDTO createInvoice(@Valid InvoiceSaveDTO invoiceSaveDTO) {
         // 1. Select the customer
         // The main idea is by looking the invoice customer ID and browse on customer repo
         Customer customer = customerRepository.findById(invoiceSaveDTO.getCustomerId())
@@ -124,13 +122,13 @@ public class InvoiceServiceImpl implements InvoiceService {
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             // Re-validate the product status
-            if (product.getStatus() != Status.Active) {
+            if (!product.getStatus().equals(Status.ACTIVE.toString())) {
                 throw new IllegalArgumentException("Product is not active");
             }
             
             // And request quantity
             if (product.getQuantity() < detailDTO.getQuantity()) {
-                throw new IllegalArgumentException("Insufficient product stock");
+                throw new IllegalArgumentException(INSUFFICIENT_PRODUCT_STOCK);
             }
 
             // If valid, then create invoice detail
@@ -155,7 +153,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             // Update product quantity
             product.setQuantity(product.getQuantity() - detailDTO.getQuantity());
             if (product.getQuantity() < 0) {
-                throw new IllegalArgumentException("Insufficient product stock");
+                throw new IllegalArgumentException(INSUFFICIENT_PRODUCT_STOCK);
             }
             productRepository.save(product);
 
@@ -183,7 +181,7 @@ public class InvoiceServiceImpl implements InvoiceService {
      */
     @Override
     @Transactional
-    public InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceSaveDTO) throws BadRequestException {
+    public InvoiceDTO updateInvoice(UUID id, @Valid InvoiceSaveDTO invoiceSaveDTO) throws BadRequestException {
         // Check if the invoice actually exists
         Invoice existingInvoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
@@ -210,7 +208,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
             
             // Validate the product status
-            if (product.getStatus() != Status.Active) {
+            if (!product.getStatus().equals(Status.ACTIVE.toString())) {
                 throw new BadRequestException("Product is not active");
             }
 
@@ -229,7 +227,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             // Validate
             if (product.getQuantity() < quantityDifference) {
-                throw new IllegalArgumentException("Insufficient product stock");
+                throw new IllegalArgumentException(INSUFFICIENT_PRODUCT_STOCK);
             }
 
             // Start from the key
@@ -252,7 +250,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             // Update product quantity
             product.setQuantity(product.getQuantity() - quantityDifference);
             if (product.getQuantity() < 0) {
-                throw new IllegalArgumentException("Insufficient product stock");
+                throw new IllegalArgumentException(INSUFFICIENT_PRODUCT_STOCK);
             }
             productRepository.save(product);
 
@@ -335,9 +333,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 revenueShowDTO.setDay(day);
                 revenueShowDTO.setAmount(revenueTotal);
             }
-            default -> {
-                throw new IllegalArgumentException("Invalid revenueBy parameter");
-            }
+            default -> throw new IllegalArgumentException("Invalid revenueBy parameter");
         }
 
         return revenueShowDTO;
