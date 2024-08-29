@@ -85,6 +85,7 @@ export class ProductFormComponent implements OnInit {
       this.productService.updateProduct(this.product?.id, saveData).subscribe({
         next: (response) => {
           if (response) {
+            this.toastrService.success('Update exist data successful!');
             this.productSaved.emit(productData);
             this.formClosed.emit();
           }
@@ -100,12 +101,13 @@ export class ProductFormComponent implements OnInit {
       this.productService.addProduct(saveData).subscribe({
         next: (response) => {
           if (response) {
+            this.toastrService.success('Added new data successful!');
             this.productSaved.emit(productData);
             this.formClosed.emit();
           }
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
           if (error.status === 400) {
             this.toastrService.error(error.error.errors);
           }
