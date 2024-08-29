@@ -71,6 +71,7 @@ export class InvoiceFormComponent implements OnInit {
     });
     if (this.isEditMode) {
       this.patchFormWithData();
+      this.invoiceForm.get('customerId')?.disable();
     }
     this.loadProducts();
     this.loadCustomers();
@@ -132,8 +133,11 @@ export class InvoiceFormComponent implements OnInit {
         .updateInvoice(this.invoice.id, invoiceData)
         .subscribe({
           next: (response) => {
-            this.invoiceSaved.emit(invoiceData);
-            this.formClosed.emit();
+            if (response) {
+              this.toastrService.success('Update exist data successful!');
+              this.invoiceSaved.emit(invoiceData);
+              this.formClosed.emit();
+            }
           },
           error: (error) => {
             if (error.status === 400) {
@@ -145,6 +149,7 @@ export class InvoiceFormComponent implements OnInit {
       this.invoiceService.createInvoice(invoiceData).subscribe({
         next: (response) => {
           if (response) {
+            this.toastrService.success('Added new data successful!');
             this.invoiceSaved.emit(invoiceData);
             this.formClosed.emit();
           }

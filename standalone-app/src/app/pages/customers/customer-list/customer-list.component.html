@@ -15,7 +15,7 @@
                         <h1 hlmSheetTitle class="md:text-2xl text-xl font-bold text-green-1">Add New Customer</h1>
                         <p hlmSheetDescription>Fill out the form below to add a new Customer.</p>
                     </hlm-sheet-header>
-                    <app-customer-form (customerAdded)="onAddCustomer($event)" (formClosed)="ctx.close()"></app-customer-form>
+                    <app-customer-form (customerSaved)="onAddCustomer($event)" (formClosed)="ctx.close()"></app-customer-form>
                 </hlm-sheet-content>
             </hlm-sheet>
         </div>
