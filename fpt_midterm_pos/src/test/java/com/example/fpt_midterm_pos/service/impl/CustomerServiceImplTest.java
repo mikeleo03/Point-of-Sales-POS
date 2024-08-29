@@ -70,10 +70,10 @@ class CustomerServiceImplTest {
         pageable = PageRequest.of(0, 10);
         customerPage = new PageImpl<>(Collections.singletonList(customer));
 
-        when(customerRepository.findByStatus(Status.ACTIVE.toString(), pageable)).thenReturn(customerPage);
+        when(customerRepository.findAll(pageable)).thenReturn(customerPage);
         when(customerMapper.toCustomerShowDTO(customer)).thenReturn(customerShowDTO);
 
-        Page<CustomerShowDTO> result = customerService.findAllActiveCustomer(pageable);
+        Page<CustomerShowDTO> result = customerService.findAllCustomer(pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());

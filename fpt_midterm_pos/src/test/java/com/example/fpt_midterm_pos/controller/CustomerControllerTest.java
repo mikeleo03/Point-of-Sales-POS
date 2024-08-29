@@ -61,7 +61,7 @@ class CustomerControllerTest {
         Page<CustomerShowDTO> customerPage = new PageImpl<>(List.of(customerShowDTO), pageable, 1);
 
         // Mock the service call
-        when(customerService.findAllActiveCustomer(any(Pageable.class)))
+        when(customerService.findAllCustomer(any(Pageable.class)))
             .thenReturn(customerPage);
 
         // Convert the Page<CustomerShowDTO> to a JSON string for comparison
@@ -84,7 +84,7 @@ class CustomerControllerTest {
         Page<CustomerShowDTO> emptyPage = new PageImpl<>(List.of(), pageable, 0);
 
         // Mock the service call
-        when(customerService.findAllActiveCustomer(any(Pageable.class)))
+        when(customerService.findAllCustomer(any(Pageable.class)))
             .thenReturn(emptyPage);
 
         // Perform the request and verify the response

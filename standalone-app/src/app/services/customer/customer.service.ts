@@ -1,23 +1,34 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
-import { Customer } from '../../models/customer.model';
+import { Observable } from 'rxjs';
+import { Customer, CustomerDTO } from '../../models/customer.model';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
 
-  private apiUrl = 'http://localhost:8080/customers'
+  private apiUrl = `${environment.apiUrl}/customers`;
+  private apiKey = environment.apiKey;
 
   constructor(private http: HttpClient) { }
 
-  getCustomers(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(this.apiUrl);
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'content-type': 'application/json',
+      'api-key': this.apiKey,
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
   }
 
-  getCustomerById(id: string): Observable<Customer> {
-    return this.http.get<Customer>(`${this.apiUrl}/${id}`);
+  getCustomers(page: number = 0, size: number = 20): Observable<any> {
+    const headers = this.getHeaders();
+    const params = {
+      page: page.toString(),
+      size: size.toString()
+    };
+    return this.http.get<any>(this.apiUrl, { headers, params });
   }
 
   getLastCustomerId(): Observable<number> {
@@ -30,20 +41,23 @@ export class CustomerService {
     });
   }
 
-  addCustomer(customer: Customer): Observable<Customer> {
-    return this.http.post<Customer>(this.apiUrl, customer);
+  addCustomer(customer: CustomerDTO): Observable<CustomerDTO> {
+    const headers = this.getHeaders();
+    return this.http.post<CustomerDTO>(this.apiUrl, customer, { headers });
   }
 
   updateCustomer(customer: Customer): Observable<Customer> {
-    return this.http.put<Customer>(`${this.apiUrl}/${customer.id}`, customer)
+    const headers = this.getHeaders();
+    return this.http.put<Customer>(`${this.apiUrl}/${customer.id}`, customer, { headers })
   }
 
-  updateCustomerStatus(id: string, status: string): Observable<Customer> {
-    return this.getCustomerById(id).pipe(
-      switchMap( customer => {
-        const updatedCustomer: Customer = { ...customer, status: status, updatedAt: new Date() };  
-        return this.updateCustomer(updatedCustomer);
-      })
-    );
+  updateCustomerStatusActive(id: string): Observable<CustomerDTO> {
+    const headers = this.getHeaders();
+    return this.http.put<CustomerDTO>(`${this.apiUrl}/active/${id}`, {}, { headers });
+  }
+
+  updateCustomerStatusDeactive(id: string): Observable<CustomerDTO> {
+    const headers = this.getHeaders();
+    return this.http.put<CustomerDTO>(`${this.apiUrl}/deactive/${id}`, {}, { headers });
   }
 }

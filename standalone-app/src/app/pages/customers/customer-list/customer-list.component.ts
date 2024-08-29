@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { Customer } from '../../../models/customer.model';
-import { ColDef, FirstDataRenderedEvent, GridApi, GridOptions, GridSizeChangedEvent } from 'ag-grid-community';
+import { ColDef, FirstDataRenderedEvent, GridApi, GridOptions, GridSizeChangedEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { StatusCellRendererComponent } from './status-cell-customer-renderer.component';
 import { PhoneNumberFormatPipe } from '../../../core/pipes/phone-number/phone-number-format.pipe';
@@ -41,21 +41,36 @@ import { CustomerFormComponent } from '../customer-form/customer-form.component'
 export class CustomerListComponent implements OnInit {
   customers: Customer[] = [];
   colDefs: ColDef[] = [];
+  defaultPageSize = 15;
+
+  private gridApi!: GridApi;
 
   public defaultColDef: ColDef = {
-    floatingFilter: true
+    floatingFilter: true,
+    flex: 1
   };
+
+  dataSource: IDatasource = {
+    getRows: (params: IGetRowsParams) => {
+      this.customerService.getCustomers(this.gridApi.paginationGetCurrentPage(), this.gridApi.paginationGetPageSize()).subscribe( response => {
+        params.successCallback(
+          response["content"], response["page"]["totalElements"]
+        );
+      })
+    }
+  }
 
   public gridOptions: GridOptions = {
     getRowStyle: (params) => {
-      if (params.data.status === 'Deactive') {
+      if (params.data && params.data.status === 'DEACTIVE') {
         return { backgroundColor: '#f5f5f5', color: '#aaa' }; // Dark background for entire row when inactive
       }
-      return undefined;
-    }
+      return { backgroundColor: '#FFFFFF', color: '#000000' };
+    },
+    rowModelType: 'infinite',
+    datasource: this.dataSource,
+    context: { componentParent: this }
   };
-
-  private gridApi!: GridApi;
 
   constructor(private customerService: CustomerService) {}
   
@@ -63,7 +78,13 @@ export class CustomerListComponent implements OnInit {
     this.initColumnDefs();
     this.loadCustomers();
     window.addEventListener('resize', this.adjustGridForScreenSize.bind(this)); // Listen for resize events
+  }
 
+  loadCustomers() {
+    this.customerService.getCustomers(0, 20).subscribe( (customer) => {
+      console.log(customer);
+      this.customers = customer;
+    })
   }
 
   onGridReady(params: any) {
@@ -71,19 +92,22 @@ export class CustomerListComponent implements OnInit {
     this.adjustGridForScreenSize(); // Initial check
   }
 
-  onCustomerToggle(event: any) {
-    const updatedCustomer = event.data;
-    this.customerService.updateCustomer(updatedCustomer).subscribe(() => {
-      this.loadCustomers();
-    });
-  }
-
   onStatusToggle(customer: any) {
-    this.customerService.updateCustomerStatus(customer.id, customer.status).subscribe(() => {
-      this.loadCustomers();
-    });
+    if (customer.status === 'ACTIVE') {
+      this.customerService.updateCustomerStatusActive(customer.id).subscribe(() => {
+        setTimeout(() => {
+          this.gridApi.refreshInfiniteCache();
+        }, 0);
+      });
+    } else if (customer.status === 'DEACTIVE') {
+      this.customerService.updateCustomerStatusDeactive(customer.id).subscribe(() => {
+        setTimeout(() => {
+          this.gridApi.refreshInfiniteCache();
+        }, 0);
+      });
+    }
   }
-
+  
   onGridSizeChanged(params: GridSizeChangedEvent) {
     params.api.sizeColumnsToFit();
   }
@@ -92,8 +116,12 @@ export class CustomerListComponent implements OnInit {
     params.api.sizeColumnsToFit();
   }
 
-  onAddCustomer(product: any) {
-    this.loadCustomers(); // Reload products after adding
+  onAddCustomer(customer: any) {
+    this.gridApi.refreshInfiniteCache(); // Refresh the data cache after adding a product
+  }
+
+  onCustomerEdit(customer: any) {
+    this.gridApi.refreshInfiniteCache();
   }
 
   initColumnDefs() {
@@ -106,7 +134,7 @@ export class CustomerListComponent implements OnInit {
         field: 'phoneNumber',
         headerName: 'Phone Number',
         filter: 'agTextColumnFilter',
-        valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value)
+        // valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value)
       },
       {
         field: 'status',
@@ -117,15 +145,9 @@ export class CustomerListComponent implements OnInit {
       {
         headerName: 'Actions',
         cellClass: 'text-center',
-        cellRenderer: ActionCellRendererComponent
+        // cellRenderer: ActionCellRendererComponent
       },
     ];
-  }
-
-  loadCustomers() {
-    this.customerService.getCustomers().subscribe( (customers) => {
-      this.customers = customers;
-    })
   }
 
   adjustGridForScreenSize() {
