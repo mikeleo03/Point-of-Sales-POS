@@ -5,8 +5,18 @@ import { ColDef, GridOptions, GridApi, IDatasource, IGetRowsParams } from 'ag-gr
 import { Router } from '@angular/router';
 import { DateFormatPipe } from '../../../core/pipes/date-format.pipe';
 import { PriceFormatPipe } from '../../../core/pipes/price-format.pipe';
-import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetHeaderComponent, HlmSheetFooterComponent, HlmSheetTitleDirective, HlmSheetDescriptionDirective } from '@spartan-ng/ui-sheet-helm';
-import { BrnSheetContentDirective, BrnSheetTriggerDirective } from '@spartan-ng/ui-sheet-brain';
+import {
+  HlmSheetComponent,
+  HlmSheetContentComponent,
+  HlmSheetHeaderComponent,
+  HlmSheetFooterComponent,
+  HlmSheetTitleDirective,
+  HlmSheetDescriptionDirective,
+} from '@spartan-ng/ui-sheet-helm';
+import {
+  BrnSheetContentDirective,
+  BrnSheetTriggerDirective,
+} from '@spartan-ng/ui-sheet-brain';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductFormComponent } from '../product-form/product-form.component';
@@ -36,7 +46,7 @@ import { Product } from '../../../models/product.model';
     HlmSheetDescriptionDirective,
     HlmLabelDirective,
     ActionCellRendererComponent,
-    StatusCellRendererComponent
+    StatusCellRendererComponent,
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
@@ -48,10 +58,10 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   colDefs: ColDef[] = [
     { field: 'name', headerClass: 'text-center', minWidth: 200 },
-    { 
-      field: 'price', 
-      sortable: true, 
-      filter: "agNumberColumnFilter", 
+    {
+      field: 'price',
+      sortable: true,
+      filter: 'agNumberColumnFilter',
       headerClass: 'text-center',
       minWidth: 150,
       valueFormatter: (params: any) => new PriceFormatPipe().transform(params.value)
@@ -69,10 +79,26 @@ export class ProductListComponent implements OnInit {
       headerClass: 'text-center',
       cellClass: 'text-center',
       minWidth: 200,
-      cellRenderer: StatusCellRendererComponent
+      cellRenderer: StatusCellRendererComponent,
     },
-    { field: 'createdAt', sortable: true, filter: "agDateColumnFilter", headerClass: 'text-center', minWidth: 200, valueFormatter: (params: any) => new DateFormatPipe().transform(params.value) },
-    { field: 'updatedAt', sortable: true, filter: "agDateColumnFilter", headerClass: 'text-center', minWidth: 200, valueFormatter: (params: any) => new DateFormatPipe().transform(params.value) },
+    {
+      field: 'createdAt',
+      sortable: true,
+      filter: 'agDateColumnFilter',
+      headerClass: 'text-center',
+      minWidth: 200,
+      valueFormatter: (params: any) =>
+        new DateFormatPipe().transform(params.value),
+    },
+    {
+      field: 'updatedAt',
+      sortable: true,
+      filter: 'agDateColumnFilter',
+      headerClass: 'text-center',
+      minWidth: 200,
+      valueFormatter: (params: any) =>
+        new DateFormatPipe().transform(params.value),
+    },
     {
       headerName: 'Actions',
       cellRenderer: ActionCellRendererComponent,
@@ -83,7 +109,7 @@ export class ProductListComponent implements OnInit {
   ];
 
   public defaultColDef: ColDef = {
-    filter: "agTextColumnFilter",
+    filter: 'agTextColumnFilter',
     floatingFilter: true,
     resizable: true,
   };
