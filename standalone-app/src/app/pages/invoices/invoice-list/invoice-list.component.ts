@@ -64,8 +64,14 @@ import { DataSource } from '@angular/cdk/collections';
 })
 export class InvoiceListComponent implements OnInit {
   invoices: InvoiceDTO[] = [];
+  loading: boolean = false;
   colDefs: ColDef[] = [
-    { headerName: 'Customer',field: 'customer.name', headerClass: 'text-center', minWidth: 200 },
+    {
+      headerName: 'Customer',
+      field: 'customer.name',
+      headerClass: 'text-center',
+      minWidth: 200,
+    },
     {
       headerName: 'Total Amount',
       field: 'amount',
@@ -94,7 +100,7 @@ export class InvoiceListComponent implements OnInit {
       headerName: 'Actions',
       cellRenderer: ActionCellRendererComponent,
       headerClass: 'text-center',
-      minWidth: 350,
+      minWidth: 200,
       cellClass: 'text-center',
     },
   ];
@@ -107,18 +113,26 @@ export class InvoiceListComponent implements OnInit {
 
   dataSource: IDatasource = {
     getRows: (params: IGetRowsParams) => {
+      this.loading = true; // Start loading
       this.invoiceService
         .getInvoices(
           {},
           this.gridApi.paginationGetCurrentPage(),
           this.gridApi.paginationGetPageSize()
         )
-        .subscribe((response) => {
-          params.successCallback(
-            response['content'],
-            response['page']['totalElements']
-          );
-        });
+        .subscribe(
+          (response) => {
+            params.successCallback(
+              response['content'],
+              response['page']['totalElements']
+            );
+            this.loading = false; // Stop loading
+          },
+          (error) => {
+            this.loading = false; // Stop loading on error
+            console.error('Error fetching invoices:', error);
+          }
+        );
     },
   };
 
@@ -157,6 +171,7 @@ export class InvoiceListComponent implements OnInit {
     console.log('Viewing invoice:', invoiceData);
     // Your logic to view the invoice details here
   }
+
   onGridSizeChanged(params: GridSizeChangedEvent) {
     params.api.sizeColumnsToFit(); // Ensure columns fit the grid width
   }

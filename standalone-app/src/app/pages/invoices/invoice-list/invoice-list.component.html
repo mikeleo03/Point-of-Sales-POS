@@ -39,6 +39,12 @@
     </div>
   </div>
   <div class="flex items-center justify-center">
+    <div
+      *ngIf="loading"
+      class="absolute inset-0 flex items-center justify-center z-50"
+    >
+      <i class="fa fa-spinner fa-spin text-3xl text-green-1"></i>
+    </div>
     <ag-grid-angular
       class="ag-theme-quartz w-full h-[100vh] mt-4 my-6"
       [gridOptions]="gridOptions"
@@ -47,7 +53,7 @@
       [defaultColDef]="defaultColDef"
       [pagination]="true"
       [paginationPageSize]="10"
-      [context]="{ componentParent: this}"
+      [context]="{ componentParent: this }"
       (gridReady)="onGridReady($event)"
       (gridSizeChanged)="onGridSizeChanged($event)"
       (firstDataRendered)="onFirstDataRendered($event)"
