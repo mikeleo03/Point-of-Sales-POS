@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.fpt_midterm_pos.data.model.Product;
@@ -28,20 +27,14 @@ import com.example.fpt_midterm_pos.mapper.ProductMapper;
 import com.example.fpt_midterm_pos.service.ProductService;
 import com.example.fpt_midterm_pos.utils.FileUtils;
 
-import jakarta.validation.Valid;
-
 @Service
-@Validated
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
-    private final ProductMapper productMapper;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductMapper productMapper, ProductRepository productRepository) {
-        this.productMapper = productMapper;
-        this.productRepository = productRepository;
-    }
+    private ProductMapper productMapper;
 
     /**
      * Finds products based on the given criteria and sorts them according to the provided sort rules.
@@ -51,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
      * @return A page of {@link ProductShowDTO} objects representing the products that match the criteria and are sorted according to the provided rules.
      */
     @Override
-    public Page<Product> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
+    public Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
         // Listing all the criteria
         String productName = criteria.getName();
         String sortByName = criteria.getSortByName();
@@ -86,20 +79,22 @@ public class ProductServiceImpl implements ProductService {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         // Get the product data from the repo
-        return productRepository.findByFilters(productName, minPrice, maxPrice, sortedPageable);
+        Page<Product> products = productRepository.findByFilters(Status.Active, productName, minPrice, maxPrice, sortedPageable);
+        return products.map(productMapper::toShowDTO);
     }
+
 
     /**
      * Creates a new product based on the provided {@link ProductSaveDTO} and saves it to the database.
      *
      * @param productSaveDTO The data transfer object containing the details of the new product to be created.
      * @return A {@link ProductDTO} representing the newly created product with its ID and other relevant details.
-     * @throws BadRequestException If the provided Excel file is not in the correct format.
+     * @throws BadRequestException If the provided CSV file is not in the correct format.
      */
     @Override
-    public ProductDTO createProduct(@Valid ProductSaveDTO productSaveDTO) {
+    public ProductDTO createProduct(ProductSaveDTO productSaveDTO) {
         Product product = productMapper.toProduct(productSaveDTO);
-        product.setStatus(Status.ACTIVE.toString()); // Ensure the product is set to active when saving
+        product.setStatus(Status.Active); // Ensure the product is set to active when saving
         product.setCreatedAt(new Date());
         product.setUpdatedAt(new Date());
         Product savedProduct = productRepository.save(product);
@@ -115,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
      * @throws ResourceNotFoundException If the product with the given ID is not found in the database.
      */
     @Override
-    public ProductDTO updateProduct(UUID id, @Valid ProductSaveDTO productSaveDTO) {
+    public ProductDTO updateProduct(UUID id, ProductSaveDTO productSaveDTO) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         product.setName(productSaveDTO.getName());
@@ -138,49 +133,52 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProductStatus(UUID id, Status status) {
         Product prodCheck = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        if(status.toString().equals(prodCheck.getStatus())) {
+        if(status == prodCheck.getStatus()) {
             throw new DuplicateStatusException("Product status is already " + status);
         }
 
-        if (prodCheck.getStatus().equals(Status.ACTIVE.toString())) {
-            prodCheck.setStatus(Status.DEACTIVE.toString());
-        } else if (prodCheck.getStatus().equals(Status.DEACTIVE.toString())) {
-            prodCheck.setStatus(Status.ACTIVE.toString());
+        if (prodCheck.getStatus() == Status.Active) {
+            prodCheck.setStatus(Status.Deactive);
+        } else if (prodCheck.getStatus() == Status.Deactive) {
+            prodCheck.setStatus(Status.Active);
         }
-
         prodCheck.setUpdatedAt(new Date());
         Product updatedProduct = productRepository.save(prodCheck);
         return productMapper.toProductDTO(updatedProduct);
     }
 
     /**
-     * Saves a list of products from a Excel file to the database.
+     * Saves a list of products from a CSV file to the database.
      *
-     * @param file The MultipartFile object containing the Excel file with product data.
+     * @param file The MultipartFile object containing the CSV file with product data.
      * @return A list of {@link ProductDTO} objects representing the saved products with their IDs and other relevant details.
-     * @throws IllegalArgumentException If the provided file is not in the correct Excel format.
-     * @throws BadRequestException If an error occurs while reading the Excel file.
+     * @throws IllegalArgumentException If the provided file is not in the correct CSV format.
+     * @throws BadRequestException If an error occurs while reading the CSV file.
      */
     @Override
-    public List<ProductDTO> saveProductsFromExcel(MultipartFile file) {
+    public List<ProductDTO> saveProductsFromCSV(MultipartFile file) {
+        if (!FileUtils.hasCSVFormat(file)) {
+            throw new IllegalArgumentException("Invalid file format. Only CSV files are accepted.");
+        }
+
         try {
-            List<ProductSaveDTO> productSaveDTOs = FileUtils.readProductsFromExcel(file);
+            List<ProductSaveDTO> productSaveDTOs = FileUtils.readProductsFromCSV(file);
             List<Product> products = productMapper.toProductList(productSaveDTOs);
-    
-            for (Product product : products) {
+
+            products.forEach(product -> {
                 if (product.getQuantity() == 0) {
-                    product.setStatus(Status.DEACTIVE.toString());
+                    product.setStatus(Status.Deactive);
                 } else {
-                    product.setStatus(Status.ACTIVE.toString());
+                    product.setStatus(Status.Active);
                 }
-            }
-    
+                product.setCreatedAt(new Date());
+                product.setUpdatedAt(new Date());
+            });
+
             List<Product> savedProducts = productRepository.saveAll(products);
             return productMapper.toProductDTOList(savedProducts);
         } catch (IOException e) {
-            throw new BadRequestException("Error reading Excel file: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Invalid file format. Only Excel files are accepted.");
+            throw new BadRequestException("Error reading CSV file: " + e.getMessage());
         }
-    }    
+    }
 }
