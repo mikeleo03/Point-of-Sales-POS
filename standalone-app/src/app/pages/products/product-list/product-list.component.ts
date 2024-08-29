@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../../services/product.service';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridSizeChangedEvent, FirstDataRenderedEvent, GridOptions, GridApi, IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { ColDef, GridOptions, GridApi, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { Router } from '@angular/router';
 import { DateFormatPipe } from '../../../core/pipes/date-format.pipe';
 import { PriceFormatPipe } from '../../../core/pipes/price-format.pipe';
@@ -26,7 +26,6 @@ import { Product } from '../../../models/product.model';
     ReactiveFormsModule,
     AgGridModule,
     ProductFormComponent,
-
     BrnSheetTriggerDirective,
     BrnSheetContentDirective,
     HlmSheetComponent,
@@ -54,7 +53,7 @@ export class ProductListComponent implements OnInit {
       sortable: true, 
       filter: "agNumberColumnFilter", 
       headerClass: 'text-center',
-      minWidth: 200,
+      minWidth: 150,
       valueFormatter: (params: any) => new PriceFormatPipe().transform(params.value)
     },
     { 
@@ -78,7 +77,7 @@ export class ProductListComponent implements OnInit {
       headerName: 'Actions',
       cellRenderer: ActionCellRendererComponent,
       headerClass: 'text-center',
-      minWidth: 225,
+      minWidth: 150,
       cellClass: 'text-center',
     },
   ];
@@ -90,21 +89,31 @@ export class ProductListComponent implements OnInit {
   };
 
   dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {      
-      this.productService.getProducts({}, this.gridApi.paginationGetCurrentPage(), this.gridApi.paginationGetPageSize()).subscribe(response => {
-        params.successCallback(
-          response["content"], response["page"]["totalElements"]
-        );
-      })
+    getRows: (params: IGetRowsParams) => {
+      const page = params.startRow / this.defaultPageSize;
+      const pageSize = params.endRow - params.startRow;
+  
+      this.productService.getProducts({}, page, pageSize).subscribe(response => {
+        params.successCallback(response["content"], response["page"]["totalElements"]);
+      }, error => {
+        params.failCallback();
+      });
+    }
+  }
+  
+  onPaginationChanged(event: any) {
+    // Ensure gridApi is available and then refresh data if needed
+    if (this.gridApi) {
+      this.gridApi.refreshInfiniteCache();
     }
   }
 
   public gridOptions: GridOptions = {
     getRowStyle: (params) => {
-      if (params.data && params.data.status != "ACTIVE") {
+      if (params.data && params.data.status === "DEACTIVE") {
         return { backgroundColor: '#f5f5f5', color: '#aaa' }; // Dark background for entire row when inactive
       }
-      return undefined;
+      return undefined; // Return undefined to apply default styling
     },
     rowModelType: 'infinite',
     datasource: this.dataSource,
@@ -114,12 +123,11 @@ export class ProductListComponent implements OnInit {
   constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit() {
-    window.addEventListener('resize', this.adjustGridForScreenSize.bind(this)); // Listen for resize events
+    // Nothing
   }
 
   onGridReady(params: any) {
     this.gridApi = params.api;
-    this.adjustGridForScreenSize(); // Initial check
   }
 
   onAddProduct(product: any) {
@@ -131,28 +139,16 @@ export class ProductListComponent implements OnInit {
   }
 
   onStatusToggle(product: any) {
-    if (product.status == 'DEACTIVE') {
-      this.productService.activateProduct(product.id).subscribe(() => {
-        this.gridApi.refreshInfiniteCache();
-      });
-    } else if (product.status == 'ACTIVE') {
+    if (product.status === 'DEACTIVE') {
       this.productService.deactivateProduct(product.id).subscribe(() => {
+        // Optionally refresh the cache for the current page
+        this.gridApi.refreshInfiniteCache();
+      });
+    } else if (product.status === 'ACTIVE') {
+      this.productService.activateProduct(product.id).subscribe(() => {
+        // Optionally refresh the cache for the current page
         this.gridApi.refreshInfiniteCache();
       });
     }
-  }
-
-  onGridSizeChanged(params: GridSizeChangedEvent) {
-    params.api.sizeColumnsToFit(); // Ensure columns fit the grid width
-  }
-
-  onFirstDataRendered(params: FirstDataRenderedEvent) {
-    params.api.sizeColumnsToFit(); // Fit columns on initial render
-  }
-
-  adjustGridForScreenSize() {
-    if (this.gridApi) {
-      this.gridApi.sizeColumnsToFit(); // Adjust columns for screen size
-    }
-  }
+  }  
 }
