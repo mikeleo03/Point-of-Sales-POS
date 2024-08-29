@@ -19,10 +19,12 @@
             </div>
         </div>
         <div class="items-center grid grid-cols-4 gap-4">
-            <label hlmLabel for="status" class="text-right">Status</label>
-            <div class="col-span-3 flex items-center">
-                <input type="checkbox" formControlName="status" class="spartan-checkbox">
-                <span class="ml-2">{{ productForm.get('status')?.value ? 'Active' : 'Inactive' }}</span>
+            <label hlmLabel for="quantity" class="text-right">Quantity</label>
+            <div class="col-span-3">
+                <input hlmInput id="quantity" type="number" formControlName="quantity" class="w-full" placeholder="Enter quantity" />
+                <span *ngIf="quantity?.invalid && (quantity?.dirty || quantity?.touched)" class="text-red-500 text-sm block mt-1">
+                    Quantity must be greater than 0.
+                </span>
             </div>
         </div>
         <div class="pt-5 w-full justify-end">
