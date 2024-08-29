@@ -23,10 +23,6 @@ import { CustomerFormComponent } from "../customer-form/customer-form.component"
     CustomerFormComponent
 ],
   template: `
-    <button
-      class="bg-gray-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-gray-600 mr-1.5 disabled:bg-gray-300 disabled:cursor-not-allowed">
-      <i class="fas fa-pencil-alt"></i>&nbsp; Info</button>
-      
     <hlm-sheet side="right">
         <button
           class="bg-blue-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-blue-600 mr-1.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
@@ -43,11 +39,6 @@ import { CustomerFormComponent } from "../customer-form/customer-form.component"
             <app-customer-form [customer]="params.data" [isEditMode]="true" (customerSaved)="onCustomerSaved($event)" (formClosed)="ctx.close()"/>
         </hlm-sheet-content>
     </hlm-sheet>
-
-    <button 
-      class="bg-red-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed">
-      <i class="fas fa-trash"></i>&nbsp; Delete
-    </button>
   `
 })
 export class ActionCellRendererComponent implements ICellRendererAngularComp {
@@ -67,9 +58,5 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
 
     onEditClick() {
       this.params.context.componentParent.onEditCustomer(this.params.data);
-    }
-
-    onDeleteClick() {
-      this.params.context.componentParent.onDeleteCustomer(this.params.data);
     }
 }

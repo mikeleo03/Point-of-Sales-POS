@@ -43,8 +43,7 @@ export class CustomerListComponent implements OnInit {
   colDefs: ColDef[] = [];
 
   public defaultColDef: ColDef = {
-    floatingFilter: true,
-    flex: 1
+    floatingFilter: true
   };
 
   public gridOptions: GridOptions = {
@@ -97,14 +96,12 @@ export class CustomerListComponent implements OnInit {
     this.loadCustomers(); // Reload products after adding
   }
 
-  onCustomerEdited(product: any) {
-    this.loadCustomers(); // Reload products after edited
-  }
-
   initColumnDefs() {
     this.colDefs = [
-      {field: 'id', headerName: 'Id', filter: 'agTextColumnFilter'},
-      {field: 'name', headerName: 'Name', filter: 'agTextColumnFilter'},
+      {
+        field: 'name',
+        headerName: 'Name',
+        filter: 'agTextColumnFilter'},
       {
         field: 'phoneNumber',
         headerName: 'Phone Number',
@@ -120,7 +117,6 @@ export class CustomerListComponent implements OnInit {
       {
         headerName: 'Actions',
         cellClass: 'text-center',
-        minWidth: 300,
         cellRenderer: ActionCellRendererComponent
       },
     ];

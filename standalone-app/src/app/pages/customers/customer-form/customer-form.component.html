@@ -14,7 +14,7 @@
             <div class="col-span-3">
                 <input hlmInput id="phoneNumber" formControlName="phoneNumber" class="w-full" placeholder="Enter Customer Phone Number" />
                 <span *ngIf="phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)" class="text-red-500 text-sm block mt-1">
-                    Phone Number is required.
+                    Phone Number must start with +62 and be 13 to 16 characters long.
                 </span>
             </div>
         </div>

@@ -20,6 +20,20 @@ export class CustomerService {
     return this.http.get<Customer>(`${this.apiUrl}/${id}`);
   }
 
+  getLastCustomerId(): Observable<number> {
+    return new Observable<number>(observer => {
+      this.http.get<any[]>(this.apiUrl).subscribe(customer => {
+        const lastId = customer.reduce((max, customer) => Math.max(max, customer.id), 0);
+        observer.next(lastId);
+        observer.complete();
+      });
+    });
+  }
+
+  addCustomer(customer: Customer): Observable<Customer> {
+    return this.http.post<Customer>(this.apiUrl, customer);
+  }
+
   updateCustomer(customer: Customer): Observable<Customer> {
     return this.http.put<Customer>(`${this.apiUrl}/${customer.id}`, customer)
   }

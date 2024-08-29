@@ -28,6 +28,7 @@ export class CustomerFormComponent implements OnInit {
   @Output() formClosed = new EventEmitter<void>();
 
   customerForm!: FormGroup;
+  lastCustomerId!: number;
 
   constructor(private fb: FormBuilder, private customerService: CustomerService) {}
 
@@ -35,7 +36,7 @@ export class CustomerFormComponent implements OnInit {
     this.customerForm = this.fb.group({
       id: [''],
       name: [this.customer?.name || '', Validators.required],
-      phoneNumber: [this.customer?.phoneNumber ||'', Validators.required],
+      phoneNumber: [this.customer?.phoneNumber || '', Validators.required],
       status: [this.customer?.status || 'Active'],
       createdAt: [this.customer?.createdAt || new Date()],
       updatedAt: [new Date()],
@@ -43,18 +44,34 @@ export class CustomerFormComponent implements OnInit {
 
     if(this.isEditMode) {
       this.customerForm.patchValue(this.customer);
+    } else {
+      this.customerService.getLastCustomerId().subscribe((lastId: number) => {
+        this.lastCustomerId = lastId;
+        this.customerForm.patchValue({
+          id: (this.lastCustomerId + 1).toString()
+        });
+      });
     }
   }
 
   onSubmit() {
     const customerData = this.customerForm.value;
-    customerData.updatedAt = new Date();
+    const checkPhone = (customerData.phoneNumber).length;
+    if(checkPhone > 16) {
+      customerData.phoneNumber = (customerData.phoneNumber).slice(0, 16);
+    }
 
     if(this.isEditMode) {
+      customerData.updatedAt = new Date();
       this.customerService.updateCustomer(customerData).subscribe(() => {
         this.customerSaved.emit(customerData);
         this.formClosed.emit();
       });
+    } else {
+      this.customerService.addCustomer(customerData).subscribe(() => {
+        this.customerSaved.emit(customerData);
+        this.formClosed.emit();
+      })
     }
   }
 
