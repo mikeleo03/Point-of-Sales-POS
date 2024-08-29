@@ -65,8 +65,9 @@ export class InvoiceService {
     return this.http.get<InvoiceDTO>(`${this.apiUrl}/${id}`);
   }
 
-  createInvoice(invoice: InvoiceSaveDTO): Observable<InvoiceSaveDTO> {
-    return this.http.post<InvoiceSaveDTO>(this.apiUrl, invoice);
+  createInvoice(invoice: InvoiceSaveDTO): Observable<InvoiceDTO> {
+    const headers = this.getHeaders();
+    return this.http.post<InvoiceDTO>(this.apiUrl, invoice, { headers });
   }
 
   updateInvoice(invoice: InvoiceSaveDTO): Observable<InvoiceSaveDTO> {

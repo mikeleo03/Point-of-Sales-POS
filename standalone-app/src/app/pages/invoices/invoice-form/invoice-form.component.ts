@@ -52,8 +52,6 @@ export class InvoiceFormComponent implements OnInit {
         Validators.required,
       ],
       invoiceDetails: this.fb.array([this.createInvoiceDetail()]),
-      status: [{ value: true, disabled: this.isViewMode }],
-      date: [{ value: new Date(), disabled: this.isViewMode }],
     });
 
     if (!this.isViewMode && this.isEditMode) {
@@ -137,8 +135,9 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProducts().subscribe((products) => {
-      this.products = products;
+    this.productService.getProducts({}, 0, 20).subscribe((products) => {
+      this.products = products.content;
+      console.log(products);
     });
   }
 
