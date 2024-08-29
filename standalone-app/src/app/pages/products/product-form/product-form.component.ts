@@ -6,6 +6,7 @@ import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
+import { ProductSaveDTO } from '../../../models/product.model';
 
 @Component({
   selector: 'app-product-form',
@@ -34,35 +35,34 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit() {
     this.productForm = this.fb.group({
-      id: [''],
+      id: [this.product?.id],
       name: [this.product?.name || '', Validators.required],
       price: [this.product?.price || '', [Validators.required, Validators.min(0)]],
-      status: [this.product?.status !== undefined ? this.product.status : true],
+      quantity: [this.product?.quantity || '', [Validators.required, Validators.min(0)]],
       createdAt: [this.product?.createdAt || new Date()],
       updatedAt: [new Date()],
     });
 
-    if (!this.isEditMode) {
-      // Fetch the last product ID if creating a new product
-      this.productService.getLastProductId().subscribe((lastId: number) => {
-        this.lastProductId = lastId;
-        this.productForm.patchValue({ id: (this.lastProductId + 1).toString() });
-      });
-    } else {
+    if (this.isEditMode) {
       this.productForm.patchValue(this.product); // Pre-fill the form with existing product data
     }
   }
 
   onSubmit() {
     const productData = this.productForm.value;
+    const saveData : ProductSaveDTO = {
+      name: productData.name,
+      price: productData.price,
+      quantity: productData.quantity
+    }
     if (this.isEditMode) {
-      this.productService.updateProduct(productData).subscribe(() => {
+      this.productService.updateProduct(this.product?.id, saveData).subscribe(() => {
         this.productSaved.emit(productData);
         this.formClosed.emit(); // Close sheet
       });
     } else {
       // Add new product
-      this.productService.addProduct(productData).subscribe(() => {
+      this.productService.addProduct(saveData).subscribe(() => {
         this.productSaved.emit(productData);
         this.formClosed.emit(); // Close sheet
       });
@@ -75,5 +75,9 @@ export class ProductFormComponent implements OnInit {
 
   get price() {
     return this.productForm.get('price');
+  }
+
+  get quantity() {
+    return this.productForm.get('quantity');
   }
 }

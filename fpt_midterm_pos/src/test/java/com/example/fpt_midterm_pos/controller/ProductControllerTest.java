@@ -2,6 +2,7 @@ package com.example.fpt_midterm_pos.controller;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,11 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.ProductDTO;
 import com.example.fpt_midterm_pos.dto.ProductSaveDTO;
 import com.example.fpt_midterm_pos.dto.ProductSearchCriteriaDTO;
-import com.example.fpt_midterm_pos.dto.ProductShowDTO;
 import com.example.fpt_midterm_pos.exception.GlobalExceptionHandler;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.service.ProductService;
@@ -61,8 +62,8 @@ class ProductControllerTest {
     void testGetProductsByCriteria_withProducts() throws Exception {
         // Prepare test data
         Pageable pageable = PageRequest.of(0, 20);
-        ProductShowDTO productShowDTO = new ProductShowDTO(UUID.randomUUID(), "Product", 100.0, 10);
-        Page<ProductShowDTO> productPage = new PageImpl<>(List.of(productShowDTO), pageable, 1);
+        Product product = new Product(UUID.randomUUID(), "Product", 100.0, Status.ACTIVE.toString(), 10, new Date(), new Date());
+        Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
 
         // Mock the service call
         when(productService.findByCriteria(any(ProductSearchCriteriaDTO.class), any(Pageable.class)))
@@ -85,7 +86,7 @@ class ProductControllerTest {
     void testGetProductsByCriteria_noProducts() throws Exception {
         // Prepare test data
         Pageable pageable = PageRequest.of(0, 20);
-        Page<ProductShowDTO> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+        Page<Product> emptyPage = new PageImpl<>(List.of(), pageable, 0);
 
         // Mock the service call
         when(productService.findByCriteria(any(ProductSearchCriteriaDTO.class), any(Pageable.class)))

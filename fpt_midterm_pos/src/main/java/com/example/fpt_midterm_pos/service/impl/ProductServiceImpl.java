@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
      * @return A page of {@link ProductShowDTO} objects representing the products that match the criteria and are sorted according to the provided rules.
      */
     @Override
-    public Page<ProductShowDTO> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
+    public Page<Product> findByCriteria(ProductSearchCriteriaDTO criteria, Pageable pageable) {
         // Listing all the criteria
         String productName = criteria.getName();
         String sortByName = criteria.getSortByName();
@@ -86,8 +86,7 @@ public class ProductServiceImpl implements ProductService {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         // Get the product data from the repo
-        Page<Product> products = productRepository.findByFilters(Status.ACTIVE.toString(), productName, minPrice, maxPrice, sortedPageable);
-        return products.map(productMapper::toShowDTO);
+        return productRepository.findByFilters(productName, minPrice, maxPrice, sortedPageable);
     }
 
     /**
