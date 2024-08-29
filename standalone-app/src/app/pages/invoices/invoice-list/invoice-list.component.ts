@@ -32,9 +32,6 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceDTO } from '../../../models/invoice.model';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
 import { ActionCellRendererComponent } from './action-cell-renderer.component';
-import { StatusCellRendererComponent } from './status-cell-renderer.component';
-import { DataSource } from '@angular/cdk/collections';
-
 @Component({
   selector: 'app-invoice-list',
   standalone: true,

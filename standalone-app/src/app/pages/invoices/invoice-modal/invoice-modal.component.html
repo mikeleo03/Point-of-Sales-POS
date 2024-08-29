@@ -1,14 +1,14 @@
-<div>
-  <h2 class="text-2xl font-bold mb-4">{{ invoice.customer.name }}</h2>
-  <div class="mb-4">
-    <p class="text-gray-700">
-      <strong>Date:</strong> {{ invoice.date | dateFormat }}
-    </p>
-  </div>
+<h2 class="text-2xl font-bold mb-4">{{ invoice.customer.name }}</h2>
+<div class="mb-4">
+  <p class="text-gray-700">
+    <strong>Date:</strong> {{ invoice.date | dateFormat }}
+  </p>
+</div>
 
-  <div>
-    <h3 class="text-lg font-semibold mb-2">Invoice Details:</h3>
-    <table class="min-w-full h-20 overflow-hidden overflow-y-auto bg-white border border-gray-200">
+<div class="w-56">
+  <h3 class="text-lg font-semibold mb-2">Invoice Details:</h3>
+  <div class="w-full h-56 overflow-x-auto overflow-y-auto">
+    <table class="bg-white border border-gray-200">
       <thead class="bg-gray-100">
         <tr>
           <th class="py-2 px-4 border-b">Product</th>
@@ -22,17 +22,19 @@
           *ngFor="let detail of invoice.invoiceDetails"
           class="hover:bg-gray-50"
         >
-          <td class="py-2 px-4 border-b">
-            {{ detail.productName }}
-          </td>
+          <td class="py-2 px-4 border-b">{{ detail.productName }}</td>
           <td class="py-2 px-4 border-b">{{ detail.quantity }}</td>
           <td class="py-2 px-4 border-b">{{ detail.price | priceFormat }}</td>
-          <td class="py-2 px-4 border-b">{{ detail.amount | priceFormat }}</td>
+          <td class="py-2 px-4 border-b">
+            {{ detail.amount | priceFormat }}
+          </td>
         </tr>
       </tbody>
     </table>
-    <div class="mt-4">
-      <p class="text-gray-700"><strong>Total:</strong> {{ invoice.amount | priceFormat}}</p>
-    </div>
+  </div>
+  <div class="mt-4">
+    <p class="text-gray-700">
+      <strong>Total:</strong> {{ invoice.amount | priceFormat }}
+    </p>
   </div>
 </div>
