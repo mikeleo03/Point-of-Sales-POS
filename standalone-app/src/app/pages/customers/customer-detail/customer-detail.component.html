@@ -1,1 +1,8 @@
-<p>customer-detail works!</p>
+<div class="py-4 grid gap-4">
+    <div class="items-center grid grid-cols-4 gap-4" *ngFor="let field of fields">
+        <label hlmLabel [for]="field" class="text-right">{{ getFieldLabel(field) }}</label>
+        <div class="col-span-3">
+            <input hlmInput [id]="field" [value]="customer[field]" class="w-full" disabled />
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetDescriptionDirective, HlmSheetFooterComponent, HlmSheetHeaderComponent, HlmSheetTitleDirective } from '@spartan-ng/ui-sheet-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { CustomerFormComponent } from "../customer-form/customer-form.component";
+import { CustomerDetailComponent } from '../customer-detail/customer-detail.component';
 
 @Component({
   selector: 'app-action-cell-customer-renderer',
@@ -20,12 +21,24 @@ import { CustomerFormComponent } from "../customer-form/customer-form.component"
     HlmSheetDescriptionDirective,
     HlmLabelDirective,
     
-    CustomerFormComponent
+    CustomerFormComponent,
+    CustomerDetailComponent
 ],
   template: `
-    <button
-    class="bg-gray-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-gray-600 mr-1.5 disabled:bg-gray-300 disabled:cursor-not-allowed">
-    <i class="fas fa-eye"></i>&nbsp; View</button>
+  <hlm-sheet side="right">
+        <button
+          class="bg-gray-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-gray-600 mr-1.5 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          brnSheetTrigger>
+          <i class="fas fa-eye"></i>&nbsp; View
+        </button>
+        <hlm-sheet-content *brnSheetContent="let ctx">
+            <hlm-sheet-header class="text-start md:mt-4 mt-6">
+                <h1 hlmSheetTitle class="md:text-2xl text-xl font-bold text-green-1">Info Detail Customer</h1>
+                <p hlmSheetDescription>Details about Customer</p>
+            </hlm-sheet-header>
+            <app-customer-detail [customer]="params.data"/>
+        </hlm-sheet-content>
+    </hlm-sheet>
 
     <hlm-sheet side="right">
         <button

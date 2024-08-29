@@ -12,6 +12,7 @@ import { HlmSheetComponent, HlmSheetContentComponent, HlmSheetDescriptionDirecti
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CustomerFormComponent } from '../customer-form/customer-form.component';
+import { CustomerDetailComponent } from '../customer-detail/customer-detail.component';
 
 @Component({
   selector: 'app-customer-list',
@@ -22,6 +23,7 @@ import { CustomerFormComponent } from '../customer-form/customer-form.component'
     PhoneNumberFormatPipe,
     ReactiveFormsModule,
     CustomerFormComponent,
+    CustomerDetailComponent,
 
     BrnSheetTriggerDirective,
     BrnSheetContentDirective,
