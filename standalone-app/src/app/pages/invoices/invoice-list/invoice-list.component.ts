@@ -97,7 +97,7 @@ export class InvoiceListComponent implements OnInit {
       headerName: 'Actions',
       cellRenderer: ActionCellRendererComponent,
       headerClass: 'text-center',
-      minWidth: 200,
+      minWidth: 250,
       cellClass: 'text-center',
     },
   ];
