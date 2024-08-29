@@ -30,7 +30,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.username = this.authService.getToken() != null ? jwtDecode(this.authService.getToken() as string).sub as string : "Mr. Lorem Ipsum";
-    console.log(jwtDecode(this.authService.getToken() as string));
   }
 
   toggleMenu() {
