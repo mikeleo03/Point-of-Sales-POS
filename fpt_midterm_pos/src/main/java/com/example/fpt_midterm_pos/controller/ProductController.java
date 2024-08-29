@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.fpt_midterm_pos.data.model.Product;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.ProductDTO;
 import com.example.fpt_midterm_pos.dto.ProductSaveDTO;
@@ -61,9 +62,9 @@ public class ProductController {
         @ApiResponse(responseCode = "204", description = "Products not found")
     })
     @GetMapping
-    public ResponseEntity<Page<ProductShowDTO>> getProductsByCriteria(ProductSearchCriteriaDTO criteria, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Page<Product>> getProductsByCriteria(ProductSearchCriteriaDTO criteria, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProductShowDTO> products = productService.findByCriteria(criteria, pageable);
+        Page<Product> products = productService.findByCriteria(criteria, pageable);
 
         if (products.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

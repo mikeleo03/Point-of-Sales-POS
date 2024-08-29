@@ -1,10 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -36,23 +31,14 @@ export class ProductFormComponent implements OnInit {
   productForm!: FormGroup;
   lastProductId!: number;
 
-  constructor(
-    private fb: FormBuilder,
-    private productService: ProductService
-  ) {}
+  constructor(private fb: FormBuilder, private productService: ProductService) {}
 
   ngOnInit() {
     this.productForm = this.fb.group({
       id: [this.product?.id],
       name: [this.product?.name || '', Validators.required],
-      price: [
-        this.product?.price || '',
-        [Validators.required, Validators.min(0)],
-      ],
-      quantity: [
-        this.product?.quantity || '',
-        [Validators.required, Validators.min(0)],
-      ],
+      price: [this.product?.price || '', [Validators.required, Validators.min(0)]],
+      quantity: [this.product?.quantity || '', [Validators.required, Validators.min(0)]],
       createdAt: [this.product?.createdAt || new Date()],
       updatedAt: [new Date()],
     });
@@ -64,18 +50,16 @@ export class ProductFormComponent implements OnInit {
 
   onSubmit() {
     const productData = this.productForm.value;
-    const saveData: ProductSaveDTO = {
+    const saveData : ProductSaveDTO = {
       name: productData.name,
       price: productData.price,
-      quantity: productData.quantity,
-    };
+      quantity: productData.quantity
+    }
     if (this.isEditMode) {
-      this.productService
-        .updateProduct(this.product?.id, saveData)
-        .subscribe(() => {
-          this.productSaved.emit(productData);
-          this.formClosed.emit(); // Close sheet
-        });
+      this.productService.updateProduct(this.product?.id, saveData).subscribe(() => {
+        this.productSaved.emit(productData);
+        this.formClosed.emit(); // Close sheet
+      });
     } else {
       // Add new product
       this.productService.addProduct(saveData).subscribe(() => {
