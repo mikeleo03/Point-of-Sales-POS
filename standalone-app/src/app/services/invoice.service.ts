@@ -57,8 +57,7 @@ export class InvoiceService {
       params = params.set('sortByAmount', criteria.sortByAmount);
     }
 
-    const response = this.http.get<any>(this.apiUrl, { headers, params });
-    return response;
+    return this.http.get<any>(this.apiUrl, { headers, params });
   }
 
   getInvoiceById(id: string): Observable<InvoiceDTO> {
