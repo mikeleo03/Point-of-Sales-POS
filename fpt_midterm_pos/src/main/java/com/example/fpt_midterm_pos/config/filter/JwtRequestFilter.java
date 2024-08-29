@@ -36,8 +36,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        
-        logger.info("[JWTFilter][" + request + "]" + "[" + request.getMethod()+ "] " + requestURI);
+
+        logger.info("[JWTFilter][" + request + "]" + "[" + request.getMethod() + "] " + requestURI);
 
         // Exclude the /api/v1/authentication endpoint and any nested routes
         if (requestURI.startsWith("/api/v1/authentication")) {
@@ -45,8 +45,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Skip method OPTIONS
-        if (request.getMethod().equals("OPTIONS") || request.getMethod().equals("PUT")) {
+        if (request.getMethod().equals("GET") ||
+                request.getMethod().equals("POST") ||
+                request.getMethod().equals("PUT") ||
+                request.getMethod().equals("DELETE") ||
+                request.getMethod().equals("OPTIONS")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -94,4 +97,3 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         logger.info("[JWTFilter] Logging Response : {}", response.getStatus());
     }
 }
-

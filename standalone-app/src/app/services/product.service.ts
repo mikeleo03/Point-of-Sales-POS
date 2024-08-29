@@ -5,7 +5,7 @@ import { ProductSaveDTO, ProductShowDTO, ProductSearchCriteriaDTO } from '../mod
 import { environment } from '../../environment/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;

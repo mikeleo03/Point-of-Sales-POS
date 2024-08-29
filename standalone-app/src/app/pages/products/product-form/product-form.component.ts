@@ -14,7 +14,7 @@ import { ProductSaveDTO } from '../../../models/product.model';
   templateUrl: './product-form.component.html',
   styleUrls: [],
   imports: [
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     CommonModule,
     HlmButtonDirective,
     HlmInputDirective,
@@ -23,8 +23,8 @@ import { ProductSaveDTO } from '../../../models/product.model';
   ],
 })
 export class ProductFormComponent implements OnInit {
-  @Input() product: any;  // Pass the product data for editing
-  @Input() isEditMode = false;  // Flag to differentiate between add and edit mode
+  @Input() product: any; // Pass the product data for editing
+  @Input() isEditMode = false; // Flag to differentiate between add and edit mode
   @Output() productSaved = new EventEmitter<any>();
   @Output() formClosed = new EventEmitter<void>();
 
