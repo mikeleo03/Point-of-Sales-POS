@@ -11,18 +11,16 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.fpt_midterm_pos.exception.BadRequestException;
 
-import jakarta.validation.Valid;
-
 public interface InvoiceService {
 
     // Find invoices based on the provided criteria.
     Page<InvoiceDTO> findByCriteria(InvoiceSearchCriteriaDTO criteria, Pageable pageable);
 
     // Creating a new invoice.
-    InvoiceDTO createInvoice(@Valid InvoiceSaveDTO invoiceSaveDTO);
+    InvoiceDTO createInvoice(InvoiceSaveDTO invoiceSaveDTO);
 
     // Updates an existing invoice with the provided invoice details.
-    InvoiceDTO updateInvoice(UUID id, @Valid InvoiceSaveDTO invoiceSaveDTO) throws BadRequestException;
+    InvoiceDTO updateInvoice(UUID id, InvoiceSaveDTO invoiceSaveDTO) throws BadRequestException;
 
     // Generates a PDF representation of the specified invoice.
     byte[] exportInvoiceToPDF(UUID id) throws IOException;

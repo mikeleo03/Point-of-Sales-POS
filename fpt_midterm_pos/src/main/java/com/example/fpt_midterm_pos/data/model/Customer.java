@@ -7,6 +7,8 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,12 +39,13 @@ public class Customer {
     private String name;
 
     @NotBlank(message = "Phone is mandatory")
-    @Pattern(regexp = "^\\+62\\d{9,13}$", message = "Phone number must start with +62 and contain 9 to 13 digits")
+    @Pattern(regexp = "^\\+62[0-9]{9,13}$", message = "Phone number must start with +62 and contain 9 to 13 digits")
     @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status = Status.ACTIVE.toString();
+    private Status status = Status.Active;
 
     @Column(name = "createdAt", nullable = false)
     private Date createdAt;
