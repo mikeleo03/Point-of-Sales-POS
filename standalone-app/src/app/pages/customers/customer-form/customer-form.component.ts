@@ -90,7 +90,6 @@ export class CustomerFormComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error);
           if (error.status === 400) {
             this.toastrService.error(error.error.errors);
           }

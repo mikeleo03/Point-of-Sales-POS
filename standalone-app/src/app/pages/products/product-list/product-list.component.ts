@@ -227,7 +227,6 @@ export class ProductListComponent implements OnInit {
       const file = input.files[0];
 
       if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-        console.log('Excel file selected:', file);
         this.productService.uploadExcelFile(file).subscribe(
           (response) => {
             this.loadProducts();

@@ -13,6 +13,5 @@ export class InvoiceModalComponent implements OnInit {
   @Input() invoice: any;
 
   ngOnInit() {
-    console.log(this.invoice);
   }
 }

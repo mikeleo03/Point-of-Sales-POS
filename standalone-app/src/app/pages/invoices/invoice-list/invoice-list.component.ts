@@ -150,7 +150,6 @@ export class InvoiceListComponent implements OnInit {
 
   onViewInvoice(invoiceData: any) {
     // Open a modal or navigate to a page to view the invoice details
-    console.log('Viewing invoice:', invoiceData);
     // Your logic to view the invoice details here
   }
 
