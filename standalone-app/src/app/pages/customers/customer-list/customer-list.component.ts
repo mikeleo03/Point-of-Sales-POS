@@ -120,25 +120,29 @@ export class CustomerListComponent implements OnInit {
         field: 'name',
         headerName: 'Name',
         sortable: true, // Enable client-side sorting
-        filter: true // Enable client-side filtering
+        filter: true, // Enable client-side filtering
+        minWidth: 200
       },
       {
         field: 'phoneNumber',
         headerName: 'Phone Number',
         sortable: true, // Enable client-side sorting
         filter: true, // Enable client-side filtering
-        valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value)
+        valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value),
+        minWidth: 200
       },
       {
         field: 'status',
         headerName: 'Status',
         cellClass: 'text-center',
-        cellRenderer: StatusCellRendererComponent
+        cellRenderer: StatusCellRendererComponent,
+        minWidth: 200,
       },
       {
         headerName: 'Actions',
         cellClass: 'text-center',
-        cellRenderer: ActionCellRendererComponent
+        cellRenderer: ActionCellRendererComponent,
+        minWidth: 250,
       },
       {
         field: 'updatedAt',

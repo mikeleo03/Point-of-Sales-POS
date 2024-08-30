@@ -10,9 +10,12 @@ import { CommonModule } from '@angular/common';
   imports: [HlmLabelDirective, HlmSwitchComponent, CommonModule],
   template: `
     <label class="flex items-center w-full justify-center mt-1">
-        <hlm-switch class="mr-2 mt-1" [checked]="params.value === 'ACTIVE'" (change)="onStatusToggle()" />
-        <span class="text-sm font-semibold mt-1" [ngClass]="{'text-green-500': params.value === 'ACTIVE', 'text-red-500': params.value === 'DEACTIVE'}">
-            {{ params.value }}
+        <hlm-switch class="mr-2 mt-1" 
+                    [checked]="isStatusActive()" 
+                    (change)="onStatusToggle()" />
+        <span class="text-sm font-semibold mt-1" 
+              [ngClass]="{'text-green-500': isStatusActive(), 'text-red-500': !isStatusActive()}">
+            {{ isStatusActive() ? 'Active' : 'Inactive' }}
         </span>
     </label>
   `
@@ -27,15 +30,15 @@ export class StatusCellRendererComponent {
     this.cdr.markForCheck();
   }
 
-  onStatusToggle() {
-    const updatedCustomer = this.params.data;
-    if(updatedCustomer.status === 'ACTIVE') {
-      updatedCustomer.status = 'DEACTIVE';
-    } else if (updatedCustomer.status === 'DEACTIVE') {
-      updatedCustomer.status = 'ACTIVE';
-    }
+  isStatusActive(): boolean {
+    return this.params.value === 'ACTIVE';
+  }
 
-    this.params.context.componentParent.onStatusToggle(updatedCustomer);
-    this.cdr.detectChanges();
+  onStatusToggle(): void {
+    const updatedProduct = this.params.data;
+    updatedProduct.status = this.isStatusActive() ? 'DEACTIVE' : 'ACTIVE';
+    
+    this.params.context.componentParent.onStatusToggle(updatedProduct);
+    this.cdr.detectChanges();  // Force change detection after toggling
   }
 }
