@@ -31,9 +31,12 @@ export class InvoiceService {
   ): Observable<any> {
     const headers = this.getHeaders();
 
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+    let params = new HttpParams();
+
+    // Conditionally add 'page' and 'size' parameters only if they are provided
+    if (page !== undefined && size !== undefined) {
+      params = params.set('page', page.toString()).set('size', size.toString());
+    }
 
     if (criteria.customerName) {
       params = params.set('customerName', criteria.customerName);

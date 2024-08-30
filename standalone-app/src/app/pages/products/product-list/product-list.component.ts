@@ -66,7 +66,13 @@ export class ProductListComponent implements OnInit {
 
   products: Product[] = [];
   colDefs: ColDef[] = [
-    { field: 'name', headerClass: 'text-center', minWidth: 200 },
+    {
+      field: 'name',
+      headerClass: 'text-center',
+      sortable: true,
+      filter: 'agTextColumnFilter',
+      minWidth: 200
+    },
     {
       field: 'price',
       sortable: true,
@@ -103,6 +109,7 @@ export class ProductListComponent implements OnInit {
     {
       field: 'updatedAt',
       sortable: true,
+      sort: 'desc',
       filter: 'agDateColumnFilter',
       headerClass: 'text-center',
       minWidth: 200,
@@ -120,9 +127,7 @@ export class ProductListComponent implements OnInit {
 
   public defaultColDef: ColDef = {
     floatingFilter: true,
-    flex: 1,
-    sortable: true, // Enable client-side sorting
-    filter: true, // Enable client-side filtering
+    flex: 1
   };
 
   // dataSource: IDatasource = {
@@ -165,8 +170,7 @@ export class ProductListComponent implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProducts({}, 0, 100).subscribe((response) => {
-      console.log(response);
+    this.productService.getProducts({}).subscribe((response) => {
       this.products = response.content;
     });
   }
@@ -187,12 +191,12 @@ export class ProductListComponent implements OnInit {
     if (product.status === 'DEACTIVE') {
       this.productService.deactivateProduct(product.id).subscribe(() => {
         // Optionally refresh the cache for the current page
-        this.gridApi.refreshInfiniteCache();
+        this.loadProducts();
       });
     } else if (product.status === 'ACTIVE') {
       this.productService.activateProduct(product.id).subscribe(() => {
         // Optionally refresh the cache for the current page
-        this.gridApi.refreshInfiniteCache();
+        this.loadProducts();
       });
     }
   }

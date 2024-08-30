@@ -149,8 +149,7 @@ export class InvoiceListComponent implements OnInit {
   }
 
   loadInvoices() {
-    this.invoiceService.getInvoices({}, 0, 100).subscribe((response) => {
-      console.log(response);
+    this.invoiceService.getInvoices({}).subscribe((response) => {
       this.invoices = response.content;
     });
   }
