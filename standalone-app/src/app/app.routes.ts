@@ -18,8 +18,8 @@ export const routes: Routes = [
         path: RouterConfig.HOME.path,
         loadChildren: () =>
           import('./pages/home/home.routes').then((m) => m.homeRoutes),
-        title: RouterConfig.HOME.link,
-        data: RouterConfig.PRODUCT.data,
+        title: "Home Page",
+        data: { header: true },
       },
       {
         path: RouterConfig.PRODUCT.path,

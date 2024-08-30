@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProductSaveDTO, ProductShowDTO, ProductSearchCriteriaDTO } from '../models/product.model';
-import { environment } from '../../environment/environment';
+import { ProductSaveDTO, ProductShowDTO, ProductSearchCriteriaDTO } from '../../models/product.model';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root',

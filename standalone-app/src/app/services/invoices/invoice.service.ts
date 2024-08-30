@@ -5,8 +5,8 @@ import {
   InvoiceDTO,
   InvoiceSaveDTO,
   InvoiceSearchCriteriaDTO,
-} from '../models/invoice.model';
-import { environment } from '../../environment/environment';
+} from '../../models/invoice.model';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
