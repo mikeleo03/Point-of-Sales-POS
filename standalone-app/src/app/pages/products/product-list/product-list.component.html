@@ -10,6 +10,20 @@
       </h3>
     </div>
     <div class="flex justify-end items-end">
+      <button
+        class="flex items-center space-x-2 bg-green-500 text-white p-2 px-4 text-sm mb-4 rounded-xl mr-2"
+        (click)="triggerFileInput()"
+      >
+        <i class="fa fa-file" aria-hidden="true"></i>
+        <span>Import Excel</span>
+      </button>
+      <input
+        type="file"
+        id="excelInput"
+        accept=".xlsx,.xls"
+        style="display: none;"
+        (change)="onFileSelected($event)"
+      >
       <hlm-sheet side="right">
         <button
           class="flex items-center space-x-2 bg-green-3 text-white p-2 px-4 text-sm mb-4 rounded-xl"

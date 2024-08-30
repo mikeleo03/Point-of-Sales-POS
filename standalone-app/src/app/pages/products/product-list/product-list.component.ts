@@ -214,4 +214,32 @@ export class ProductListComponent implements OnInit {
       this.gridApi.sizeColumnsToFit(); // Adjust columns for screen size
     }
   }
+
+  triggerFileInput() {
+    const fileInput = document.querySelector('#excelInput') as HTMLElement;
+    fileInput?.click();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        console.log('Excel file selected:', file);
+        this.productService.uploadExcelFile(file).subscribe(
+          (response) => {
+            console.log('Upload successful:', response);
+          },
+          (error) => {
+            console.error('Upload failed:', error);
+            alert('Errorr parsing');
+          }
+        );
+      } else {
+        alert('Please select an XLSX file.');
+      }
+    }
+  }
 }

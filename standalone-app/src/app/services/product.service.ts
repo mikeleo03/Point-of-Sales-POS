@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, ObservableLike } from 'rxjs';
 import { ProductSaveDTO, ProductShowDTO, ProductSearchCriteriaDTO } from '../models/product.model';
 import { environment } from '../../environment/environment';
 
@@ -16,6 +16,7 @@ export class ProductService {
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
       'api-key': this.apiKey,
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
@@ -54,5 +55,14 @@ export class ProductService {
   deactivateProduct(id: string): Observable<ProductShowDTO> {
     const headers = this.getHeaders();
     return this.http.put<ProductShowDTO>(`${this.apiUrl}/deactive/${id}`, { headers });
+  }
+
+  uploadExcelFile(file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+
+    const headers = this.getHeaders();
+
+    return this.http.post<any>(`${this.apiUrl}/upload`, formData, { headers });
   }
 }
