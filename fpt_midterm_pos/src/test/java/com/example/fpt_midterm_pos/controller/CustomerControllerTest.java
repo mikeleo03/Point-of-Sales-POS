@@ -1,5 +1,6 @@
 package com.example.fpt_midterm_pos.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,10 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
-import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
 import com.example.fpt_midterm_pos.exception.GlobalExceptionHandler;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.service.CustomerService;
@@ -57,8 +58,8 @@ class CustomerControllerTest {
     void testGetAllCustomer_withCustomers() throws Exception {
         // Prepare test data
         Pageable pageable = PageRequest.of(0, 20);
-        CustomerShowDTO customerShowDTO = new CustomerShowDTO(UUID.randomUUID(), "Customer", "+62123456789");
-        Page<CustomerShowDTO> customerPage = new PageImpl<>(List.of(customerShowDTO), pageable, 1);
+        Customer customer = new Customer(UUID.randomUUID(), "Customer", "+62123456789", Status.ACTIVE.toString(), new Date(), new Date(), null);
+        Page<Customer> customerPage = new PageImpl<>(List.of(customer), pageable, 1);
 
         // Mock the service call
         when(customerService.findAllCustomer(any(Pageable.class)))
@@ -81,7 +82,7 @@ class CustomerControllerTest {
     void testGetAllCustomer_noCustomers() throws Exception {
         // Prepare test data
         Pageable pageable = PageRequest.of(0, 20);
-        Page<CustomerShowDTO> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+        Page<Customer> emptyPage = new PageImpl<>(List.of(), pageable, 0);
 
         // Mock the service call
         when(customerService.findAllCustomer(any(Pageable.class)))

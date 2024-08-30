@@ -12,11 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,7 +26,6 @@ import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.data.repository.CustomerRepository;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
-import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
 import com.example.fpt_midterm_pos.exception.DuplicateStatusException;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.CustomerMapper;
@@ -65,19 +62,16 @@ class CustomerServiceImplTest {
         customer.setCreatedAt(new java.util.Date());
         customer.setUpdatedAt(new java.util.Date());
 
-        CustomerShowDTO customerShowDTO = new CustomerShowDTO(customer.getId(), customer.getName(), customer.getPhoneNumber());
-
         pageable = PageRequest.of(0, 10);
         customerPage = new PageImpl<>(Collections.singletonList(customer));
 
         when(customerRepository.findAll(pageable)).thenReturn(customerPage);
-        when(customerMapper.toCustomerShowDTO(customer)).thenReturn(customerShowDTO);
 
-        Page<CustomerShowDTO> result = customerService.findAllCustomer(pageable);
+        Page<Customer> result = customerService.findAllCustomer(pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
-        assertEquals(customerShowDTO, result.getContent().get(0));
+        assertEquals(customer, result.getContent().get(0));
     }
 
     @Test
