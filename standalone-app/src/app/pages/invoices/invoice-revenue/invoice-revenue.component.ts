@@ -11,7 +11,7 @@ import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { HttpClientModule } from '@angular/common/http';
-import { InvoiceService } from '../../../services/invoice.service'; // Adjust the path to your service
+import { InvoiceService } from '../../../services/invoices/invoice.service'; // Adjust the path to your service
 import { Revenue } from '../../../models/revenue.model'; // Adjust the path to your model
 
 @Component({

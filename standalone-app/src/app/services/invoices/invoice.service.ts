@@ -7,6 +7,7 @@ import {
   InvoiceSearchCriteriaDTO,
 } from '../../models/invoice.model';
 import { environment } from '../../../environment/environment';
+import { Revenue } from '../../models/revenue.model';
 
 @Injectable({
   providedIn: 'root',
@@ -90,5 +91,17 @@ export class InvoiceService {
   exportInvoiceToPDF(id: string): Observable<Blob> {
     const headers = this.getHeaders();
     return this.http.get(`${this.apiUrl}/${id}/export`, { headers, responseType: 'blob' });
+  }
+
+  getRevenue(date: string, revenueBy: string): Observable<Revenue> {
+    const headers = this.getHeaders();
+    const params = new HttpParams()
+      .set('date', date)
+      .set('revenueBy', revenueBy);
+
+    return this.http.get<Revenue>(`${this.apiUrl}/revenue`, {
+      headers,
+      params,
+    });
   }
 }
