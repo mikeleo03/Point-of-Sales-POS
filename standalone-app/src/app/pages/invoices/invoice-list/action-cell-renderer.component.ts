@@ -101,7 +101,7 @@ import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component'
           <p hlmSheetDescription>
             {{
               params.data
-                ? 'Edit the invoice details below.'
+                ? 'Edit the invoice details below. Can be edit only 10 Minutes'
                 : 'Fill out the form below to add a new invoice.'
             }}
           </p>

@@ -32,6 +32,8 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceDTO } from '../../../models/invoice.model';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
 import { ActionCellRendererComponent } from './action-cell-renderer.component';
+import { InvoiceRevenueComponent } from '../invoice-revenue/invoice-revenue.component';
+import { Revenue } from '../../../models/revenue.model';
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
@@ -44,6 +46,7 @@ import { ActionCellRendererComponent } from './action-cell-renderer.component';
     ReactiveFormsModule,
     AgGridModule,
     InvoiceFormComponent,
+    InvoiceRevenueComponent,
 
     BrnSheetTriggerDirective,
     BrnSheetContentDirective,
@@ -107,28 +110,6 @@ export class InvoiceListComponent implements OnInit {
     sortable: true, // Enable client-side sorting
     filter: true, // Enable client-side filtering
   };
-
-  // dataSource: IDatasource = {
-  //   getRows: (params: IGetRowsParams) => {
-  //     this.invoiceService
-  //       .getInvoices(
-  //         {},
-  //         this.gridApi.paginationGetCurrentPage(),
-  //         this.gridApi.paginationGetPageSize()
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           params.successCallback(
-  //             response['content'],
-  //             response['page']['totalElements']
-  //           );
-  //         },
-  //         (error) => {
-  //           console.error('Error fetching invoices:', error);
-  //         }
-  //       );
-  //   },
-  // };
 
   public gridOptions: GridOptions = {
     getRowStyle: (params) => {

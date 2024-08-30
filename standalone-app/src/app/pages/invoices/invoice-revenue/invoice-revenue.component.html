@@ -1,0 +1,87 @@
+<div class="py-4 grid gap-4">
+  <form
+    [formGroup]="revenueForm"
+    (ngSubmit)="getRevenueReport()"
+    class="space-y-4"
+  >
+    <div class="items-center grid grid-cols-4 gap-4">
+      <label hlmLabel class="text-right" for="date">Select Date:</label>
+      <div class="col-span-3">
+        <input
+          hlmInput
+          class="w-full p-1 pl-5"
+          type="date"
+          id="date"
+          formControlName="date"
+        />
+      </div>
+      <div class="w-96 text-center">
+        <span
+          *ngIf="
+            revenueForm.get('date')?.invalid &&
+            (revenueForm.get('date')?.dirty || revenueForm.get('date')?.touched)
+          "
+          class="text-red-500 text-sm block mt-1"
+        >
+          Date is required.
+        </span>
+      </div>
+    </div>
+
+    <div class="items-center grid grid-cols-4 gap-4">
+      <label hlmLabel class="text-right" for="revenueBy">Revenue By:</label>
+      <div class="col-span-3">
+        <select formControlName="revenueBy" hlmInput class="w-full">
+          <option class="py-4 border border-black" value="">
+            Select an option
+          </option>
+          <option class="py-4 border border-black" value="year">Year</option>
+          <option class="py-4 border border-black" value="month">Month</option>
+          <option class="py-4 border border-black" value="day">Day</option>
+        </select>
+        <div class="w-96 text-center">
+          <span
+            *ngIf="
+              revenueForm.get('revenueBy')?.invalid &&
+              (revenueForm.get('revenueBy')?.dirty ||
+                revenueForm.get('revenueBy')?.touched)
+            "
+            class="text-red-500 text-sm block mt-1"
+          >
+            Revenue By is required.
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-end justify-end">
+      <button
+        hlmBtn
+        class="bg-green-2 hover:bg-green-2/80"
+        type="submit"
+        [disabled]="revenueForm.invalid"
+      >
+        Generate Report
+      </button>
+    </div>
+    <div *ngIf="revenueData" class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">
+        Revenue Report
+      </h3>
+      <div class="space-y-2">
+        <div class="text-gray-600">
+          <span class="font-medium text-gray-800">Year: </span> {{ revenueData.year }}
+        </div>
+        <div *ngIf="revenueData.month" class="text-gray-600">
+          <span class="font-medium text-gray-800">Month: </span> {{ revenueData.month }}
+        </div>
+        <div *ngIf="revenueData.day" class="text-gray-600">
+          <span class="font-medium text-gray-800">Day: </span> {{ revenueData.day }}
+        </div>
+        <div class="text-gray-600">
+          <span class="font-medium text-gray-800">Amount: </span> 
+          <span class="text-green-600 font-semibold">{{ revenueData.amount | priceFormat }}</span>
+        </div>
+      </div>
+    </div>    
+  </form>
+</div>
