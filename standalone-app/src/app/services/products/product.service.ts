@@ -20,6 +20,13 @@ export class ProductService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
   }
+  
+  private getHeaders_2(): HttpHeaders {
+    return new HttpHeaders({
+      'api-key': this.apiKey,
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+  }
 
   // Get products by criteria with pagination
   getProducts(criteria: ProductSearchCriteriaDTO, page: number = 0, size: number = 20): Observable<any> {
@@ -54,5 +61,13 @@ export class ProductService {
   deactivateProduct(id: string): Observable<ProductShowDTO> {
     const headers = this.getHeaders();
     return this.http.put<ProductShowDTO>(`${this.apiUrl}/deactive/${id}`, { headers });
+  }
+
+  uploadExcelFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    const headers = this.getHeaders_2();
+    return this.http.post<any>(`${this.apiUrl}/upload`, formData, { headers });
   }
 }

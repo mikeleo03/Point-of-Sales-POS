@@ -173,6 +173,8 @@ public class ProductServiceImpl implements ProductService {
                 } else {
                     product.setStatus(Status.ACTIVE.toString());
                 }
+                product.setCreatedAt(new Date());
+                product.setUpdatedAt(new Date());
             }
     
             List<Product> savedProducts = productRepository.saveAll(products);
