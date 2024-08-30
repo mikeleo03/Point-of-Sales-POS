@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
+import { DateFormatPipe } from '../../../core/pipes/date-format.pipe';
+import { PhoneNumberFormatPipe } from '../../../core/pipes/phone-number/phone-number-format.pipe';
 
 @Component({
   selector: 'app-customer-detail',
@@ -9,7 +11,9 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
   imports: [
     CommonModule,
     HlmLabelDirective,
-    HlmInputDirective
+    HlmInputDirective,
+    DateFormatPipe,
+    PhoneNumberFormatPipe
   ],
   templateUrl: './customer-detail.component.html',
   styleUrl: './customer-detail.component.css'
