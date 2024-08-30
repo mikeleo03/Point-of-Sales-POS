@@ -18,7 +18,7 @@ import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent {
   // constants
-  mainbg: string = '../assets/img/background2.png';
+  mainbg: string = '../assets/img/background.jpg';
   user: User = { username: '', password: '' };
 
   @ViewChild(ToastContainerDirective, { static: true })

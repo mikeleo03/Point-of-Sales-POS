@@ -1,5 +1,17 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -7,6 +19,7 @@ import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { ProductSaveDTO } from '../../../models/product.model';
+import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product-form',
@@ -28,17 +41,30 @@ export class ProductFormComponent implements OnInit {
   @Output() productSaved = new EventEmitter<any>();
   @Output() formClosed = new EventEmitter<void>();
 
+  @ViewChild(ToastContainerDirective, { static: true })
+  toastContainer!: ToastContainerDirective;
+
   productForm!: FormGroup;
   lastProductId!: number;
 
-  constructor(private fb: FormBuilder, private productService: ProductService) {}
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private toastrService: ToastrService
+  ) {}
 
   ngOnInit() {
     this.productForm = this.fb.group({
       id: [this.product?.id],
       name: [this.product?.name || '', Validators.required],
-      price: [this.product?.price || '', [Validators.required, Validators.min(0)]],
-      quantity: [this.product?.quantity || '', [Validators.required, Validators.min(0)]],
+      price: [
+        this.product?.price || '',
+        [Validators.required, Validators.min(0)],
+      ],
+      quantity: [
+        this.product?.quantity || '',
+        [Validators.required, Validators.min(0)],
+      ],
       createdAt: [this.product?.createdAt || new Date()],
       updatedAt: [new Date()],
     });
@@ -50,21 +76,42 @@ export class ProductFormComponent implements OnInit {
 
   onSubmit() {
     const productData = this.productForm.value;
-    const saveData : ProductSaveDTO = {
+    const saveData: ProductSaveDTO = {
       name: productData.name,
       price: productData.price,
-      quantity: productData.quantity
-    }
+      quantity: productData.quantity,
+    };
     if (this.isEditMode) {
-      this.productService.updateProduct(this.product?.id, saveData).subscribe(() => {
-        this.productSaved.emit(productData);
-        this.formClosed.emit(); // Close sheet
+      this.productService.updateProduct(this.product?.id, saveData).subscribe({
+        next: (response) => {
+          if (response) {
+            this.toastrService.success('Update exist data successful!');
+            this.productSaved.emit(productData);
+            this.formClosed.emit();
+          }
+        },
+        error: (error) => {
+          if (error.status === 400) {
+            this.toastrService.error(error.error.errors);
+          }
+        },
       });
     } else {
       // Add new product
-      this.productService.addProduct(saveData).subscribe(() => {
-        this.productSaved.emit(productData);
-        this.formClosed.emit(); // Close sheet
+      this.productService.addProduct(saveData).subscribe({
+        next: (response) => {
+          if (response) {
+            this.toastrService.success('Added new data successful!');
+            this.productSaved.emit(productData);
+            this.formClosed.emit();
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          if (error.status === 400) {
+            this.toastrService.error(error.error.errors);
+          }
+        },
       });
     }
   }

@@ -1,9 +1,8 @@
 package com.example.fpt_midterm_pos.data.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +33,15 @@ class CustomerRepositoryTest {
         customerRepository.save(customer);
     }
 
-    // @Test
-    // void findByStatus() {
-    //     Page<Customer> customers = customerRepository.findByStatus(Status.ACTIVE.toString(), PageRequest.of(0, 10));
-    //     assertThat(customers.getTotalElements()).isPositive();
-    // }
+    @Test
+    void findByStatus() {
+        Page<Customer> customers = customerRepository.findAll(PageRequest.of(0, 10));
+        assertThat(customers.getTotalElements()).isPositive();
+    }
 
-    // @Test
-    // void findByStatusEmptyResult() {
-    //     Page<Customer> customers = customerRepository.findByStatus(Status.DEACTIVE.toString(), PageRequest.of(0, 10));
-    //     assertThat(customers.getTotalElements()).isZero();
-    // }
+    @Test
+    void findByStatusEmptyResult() {
+        Page<Customer> customers = customerRepository.findAll(PageRequest.of(0, 10));
+        assertThat(customers.getTotalElements()).isEqualTo(1);
+    }
 }

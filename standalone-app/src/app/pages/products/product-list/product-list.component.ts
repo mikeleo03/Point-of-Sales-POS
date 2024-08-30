@@ -1,7 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../../services/product.service';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridOptions, GridApi, IDatasource, IGetRowsParams } from 'ag-grid-community';
+
+import {
+  ColDef,
+  GridSizeChangedEvent,
+  FirstDataRenderedEvent,
+  GridOptions,
+  GridApi,
+  IDatasource,
+  IGetRowsParams,
+} from 'ag-grid-community';
 import { Router } from '@angular/router';
 import { DateFormatPipe } from '../../../core/pipes/date-format.pipe';
 import { PriceFormatPipe } from '../../../core/pipes/price-format.pipe';
@@ -64,15 +73,16 @@ export class ProductListComponent implements OnInit {
       filter: 'agNumberColumnFilter',
       headerClass: 'text-center',
       minWidth: 150,
-      valueFormatter: (params: any) => new PriceFormatPipe().transform(params.value)
+      valueFormatter: (params: any) =>
+        new PriceFormatPipe().transform(params.value),
     },
-    { 
-      field: 'quantity', 
-      sortable: true, 
-      filter: "agNumberColumnFilter", 
+    {
+      field: 'quantity',
+      sortable: true,
+      filter: 'agNumberColumnFilter',
       headerClass: 'text-center',
       cellClass: 'text-center',
-      minWidth: 150
+      minWidth: 150,
     },
     {
       field: 'status',
@@ -109,24 +119,25 @@ export class ProductListComponent implements OnInit {
   ];
 
   public defaultColDef: ColDef = {
-    filter: 'agTextColumnFilter',
     floatingFilter: true,
-    resizable: true,
+    flex: 1,
+    sortable: true, // Enable client-side sorting
+    filter: true, // Enable client-side filtering
   };
 
-  dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
-      const page = params.startRow / this.defaultPageSize;
-      const pageSize = params.endRow - params.startRow;
-  
-      this.productService.getProducts({}, page, pageSize).subscribe(response => {
-        params.successCallback(response["content"], response["page"]["totalElements"]);
-      }, error => {
-        params.failCallback();
-      });
-    }
-  }
-  
+  // dataSource: IDatasource = {
+  //   getRows: (params: IGetRowsParams) => {
+  //     const page = params.startRow / this.defaultPageSize;
+  //     const pageSize = params.endRow - params.startRow;
+
+  //     this.productService.getProducts({}, page, pageSize).subscribe(response => {
+  //       params.successCallback(response["content"], response["page"]["totalElements"]);
+  //     }, error => {
+  //       params.failCallback();
+  //     });
+  //   }
+  // }
+
   onPaginationChanged(event: any) {
     // Ensure gridApi is available and then refresh data if needed
     if (this.gridApi) {
@@ -136,20 +147,28 @@ export class ProductListComponent implements OnInit {
 
   public gridOptions: GridOptions = {
     getRowStyle: (params) => {
-      if (params.data && params.data.status === "DEACTIVE") {
+      if (params.data && params.data.status === 'DEACTIVE') {
         return { backgroundColor: '#f5f5f5', color: '#aaa' }; // Dark background for entire row when inactive
       }
       return undefined; // Return undefined to apply default styling
     },
-    rowModelType: 'infinite',
-    datasource: this.dataSource,
-    context: { componentParent: this }
-  };  
+    pagination: true, // Enable client-side pagination
+    paginationPageSize: 10, // Default page size
+    context: { componentParent: this },
+  };
 
   constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit() {
-    // Nothing
+    this.loadProducts();
+    window.addEventListener('resize', this.adjustGridForScreenSize.bind(this)); // Listen for resize events
+  }
+
+  loadProducts() {
+    this.productService.getProducts({}, 0, 100).subscribe((response) => {
+      console.log(response);
+      this.products = response.content;
+    });
   }
 
   onGridReady(params: any) {
@@ -157,11 +176,11 @@ export class ProductListComponent implements OnInit {
   }
 
   onAddProduct(product: any) {
-    this.gridApi.refreshInfiniteCache(); // Refresh the data cache after adding a product
+    this.loadProducts(); // Refresh the data cache after adding a product
   }
 
   onProductEdited(product: any) {
-    this.gridApi.refreshInfiniteCache(); // Refresh the data cache after editing a product
+    this.loadProducts(); // Refresh the data cache after editing a product
   }
 
   onStatusToggle(product: any) {
@@ -176,5 +195,19 @@ export class ProductListComponent implements OnInit {
         this.gridApi.refreshInfiniteCache();
       });
     }
-  }  
+  }
+
+  onGridSizeChanged(params: GridSizeChangedEvent) {
+    params.api.sizeColumnsToFit(); // Ensure columns fit the grid width
+  }
+
+  onFirstDataRendered(params: FirstDataRenderedEvent) {
+    params.api.sizeColumnsToFit(); // Fit columns on initial render
+  }
+
+  adjustGridForScreenSize() {
+    if (this.gridApi) {
+      this.gridApi.sizeColumnsToFit(); // Adjust columns for screen size
+    }
+  }
 }

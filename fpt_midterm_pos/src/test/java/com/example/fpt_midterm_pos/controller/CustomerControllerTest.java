@@ -1,5 +1,6 @@
 package com.example.fpt_midterm_pos.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,10 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
-import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
 import com.example.fpt_midterm_pos.exception.GlobalExceptionHandler;
 import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.service.CustomerService;
@@ -53,47 +54,47 @@ class CustomerControllerTest {
             .build();
     }
 
-    // @Test
-    // void testGetAllCustomer_withCustomers() throws Exception {
-    //     // Prepare test data
-    //     Pageable pageable = PageRequest.of(0, 20);
-    //     CustomerShowDTO customerShowDTO = new CustomerShowDTO(UUID.randomUUID(), "Customer", "+62123456789");
-    //     Page<CustomerShowDTO> customerPage = new PageImpl<>(List.of(customerShowDTO), pageable, 1);
+    @Test
+    void testGetAllCustomer_withCustomers() throws Exception {
+        // Prepare test data
+        Pageable pageable = PageRequest.of(0, 20);
+        Customer customer = new Customer(UUID.randomUUID(), "Customer", "+62123456789", Status.ACTIVE.toString(), new Date(), new Date(), null);
+        Page<Customer> customerPage = new PageImpl<>(List.of(customer), pageable, 1);
 
-    //     // Mock the service call
-    //     when(customerService.findAllCustomer(any(Pageable.class)))
-    //         .thenReturn(customerPage);
+        // Mock the service call
+        when(customerService.findAllCustomer(any(Pageable.class)))
+            .thenReturn(customerPage);
 
-    //     // Convert the Page<CustomerShowDTO> to a JSON string for comparison
-    //     ObjectMapper objectMapper = new ObjectMapper();
-    //     String expectedJson = objectMapper.writeValueAsString(customerPage);
+        // Convert the Page<CustomerShowDTO> to a JSON string for comparison
+        ObjectMapper objectMapper = new ObjectMapper();
+        String expectedJson = objectMapper.writeValueAsString(customerPage);
 
-    //     // Perform the request and verify the response
-    //     mockMvc.perform(get("/api/v1/customers")
-    //             .param("page", "0")
-    //             .param("size", "20")
-    //             .contentType(MediaType.APPLICATION_JSON))
-    //             .andExpect(status().isOk())
-    //             .andExpect(content().json(expectedJson));
-    // }
+        // Perform the request and verify the response
+        mockMvc.perform(get("/api/v1/customers")
+                .param("page", "0")
+                .param("size", "20")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedJson));
+    }
 
-    // @Test
-    // void testGetAllCustomer_noCustomers() throws Exception {
-    //     // Prepare test data
-    //     Pageable pageable = PageRequest.of(0, 20);
-    //     Page<CustomerShowDTO> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+    @Test
+    void testGetAllCustomer_noCustomers() throws Exception {
+        // Prepare test data
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<Customer> emptyPage = new PageImpl<>(List.of(), pageable, 0);
 
-    //     // Mock the service call
-    //     when(customerService.findAllCustomer(any(Pageable.class)))
-    //         .thenReturn(emptyPage);
+        // Mock the service call
+        when(customerService.findAllCustomer(any(Pageable.class)))
+            .thenReturn(emptyPage);
 
-    //     // Perform the request and verify the response
-    //     mockMvc.perform(get("/api/v1/customers")
-    //             .param("page", "0")
-    //             .param("size", "20")
-    //             .contentType(MediaType.APPLICATION_JSON))
-    //             .andExpect(status().isNoContent());
-    // }
+        // Perform the request and verify the response
+        mockMvc.perform(get("/api/v1/customers")
+                .param("page", "0")
+                .param("size", "20")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
 
     @Test
     void testCreateCustomer_withValidFormat() throws Exception {

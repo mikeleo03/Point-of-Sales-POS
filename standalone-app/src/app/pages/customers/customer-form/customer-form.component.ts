@@ -1,5 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -7,6 +19,7 @@ import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { CustomerSaveDTO } from '../../../models/customer.model';
+import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-customer-form',
@@ -20,7 +33,7 @@ import { CustomerSaveDTO } from '../../../models/customer.model';
     HlmLabelDirective,
   ],
   templateUrl: './customer-form.component.html',
-  styleUrl: './customer-form.component.css'
+  styleUrl: './customer-form.component.css',
 })
 export class CustomerFormComponent implements OnInit {
   @Input() customer: any;
@@ -28,10 +41,17 @@ export class CustomerFormComponent implements OnInit {
   @Output() customerSaved = new EventEmitter<any>();
   @Output() formClosed = new EventEmitter<void>();
 
+  @ViewChild(ToastContainerDirective, { static: true })
+  toastContainer!: ToastContainerDirective;
+
   customerForm!: FormGroup;
   lastCustomerId!: number;
 
-  constructor(private fb: FormBuilder, private customerService: CustomerService) {}
+  constructor(
+    private fb: FormBuilder,
+    private customerService: CustomerService,
+    private toastrService: ToastrService
+  ) {}
 
   ngOnInit() {
     this.customerForm = this.fb.group({
@@ -43,33 +63,55 @@ export class CustomerFormComponent implements OnInit {
       updatedAt: [new Date()],
     });
 
-    if(this.isEditMode) {
+    if (this.isEditMode) {
       this.customerForm.patchValue(this.customer);
     }
   }
 
   onSubmit() {
     const customerData = this.customerForm.value;
-    const checkPhone = (customerData.phoneNumber).length;
-    if(checkPhone > 16) {
-      customerData.phoneNumber = (customerData.phoneNumber).slice(0, 16);
+    const checkPhone = customerData.phoneNumber.length;
+    if (checkPhone > 16) {
+      customerData.phoneNumber = customerData.phoneNumber.slice(0, 16);
     }
 
     const saveData: CustomerSaveDTO = {
       name: customerData.name,
-      phoneNumber: customerData.phoneNumber
+      phoneNumber: customerData.phoneNumber,
     };
 
-    if(this.isEditMode) {
-      this.customerService.updateCustomer(customerData.id, saveData).subscribe(() => {
-        this.customerSaved.emit(customerData);
-        this.formClosed.emit();
+    if (this.isEditMode) {
+      this.customerService.updateCustomer(customerData.id, saveData).subscribe({
+        next: (response) => {
+          if (response) {
+            this.toastrService.success('Update exist data successful!');
+            this.customerSaved.emit(customerData);
+            this.formClosed.emit();
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          if (error.status === 400) {
+            this.toastrService.error(error.error.errors);
+          }
+        },
       });
     } else {
-      this.customerService.addCustomer(saveData).subscribe(() => {
-        this.customerSaved.emit(customerData);
-        this.formClosed.emit();
-      })
+      this.customerService.addCustomer(saveData).subscribe({
+        next: (response) => {
+          if (response) {
+            this.toastrService.success('Added new data successful!');
+            this.customerSaved.emit(customerData);
+            this.formClosed.emit();
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          if (error.status === 400) {
+            this.toastrService.error(error.error.errors);
+          }
+        },
+      });
     }
   }
 

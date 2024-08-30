@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { Customer } from '../../../models/customer.model';
-import { ColDef, FirstDataRenderedEvent, GridApi, GridOptions, GridSizeChangedEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { ColDef, FirstDataRenderedEvent, GridApi, GridOptions, GridSizeChangedEvent } from 'ag-grid-community';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { StatusCellRendererComponent } from './status-cell-customer-renderer.component';
 import { PhoneNumberFormatPipe } from '../../../core/pipes/phone-number/phone-number-format.pipe';
@@ -52,30 +52,20 @@ export class CustomerListComponent implements OnInit {
     flex: 1
   };
 
-  dataSource: IDatasource = {
-    getRows: (params: IGetRowsParams) => {
-      this.customerService.getCustomers(this.gridApi.paginationGetCurrentPage(), this.gridApi.paginationGetPageSize()).subscribe( response => {
-        params.successCallback(
-          response["content"], response["page"]["totalElements"]
-        );
-      })
-    }
-  }
-
   public gridOptions: GridOptions = {
+    pagination: true, // Enable client-side pagination
+    paginationPageSize: 10, // Default page size
+    context: { componentParent: this },
     getRowStyle: (params) => {
       if (params.data && params.data.status === 'DEACTIVE') {
         return { backgroundColor: '#f5f5f5', color: '#aaa' }; // Dark background for entire row when inactive
       }
       return { backgroundColor: '#FFFFFF', color: '#000000' };
-    },
-    rowModelType: 'infinite',
-    datasource: this.dataSource,
-    context: { componentParent: this }
+    }
   };
 
   constructor(private customerService: CustomerService) {}
-  
+
   ngOnInit(): void {
     this.initColumnDefs();
     this.loadCustomers();
@@ -83,33 +73,29 @@ export class CustomerListComponent implements OnInit {
   }
 
   loadCustomers() {
-    this.customerService.getCustomers(0, 20).subscribe( (customer) => {
-      console.log(customer);
-      this.customers = customer;
+    this.customerService.getCustomers(0, 100).subscribe( (response) => {
+      this.customers = response.content; // Set the response data to customers array
     })
   }
 
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.adjustGridForScreenSize(); // Initial check
+    (this.gridApi as any).setRowData(this.customers);
   }
 
   onStatusToggle(customer: any) {
     if (customer.status === 'ACTIVE') {
       this.customerService.updateCustomerStatusActive(customer.id).subscribe(() => {
-        setTimeout(() => {
-          this.gridApi.refreshInfiniteCache();
-        }, 0);
+        this.loadCustomers();
       });
     } else if (customer.status === 'DEACTIVE') {
       this.customerService.updateCustomerStatusDeactive(customer.id).subscribe(() => {
-        setTimeout(() => {
-          this.gridApi.refreshInfiniteCache();
-        }, 0);
+        this.loadCustomers();
       });
     }
   }
-  
+
   onGridSizeChanged(params: GridSizeChangedEvent) {
     params.api.sizeColumnsToFit();
   }
@@ -119,7 +105,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   onAddCustomer(customer: any) {
-    this.gridApi.refreshInfiniteCache(); // Refresh the data cache after adding a product
+    this.loadCustomers(); // Reload data after adding a customer
   }
 
   initColumnDefs() {
@@ -127,12 +113,15 @@ export class CustomerListComponent implements OnInit {
       {
         field: 'name',
         headerName: 'Name',
-        filter: 'agTextColumnFilter'},
+        sortable: true, // Enable client-side sorting
+        filter: true // Enable client-side filtering
+      },
       {
         field: 'phoneNumber',
         headerName: 'Phone Number',
-        filter: 'agTextColumnFilter',
-        // valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value)
+        sortable: true, // Enable client-side sorting
+        filter: true, // Enable client-side filtering
+        valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value)
       },
       {
         field: 'status',
@@ -145,6 +134,11 @@ export class CustomerListComponent implements OnInit {
         cellClass: 'text-center',
         cellRenderer: ActionCellRendererComponent
       },
+      {
+        field: 'updatedAt',
+        sort: 'desc',   // Sort by this field automatically
+        hide: true     // Hide this field from the grid
+      }
     ];
   }
 
