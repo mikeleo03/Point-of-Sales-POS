@@ -9,7 +9,7 @@
       <div class="col-span-3">
         <input
           hlmInput
-          class="w-full p-1"
+          class="w-full p-1 pl-5"
           type="date"
           id="date"
           formControlName="date"
@@ -63,12 +63,25 @@
         Generate Report
       </button>
     </div>
-    <div *ngIf="revenueData">
-      <h3>Revenue Report</h3>
-      <p>Year: {{ revenueData.year }}</p>
-      <p *ngIf="revenueData.month">Month: {{ revenueData.month }}</p>
-      <p *ngIf="revenueData.day">Day: {{ revenueData.day }}</p>
-      <p>Amount: {{ revenueData.amount | currency }}</p>
-    </div>
+    <div *ngIf="revenueData" class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">
+        Revenue Report
+      </h3>
+      <div class="space-y-2">
+        <div class="text-gray-600">
+          <span class="font-medium text-gray-800">Year: </span> {{ revenueData.year }}
+        </div>
+        <div *ngIf="revenueData.month" class="text-gray-600">
+          <span class="font-medium text-gray-800">Month: </span> {{ revenueData.month }}
+        </div>
+        <div *ngIf="revenueData.day" class="text-gray-600">
+          <span class="font-medium text-gray-800">Day: </span> {{ revenueData.day }}
+        </div>
+        <div class="text-gray-600">
+          <span class="font-medium text-gray-800">Amount: </span> 
+          <span class="text-green-600 font-semibold">{{ revenueData.amount | priceFormat }}</span>
+        </div>
+      </div>
+    </div>    
   </form>
 </div>

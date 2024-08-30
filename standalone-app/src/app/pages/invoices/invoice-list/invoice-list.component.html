@@ -13,10 +13,10 @@
     <div class="flex justify-end items-end gap-x-4">
       <hlm-sheet side="right">
         <button
-          class="flex items-center space-x-2 bg-green-3 text-white p-2 px-4 text-sm mb-4 rounded-xl"
+          class="flex items-center space-x-2 bg-orange-500 text-white p-2 px-4 text-sm mb-4 rounded-xl"
           brnSheetTrigger
         >
-          <i class="fa fa-plus" aria-hidden="true"></i>
+          <i class="fa fa-file-alt" aria-hidden="true"></i>
           <span>Generate Report</span>
         </button>
         <hlm-sheet-content *brnSheetContent="let ctx">
@@ -28,7 +28,7 @@
               Generate Report
             </h1>
             <p hlmSheetDescription>
-              Fill out the form below to add a new invoice.
+              Fill out the form below to generate new report.
             </p>
           </hlm-sheet-header>
           <app-invoice-revenue></app-invoice-revenue>

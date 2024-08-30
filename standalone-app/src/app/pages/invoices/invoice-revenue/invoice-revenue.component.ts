@@ -13,11 +13,13 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { HttpClientModule } from '@angular/common/http';
 import { InvoiceService } from '../../../services/invoices/invoice.service'; // Adjust the path to your service
 import { Revenue } from '../../../models/revenue.model'; // Adjust the path to your model
+import { PriceFormatPipe } from '../../../core/pipes/price-format.pipe';
 
 @Component({
   selector: 'app-invoice-revenue',
   standalone: true,
   imports: [
+    PriceFormatPipe,
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
