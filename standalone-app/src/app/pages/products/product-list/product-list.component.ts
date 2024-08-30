@@ -66,7 +66,13 @@ export class ProductListComponent implements OnInit {
 
   products: Product[] = [];
   colDefs: ColDef[] = [
-    { field: 'name', headerClass: 'text-center', minWidth: 200 },
+    {
+      field: 'name',
+      headerClass: 'text-center',
+      sortable: true,
+      filter: 'agTextColumnFilter',
+      minWidth: 200
+    },
     {
       field: 'price',
       sortable: true,
@@ -121,9 +127,7 @@ export class ProductListComponent implements OnInit {
 
   public defaultColDef: ColDef = {
     floatingFilter: true,
-    flex: 1,
-    sortable: true, // Enable client-side sorting
-    // filter: true, // Enable client-side filtering
+    flex: 1
   };
 
   // dataSource: IDatasource = {
