@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { Customer } from '../../../models/customer.model';
 import { ColDef, FirstDataRenderedEvent, GridApi, GridOptions, GridSizeChangedEvent } from 'ag-grid-community';
-import { CustomerService } from '../../../services/customer/customer.service';
+import { CustomerService } from '../../../services/customers/customer.service';
 import { StatusCellRendererComponent } from './status-cell-customer-renderer.component';
 import { PhoneNumberFormatPipe } from '../../../core/pipes/phone-number/phone-number-format.pipe';
 import { ActionCellRendererComponent } from './action-cell-customer-renderer.component';
@@ -120,25 +120,29 @@ export class CustomerListComponent implements OnInit {
         field: 'name',
         headerName: 'Name',
         sortable: true, // Enable client-side sorting
-        filter: true // Enable client-side filtering
+        filter: true, // Enable client-side filtering
+        minWidth: 200
       },
       {
         field: 'phoneNumber',
         headerName: 'Phone Number',
         sortable: true, // Enable client-side sorting
         filter: true, // Enable client-side filtering
-        valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value)
+        valueFormatter: (params: any) => new PhoneNumberFormatPipe().transform(params.value),
+        minWidth: 200
       },
       {
         field: 'status',
         headerName: 'Status',
         cellClass: 'text-center',
-        cellRenderer: StatusCellRendererComponent
+        cellRenderer: StatusCellRendererComponent,
+        minWidth: 200,
       },
       {
         headerName: 'Actions',
         cellClass: 'text-center',
-        cellRenderer: ActionCellRendererComponent
+        cellRenderer: ActionCellRendererComponent,
+        minWidth: 250,
       },
       {
         field: 'updatedAt',

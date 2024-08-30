@@ -13,14 +13,14 @@ import {
   ReactiveFormsModule,
   FormArray,
 } from '@angular/forms';
-import { ProductService } from '../../../services/product.service';
-import { CustomerService } from '../../../services/customer/customer.service';
+import { ProductService } from '../../../services/products/product.service';
+import { CustomerService } from '../../../services/customers/customer.service';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
-import { InvoiceService } from '../../../services/invoice.service';
+import { InvoiceService } from '../../../services/invoices/invoice.service';
 import { Product } from '../../../models/product.model';
 import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
 import { Customer } from '../../../models/customer.model';

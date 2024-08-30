@@ -5,8 +5,8 @@ import {
   InvoiceDTO,
   InvoiceSaveDTO,
   InvoiceSearchCriteriaDTO,
-} from '../models/invoice.model';
-import { environment } from '../../environment/environment';
+} from '../../models/invoice.model';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -85,5 +85,10 @@ export class InvoiceService {
 
   deleteInvoice(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  exportInvoiceToPDF(id: string): Observable<Blob> {
+    const headers = this.getHeaders();
+    return this.http.get(`${this.apiUrl}/${id}/export`, { headers, responseType: 'blob' });
   }
 }

@@ -20,18 +20,18 @@ export const RouterConfig = {
   PRODUCT: {
     path: 'products',
     link: '/product',
-    title: 'List of Products',
+    title: 'Products',
     data: { header: true },
   },
   CUSTOMER: {
     path: 'customers',
     link: '/customer',
-    title: 'List of Customers',
+    title: 'Customers',
     data: { header: true }},
   INVOICE: {
     path: 'invoices',
     link: '/invoice',
-    title: 'List of Invoices',
+    title: 'Invoices',
     data: { header: true },
   },
   NOT_FOUND: { path: '**', link: null, title: 'Page Not Found' },

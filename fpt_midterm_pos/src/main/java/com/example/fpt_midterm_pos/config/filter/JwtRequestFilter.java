@@ -40,16 +40,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         logger.info("[JWTFilter][" + request + "]" + "[" + request.getMethod() + "] " + requestURI);
 
         // Exclude the /api/v1/authentication endpoint and any nested routes
-        if (requestURI.startsWith("/api/v1/authentication")) {
+        if (requestURI.startsWith("/api/v1/authentication") || !requestURI.startsWith("/api")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (request.getMethod().equals("GET") ||
-                request.getMethod().equals("POST") ||
-                request.getMethod().equals("PUT") ||
-                request.getMethod().equals("DELETE") ||
-                request.getMethod().equals("OPTIONS")) {
+        if (request.getMethod().equals("OPTIONS") || request.getMethod().equals("PUT")) {
             filterChain.doFilter(request, response);
             return;
         }
