@@ -76,6 +76,15 @@ import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component'
       </hlm-dialog-content>
     </hlm-dialog>
 
+    <!-- Export PDF Button -->
+    <button
+      class="bg-red-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-red-600 mr-1.5 disabled:bg-red-300 disabled:cursor-not-allowed"
+      (click)="exportToPDF()"
+      [disabled]="!params.data"
+    >
+      <i class="fas fa-file-pdf"></i>&nbsp; PDF
+    </button>
+
     <hlm-sheet side="right">
       <button
         class="bg-blue-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-blue-600 mr-1.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
@@ -92,7 +101,7 @@ import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component'
           <p hlmSheetDescription>
             {{
               params.data
-                ? 'Edit the invoice details below.'
+                ? 'Edit the invoice details below. Can be edit only 10 Minutes'
                 : 'Fill out the form below to add a new invoice.'
             }}
           </p>
@@ -134,5 +143,11 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
       (now.getTime() - invoiceDate.getTime()) / 60000
     );
     return diffInMinutes > 10;
+  }
+
+  exportToPDF() {
+    if (this.params.data) {
+      this.params.context.componentParent.exportInvoiceToPDF(this.params.data);
+    }
   }
 }

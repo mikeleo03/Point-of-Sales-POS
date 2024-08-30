@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../../services/product.service';
+import { ProductService } from '../../../services/products/product.service';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
 
 import {

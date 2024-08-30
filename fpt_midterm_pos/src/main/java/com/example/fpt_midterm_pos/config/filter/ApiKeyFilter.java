@@ -39,6 +39,13 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
+        String requestURI = request.getRequestURI();
+
+        if (!requestURI.startsWith("/api")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         
         String requestApiKey = request.getHeader("api-key");
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { InvoiceService } from '../../../services/invoice.service';
+import { InvoiceService } from '../../../services/invoices/invoice.service';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
 import {
   ColDef,
@@ -32,6 +32,8 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { InvoiceDTO } from '../../../models/invoice.model';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
 import { ActionCellRendererComponent } from './action-cell-renderer.component';
+import { InvoiceRevenueComponent } from '../invoice-revenue/invoice-revenue.component';
+import { Revenue } from '../../../models/revenue.model';
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
@@ -44,6 +46,7 @@ import { ActionCellRendererComponent } from './action-cell-renderer.component';
     ReactiveFormsModule,
     AgGridModule,
     InvoiceFormComponent,
+    InvoiceRevenueComponent,
 
     BrnSheetTriggerDirective,
     BrnSheetContentDirective,
@@ -84,7 +87,7 @@ export class InvoiceListComponent implements OnInit {
       sortable: true,
       filter: 'agDateColumnFilter',
       headerClass: 'text-center',
-      minWidth: 200,
+      minWidth: 250,
       valueFormatter: (params: any) =>
         `
         ${new DateFormatPipe().transform(
@@ -96,7 +99,7 @@ export class InvoiceListComponent implements OnInit {
       headerName: 'Actions',
       cellRenderer: ActionCellRendererComponent,
       headerClass: 'text-center',
-      minWidth: 250,
+      minWidth: 350,
       cellClass: 'text-center',
     },
   ];
@@ -107,28 +110,6 @@ export class InvoiceListComponent implements OnInit {
     sortable: true, // Enable client-side sorting
     filter: true, // Enable client-side filtering
   };
-
-  // dataSource: IDatasource = {
-  //   getRows: (params: IGetRowsParams) => {
-  //     this.invoiceService
-  //       .getInvoices(
-  //         {},
-  //         this.gridApi.paginationGetCurrentPage(),
-  //         this.gridApi.paginationGetPageSize()
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           params.successCallback(
-  //             response['content'],
-  //             response['page']['totalElements']
-  //           );
-  //         },
-  //         (error) => {
-  //           console.error('Error fetching invoices:', error);
-  //         }
-  //       );
-  //   },
-  // };
 
   public gridOptions: GridOptions = {
     getRowStyle: (params) => {
@@ -172,6 +153,14 @@ export class InvoiceListComponent implements OnInit {
     console.log('Viewing invoice:', invoiceData);
     // Your logic to view the invoice details here
   }
+
+  exportInvoiceToPDF(invoice: any) {
+    this.invoiceService.exportInvoiceToPDF(invoice.id).subscribe((pdfBlob) => {
+      const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
+  }  
 
   onGridSizeChanged(params: GridSizeChangedEvent) {
     params.api.sizeColumnsToFit(); // Ensure columns fit the grid width
