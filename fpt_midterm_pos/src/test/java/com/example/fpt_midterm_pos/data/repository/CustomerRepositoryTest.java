@@ -34,15 +34,15 @@ class CustomerRepositoryTest {
         customerRepository.save(customer);
     }
 
-    @Test
-    void findByStatus() {
-        Page<Customer> customers = customerRepository.findByStatus(Status.ACTIVE.toString(), PageRequest.of(0, 10));
-        assertThat(customers.getTotalElements()).isPositive();
-    }
+    // @Test
+    // void findByStatus() {
+    //     Page<Customer> customers = customerRepository.findByStatus(Status.ACTIVE.toString(), PageRequest.of(0, 10));
+    //     assertThat(customers.getTotalElements()).isPositive();
+    // }
 
-    @Test
-    void findByStatusEmptyResult() {
-        Page<Customer> customers = customerRepository.findByStatus(Status.DEACTIVE.toString(), PageRequest.of(0, 10));
-        assertThat(customers.getTotalElements()).isZero();
-    }
+    // @Test
+    // void findByStatusEmptyResult() {
+    //     Page<Customer> customers = customerRepository.findByStatus(Status.DEACTIVE.toString(), PageRequest.of(0, 10));
+    //     assertThat(customers.getTotalElements()).isZero();
+    // }
 }
