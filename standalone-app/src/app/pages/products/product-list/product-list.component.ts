@@ -103,6 +103,7 @@ export class ProductListComponent implements OnInit {
     {
       field: 'updatedAt',
       sortable: true,
+      sort: 'desc',
       filter: 'agDateColumnFilter',
       headerClass: 'text-center',
       minWidth: 200,
@@ -122,7 +123,7 @@ export class ProductListComponent implements OnInit {
     floatingFilter: true,
     flex: 1,
     sortable: true, // Enable client-side sorting
-    filter: true, // Enable client-side filtering
+    // filter: true, // Enable client-side filtering
   };
 
   // dataSource: IDatasource = {
@@ -187,12 +188,12 @@ export class ProductListComponent implements OnInit {
     if (product.status === 'DEACTIVE') {
       this.productService.deactivateProduct(product.id).subscribe(() => {
         // Optionally refresh the cache for the current page
-        this.gridApi.refreshInfiniteCache();
+        this.loadProducts();
       });
     } else if (product.status === 'ACTIVE') {
       this.productService.activateProduct(product.id).subscribe(() => {
         // Optionally refresh the cache for the current page
-        this.gridApi.refreshInfiniteCache();
+        this.loadProducts();
       });
     }
   }
