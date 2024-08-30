@@ -78,6 +78,12 @@ export class CustomerListComponent implements OnInit {
     })
   }
 
+  loadProducts() {
+    this.customerService.getCustomers().subscribe((response) => {
+      this.customers = response.content;
+    });
+  }
+
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.adjustGridForScreenSize(); // Initial check
