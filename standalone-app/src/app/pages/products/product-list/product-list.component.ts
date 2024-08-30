@@ -230,10 +230,9 @@ export class ProductListComponent implements OnInit {
         console.log('Excel file selected:', file);
         this.productService.uploadExcelFile(file).subscribe(
           (response) => {
-            console.log('Upload successful:', response);
+            this.loadProducts();
           },
           (error) => {
-            console.error('Upload failed:', error);
             alert('Errorr parsing');
           }
         );
