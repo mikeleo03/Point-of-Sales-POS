@@ -79,7 +79,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   loadProducts() {
-    this.customerService.getCustomers().subscribe((response) => {
+    this.customerService.getCustomers(0, 100).subscribe((response) => {
       this.customers = response.content;
     });
   }

@@ -170,7 +170,7 @@ export class ProductListComponent implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProducts({}).subscribe((response) => {
+    this.productService.getProducts({}, 0, 100).subscribe((response) => {
       this.products = response.content;
     });
   }

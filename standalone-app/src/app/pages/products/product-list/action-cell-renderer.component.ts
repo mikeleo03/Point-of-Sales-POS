@@ -28,7 +28,7 @@ import { CommonModule } from '@angular/common'; // Import CommonModule
       <hlm-sheet side="right">
           <button class="bg-blue-500 text-white text-xs px-4 py-1.5 rounded-xl shadow hover:bg-blue-600 mr-1.5 disabled:bg-blue-300 disabled:cursor-not-allowed"
             brnSheetTrigger 
-            [disabled]="!params.data.status"
+            [disabled]="isDisabled()"
             (click)="onEditClick()">
             <i class="fas fa-pencil-alt"></i>&nbsp; Update
           </button>
@@ -57,6 +57,10 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     refresh(params: ICellRendererParams) {
       this.params = params;
       return true;
+    }
+
+    isDisabled():boolean {
+      return this.params?.data?.status === 'DEACTIVE';
     }
 
     onProductSaved(product: any) {
