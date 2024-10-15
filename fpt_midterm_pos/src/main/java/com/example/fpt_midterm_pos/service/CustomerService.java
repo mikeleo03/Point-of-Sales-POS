@@ -9,12 +9,11 @@ import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
-import com.example.fpt_midterm_pos.dto.CustomerShowDTO;
 
 public interface CustomerService {
 
     // Retrieves a paginated list of all customers.
-    Page<CustomerShowDTO> findAllActiveCustomer(Pageable pageable);
+    Page<Customer> findAllCustomer(Pageable pageable);
 
     // Creating a new customer.
     CustomerDTO createCustomer(CustomerSaveDTO customerSaveDTO);

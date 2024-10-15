@@ -1,0 +1,145 @@
+<div class="py-4 grid gap-4">
+  <div aria-live="polite" toastContainer></div>
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="w-full">
+      <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
+        <label
+          hlmLabel
+          class="text-right col-span-2 lg:col-span-1"
+          for="customerId"
+          >Customer:</label
+        >
+        <div class="col-span-3">
+          <select
+            id="customerId"
+            formControlName="customerId"
+            hlmInput
+            class="w-full"
+          >
+            <option
+              class="py-4 border border-black"
+              *ngFor="let customer of customers"
+              [value]="customer.id"
+            >
+              {{ customer.name }}
+            </option>
+          </select>
+          <span
+            *ngIf="
+              invoiceForm.get('customerId')?.invalid &&
+              (invoiceForm.get('customerId')?.dirty ||
+                invoiceForm.get('customerId')?.touched)
+            "
+            class="text-red-500 text-sm block mt-1"
+          >
+            Customer is required.
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="h-44 lg:h-80 overflow-y-auto p-2">
+      <div
+        formArrayName="invoiceDetails"
+        *ngFor="let detail of invoiceDetails.controls; let i = index"
+      >
+        <div [formGroupName]="i" class="w-full space-y-4">
+          <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
+            <label
+              hlmLabel
+              class="text-right col-span-2 lg:col-span-1"
+              for="productId"
+              >Product:</label
+            >
+            <div class="col-span-3">
+              <select
+                id="productId"
+                formControlName="productId"
+                hlmInput
+                class="w-full"
+              >
+                <option
+                  class="py-4 border border-black"
+                  *ngFor="let product of products"
+                  [value]="product.id"
+                >
+                  {{ product.name }}
+                </option>
+              </select>
+              <span
+                *ngIf="
+                  detail.get('productId')?.invalid &&
+                  (detail.get('productId')?.dirty ||
+                    detail.get('productId')?.touched)
+                "
+                class="text-red-500 text-sm block mt-1"
+              >
+                Product is required.
+              </span>
+            </div>
+          </div>
+
+          <div class="items-center grid grid-cols-5 lg:grid-cols-4 gap-4">
+            <label
+              hlmLabel
+              class="text-right col-span-2 lg:col-span-1"
+              for="quantity"
+              >Quantity:</label
+            >
+            <div class="col-span-3">
+              <input
+                hlmInput
+                id="quantity"
+                type="number"
+                formControlName="quantity"
+                class="w-full"
+                placeholder="Enter quantity"
+              />
+              <span
+                *ngIf="
+                  detail.get('quantity')?.invalid &&
+                  (detail.get('quantity')?.dirty ||
+                    detail.get('quantity')?.touched)
+                "
+                class="text-red-500 text-sm block mt-1"
+              >
+                Quantity is required.
+              </span>
+            </div>
+          </div>
+
+          <div class="col-span-5 lg:col-span-4 text-right text-sm">
+            <button
+              type="button"
+              class="bg-red-600 text-white p-1 mb-2 px-4 text-xs rounded-lg"
+              (click)="removeInvoiceDetail(i)"
+              *ngIf="invoiceDetails.length > 1"
+            >
+              <i class="fa fa-trash mr-2" aria-hidden="true"></i>
+              Remove Product
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-span-5 lg:col-span-4 text-right text-sm mt-2">
+        <button
+          type="button"
+          class="bg-green-3 text-white p-2 px-4 text-xs lg:text-sm rounded-lg"
+          (click)="addInvoiceDetail()"
+        >
+          <i class="fa fa-plus mr-2" aria-hidden="true"></i>
+          <span>Add More Product</span>
+        </button>
+      </div>
+    </div>
+    <div class="pt-5 w-full text-right">
+      <button
+        hlmBtn
+        class="bg-green-2 hover:bg-green-2/80"
+        type="submit"
+        [disabled]="invoiceForm.invalid || isViewMode"
+      >
+        {{ isEditMode ? "Update Invoice" : "Save Invoice" }}
+      </button>
+    </div>
+  </form>
+</div>

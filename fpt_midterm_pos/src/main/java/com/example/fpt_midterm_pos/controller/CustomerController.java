@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
@@ -28,6 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
 
@@ -42,15 +46,15 @@ public class CustomerController {
      * @return A {@link ResponseEntity} containing a {@link Page} of {@link CustomerShowDTO} objects representing the customers on the specified page.
      * @apiNote If no customers are found, a {@link ResponseEntity} with status status code 204 (No Content) is returned.
      */
-    @Operation(summary = "Retrieve all Active Customers.")
+    @Operation(summary = "Retrieve all Customers.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Customers retrieved successfully"),
         @ApiResponse(responseCode = "204", description = "Customers not found")
     })
     @GetMapping
-    public ResponseEntity<Page<CustomerShowDTO>> getAllCustomer(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CustomerShowDTO> customerPage = customerService.findAllActiveCustomer(pageable);
+        Page<Customer> customerPage = customerService.findAllCustomer(pageable);
 
         if (customerPage.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -174,7 +174,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setCreatedAt(new Date());
                 product.setUpdatedAt(new Date());
             });
-
+    
             List<Product> savedProducts = productRepository.saveAll(products);
             return productMapper.toProductDTOList(savedProducts);
         } catch (IOException e) {

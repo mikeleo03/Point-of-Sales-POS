@@ -35,8 +35,8 @@ public class CustomerServiceImpl implements CustomerService {
      * @return A Page object containing a list of {@link CustomerShowDTO} objects representing the customers on the specified page.
      */
     @Override
-    public Page<CustomerShowDTO> findAllActiveCustomer(Pageable pageable) {
-        return customerRepository.findByStatus(Status.Active, pageable).map(customerMapper::toCustomerShowDTO);
+    public Page<Customer> findAllCustomer(Pageable pageable) {
+        return customerRepository.findAll(pageable);
     }
 
     /**

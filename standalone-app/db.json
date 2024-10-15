@@ -1,0 +1,261 @@
+{
+  "customers": [
+    {
+      "id": "1",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-29T03:41:50.861Z"
+    },
+    {
+      "id": "2",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-29T02:46:09.779Z"
+    },
+    {
+      "id": "3",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:23.638Z"
+    },
+    {
+      "id": "4",
+      "name": "Fadhly",
+      "phoneNumber": "+628283749958312",
+      "status": "Active",
+      "createdAt": "2024-08-27T10:00:00Z",
+      "updatedAt": "2024-08-28T22:30:19.279Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Apple iPhone 14",
+      "price": 15999000,
+      "status": true,
+      "createdAt": "2024-08-01T10:00:00Z",
+      "updatedAt": "2024-08-01T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "name": "Samsung Galaxy S23",
+      "price": 12999000,
+      "status": false,
+      "createdAt": "2024-08-02T12:00:00Z",
+      "updatedAt": "2024-08-02T12:00:00Z"
+    },
+    {
+      "id": "3",
+      "name": "Sony WH-1000XM5",
+      "price": 5999000,
+      "status": true,
+      "createdAt": "2024-08-03T14:00:00Z",
+      "updatedAt": "2024-08-03T14:00:00Z"
+    },
+    {
+      "id": "4",
+      "name": "Dell XPS 13",
+      "price": 22499000,
+      "status": true,
+      "createdAt": "2024-08-04T16:00:00Z",
+      "updatedAt": "2024-08-04T16:00:00Z"
+    },
+    {
+      "id": "5",
+      "name": "Apple MacBook Air M2",
+      "price": 18499000,
+      "status": true,
+      "createdAt": "2024-08-05T18:00:00Z",
+      "updatedAt": "2024-08-05T18:00:00Z"
+    },
+    {
+      "id": "6",
+      "name": "Google Pixel 8",
+      "price": 9499000,
+      "status": false,
+      "createdAt": "2024-08-06T20:00:00Z",
+      "updatedAt": "2024-08-06T20:00:00Z"
+    },
+    {
+      "id": "7",
+      "name": "Microsoft Surface Pro 9",
+      "price": 17499000,
+      "status": true,
+      "createdAt": "2024-08-07T22:00:00Z",
+      "updatedAt": "2024-08-07T22:00:00Z"
+    },
+    {
+      "id": "8",
+      "name": "Bose QuietComfort 45",
+      "price": 5299000,
+      "status": true,
+      "createdAt": "2024-08-08T08:00:00Z",
+      "updatedAt": "2024-08-08T08:00:00Z"
+    },
+    {
+      "id": "9",
+      "name": "Apple AirPods Pro 2",
+      "price": 3499000,
+      "status": true,
+      "createdAt": "2024-08-09T10:00:00Z",
+      "updatedAt": "2024-08-09T10:00:00Z"
+    },
+    {
+      "id": "10",
+      "name": "Samsung Galaxy Tab S9",
+      "price": 11499000,
+      "status": false,
+      "createdAt": "2024-08-10T12:00:00Z",
+      "updatedAt": "2024-08-10T12:00:00Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "password123"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "323e4567-e89b-12d3-a456-426614174005",
+      "amount": 150,
+      "date": "2024-08-26T17:00:00.000+00:00",
+      "customer": {
+        "id": "123e4567-e89b-12d3-a456-426614174001",
+        "name": "Jane PP"
+      },
+      "invoiceDetails": [
+        {
+          "productId": "223e4567-e89b-12d3-a456-426614174003",
+          "productName": "Unknown Product",
+          "quantity": 1,
+          "price": 150,
+          "amount": 150
+        }
+      ],
+      "status": false
+    },
+    {
+      "id": "323e4567-e89b-12d3-a456-426614174005",
+      "amount": 150,
+      "date": "2024-08-26T17:00:00.000+00:00",
+      "customer": {
+        "id": "123e4567-e89b-12d3-a456-426614174001",
+        "name": "Jane Smith"
+      },
+      "invoiceDetails": [
+        {
+          "productId": "223e4567-e89b-12d3-a456-426614174003",
+          "productName": "Unknown Product",
+          "quantity": 1,
+          "price": 150,
+          "amount": 150
+        }
+      ],
+      "status": false
+    },
+    {
+      "id": "1e9b",
+      "customerId": "321312",
+      "invoiceDetails": [
+        {
+          "productId": "1",
+          "quantity": 333,
+          "productName": "Unknown Product",
+          "price": 1,
+          "amount": 333
+        }
+      ],
+      "status": false,
+      "date": "2024-08-28T10:10:56.000+00:00",
+      "customer": {
+        "id": "321312",
+        "name": "Unknown Customer"
+      },
+      "amount": 333
+    },
+    {
+      "id": "3372",
+      "customerId": "4321321321",
+      "invoiceDetails": [
+        {
+          "productId": "1",
+          "quantity": 2
+        },
+        {
+          "productId": "5",
+          "quantity": 23
+        }
+      ],
+      "status": true,
+      "date": "2024-08-28T04:50:18.869Z"
+    },
+    {
+      "id": "d144",
+      "customerId": "4323321321",
+      "invoiceDetails": [
+        {
+          "productId": "4",
+          "quantity": 2
+        }
+      ],
+      "status": true,
+      "date": "2024-08-28T05:02:41.091Z"
+    },
+    {
+      "id": "7768",
+      "customerId": "d2142132",
+      "invoiceDetails": [
+        {
+          "productId": "1",
+          "quantity": 222
+        }
+      ],
+      "status": true,
+      "date": "2024-08-28T07:18:30.475Z"
+    },
+    {
+      "id": "5d1a",
+      "customerId": "231312",
+      "invoiceDetails": [
+        {
+          "productId": "1",
+          "quantity": 33
+        }
+      ],
+      "status": true,
+      "date": "2024-08-28T08:03:56.924Z"
+    },
+    {
+      "id": "6687",
+      "customerId": "dwqdwq",
+      "invoiceDetails": [
+        {
+          "productId": "1",
+          "quantity": 22
+        }
+      ],
+      "status": false,
+      "date": "2024-08-28T08:19:45.459Z"
+    },
+    {
+      "id": "f376",
+      "customerId": "fjfjfjfj",
+      "invoiceDetails": [
+        {
+          "productId": "4",
+          "quantity": 888
+        }
+      ],
+      "status": true,
+      "date": "2024-08-28T08:56:58.988Z"
+    }
+  ]
+}
