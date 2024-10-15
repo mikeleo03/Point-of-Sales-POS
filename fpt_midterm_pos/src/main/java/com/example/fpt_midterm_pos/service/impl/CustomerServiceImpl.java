@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import com.example.fpt_midterm_pos.data.model.Customer;
 import com.example.fpt_midterm_pos.data.model.Status;
@@ -20,22 +19,14 @@ import com.example.fpt_midterm_pos.exception.ResourceNotFoundException;
 import com.example.fpt_midterm_pos.mapper.CustomerMapper;
 import com.example.fpt_midterm_pos.service.CustomerService;
 
-import jakarta.validation.Valid;
-
 @Service
-@Validated
 public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerMapper customerMapper;
-    private final CustomerRepository customerRepository;
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @Autowired
-    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepository customerRepository) {
-        this.customerMapper = customerMapper;
-        this.customerRepository = customerRepository;
-    }
-
-    private static final String CUSTOMER_NOT_FOUND = "Customer not found";
+    private CustomerRepository customerRepository;
 
     /**
      * Retrieves a paginated list of all customers from the repository.
@@ -57,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Customer findById(UUID customerId) {
-        return customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
+        return customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     }
     
     /**
@@ -67,7 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return A {@link CustomerDTO} object representing the newly created customer.
      */
     @Override
-    public CustomerDTO createCustomer(@Valid CustomerSaveDTO customerSaveDTO) {
+    public CustomerDTO createCustomer(CustomerSaveDTO customerSaveDTO) {
         Customer customer = customerMapper.toCustomer(customerSaveDTO);
         customer.setCreatedAt(new Date());
         customer.setUpdatedAt(new Date());
@@ -84,8 +75,8 @@ public class CustomerServiceImpl implements CustomerService {
      * @throws ResourceNotFoundException if the customer with the given ID is not found.
      */
     @Override
-    public CustomerDTO updateCustomer(UUID id, @Valid CustomerSaveDTO customerSaveDTO) {
-        Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
+    public CustomerDTO updateCustomer(UUID id, CustomerSaveDTO customerSaveDTO) {
+        Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
         Customer customer = customerMapper.toCustomer(customerSaveDTO);
         custCheck.setName(customer.getName());
@@ -105,16 +96,16 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public CustomerDTO updateCustomerStatus(UUID id, Status status) {
-        Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
+        Customer custCheck = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
-        if(status.toString().equals(custCheck.getStatus())) {
+        if(status == custCheck.getStatus()) {
             throw new DuplicateStatusException("Customer status is already " + status);
         }
 
-        if (custCheck.getStatus().equals(Status.ACTIVE.toString())) {
-            custCheck.setStatus(Status.DEACTIVE.toString());
-        } else if (custCheck.getStatus().equals(Status.DEACTIVE.toString())) {
-            custCheck.setStatus(Status.ACTIVE.toString());
+        if (custCheck.getStatus() == Status.Active) {
+            custCheck.setStatus(Status.Deactive);
+        } else if (custCheck.getStatus() == Status.Deactive) {
+            custCheck.setStatus(Status.Active);
         }
         custCheck.setUpdatedAt(new Date());
         Customer updatedCustomer = customerRepository.save(custCheck);

@@ -10,18 +10,16 @@ import com.example.fpt_midterm_pos.data.model.Status;
 import com.example.fpt_midterm_pos.dto.CustomerDTO;
 import com.example.fpt_midterm_pos.dto.CustomerSaveDTO;
 
-import jakarta.validation.Valid;
-
 public interface CustomerService {
 
     // Retrieves a paginated list of all customers.
     Page<Customer> findAllCustomer(Pageable pageable);
 
     // Creating a new customer.
-    CustomerDTO createCustomer(@Valid CustomerSaveDTO customerSaveDTO);
+    CustomerDTO createCustomer(CustomerSaveDTO customerSaveDTO);
 
     // Updates an existing customer with the provided customer details.
-    CustomerDTO updateCustomer(UUID id, @Valid CustomerSaveDTO customerSaveDTO);
+    CustomerDTO updateCustomer(UUID id, CustomerSaveDTO customerSaveDTO);
 
     // Updates the status of an existing customer.
     CustomerDTO updateCustomerStatus(UUID id, Status status);

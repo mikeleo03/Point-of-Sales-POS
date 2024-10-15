@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerInvoiceDTO {
-    private UUID id;
+    private UUID Id;
     private String name;
 }
